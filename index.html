@@ -441,6 +441,38 @@ dialog{border-radius:26px 26px 0 0}
 .br input{min-height:38px;padding:6px;text-align:center}
 .bd{font-size:.8rem;font-weight:600}
 .br.has{opacity:.6}
+
+/* v9 */
+.hero-link{display:flex;align-items:center;gap:8px;width:100%;margin-top:12px;border:0;border-radius:14px;padding:10px 12px;background:rgba(255,255,255,.1);color:#fff;font-weight:600;font-size:.86rem;text-align:left}
+.hero-link svg{width:18px;height:18px;opacity:.85}
+.hero-link span:nth-child(2){flex:1}
+.sweet-c{background:var(--surface);border-radius:var(--r-lg);box-shadow:var(--shadow);margin:12px 0;overflow:hidden}
+.sweet-h{display:flex;align-items:center;gap:12px;width:100%;border:0;background:none;padding:12px 14px;text-align:left;color:var(--ink)}
+.sw-ic{width:34px;height:34px;border-radius:12px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);flex:none}
+.sw-ic svg{width:18px;height:18px}
+.sweet-h .go,.mc-h .chev{color:var(--muted)}
+.mc-h[data-act]{cursor:pointer}
+.mc-h .chev{margin-left:6px;font-size:.85rem;font-weight:400}
+.mealcard.open .mc-h{border-bottom:0}
+.howto > summary{cursor:pointer;list-style:none}
+.howto > summary::-webkit-details-marker{display:none}
+.howto > summary::after{content:" ⌄";color:var(--muted)}
+.howto[open] > summary::after{content:" ⌃"}
+.howto{background:var(--sunk);border-radius:16px;padding:12px 14px;margin-bottom:10px;font-size:.86rem}
+.howto ol,.steps{margin:6px 0 4px;padding-left:20px;display:grid;gap:4px}
+.steps{font-size:.9rem;gap:8px}
+.howto .chips{flex-wrap:wrap;margin:8px 0 0}
+.howto .chip{font-size:.78rem;background:var(--surface)}
+details.parsed > summary{list-style:none;cursor:pointer}
+details.parsed > summary::-webkit-details-marker{display:none}
+details.parsed > summary::after{content:"⌄";color:var(--muted);margin-left:auto}
+details.parsed[open] > summary::after{content:"⌃"}
+.parsed.combo{background:var(--accent-soft)}
+.ing{list-style:none;margin:6px 0;padding:0;display:grid;gap:4px}
+.ing li{display:flex;gap:8px;font-size:.88rem}
+.banner.install{background:var(--accent-soft)}
+#tai svg{width:16px;height:16px;vertical-align:-3px}
+.rt li button:not(.skip) .freq{margin-bottom:1px}
 @media (prefers-reduced-motion:reduce){dialog[open]{animation:none}#toast{transition:none}.ring .fg{transition:none}}
 </style>
 </head>
@@ -1385,10 +1417,9 @@ const exById = id => exercises().find(e => e.id === id);
 function macrosFor(per100, g) { const k = g / 100; return { kcal: per100.kcal * k, p: per100.p * k, c: per100.c * k, f: per100.f * k }; }
 function dayTotals(d) {
   const t = { kcal: 0, p: 0, c: 0, f: 0, est: false, n: d.meals.length, sweet: 0 };
-  for (const e of d.meals) { t.kcal += +e.kcal || 0; t.p += +e.p || 0; t.c += +e.c || 0; t.f += +e.f || 0; if (e.est) t.est = true; if (e.sweet) t.sweet += +e.kcal || 0; }
+  for (const e of d.meals) { t.kcal += +e.kcal || 0; t.p += +e.p || 0; t.c += +e.c || 0; t.f += +e.f || 0; if (e.est) t.est = true; t.sweet += e.sweetKcal !== undefined ? +e.sweetKcal || 0 : e.sweet ? +e.kcal || 0 : 0; }
   return t;
 }
-
 
 /* ===== Εικονίδια (SVG, stroke) ===== */
 const IC = (() => {
@@ -1437,19 +1468,15 @@ function backupBanner() {
 }
 function viewDay() {
   const d = getDay(UI.date), snap = daySnap(d), tot = dayTotals(d);
-  let h = onboardingHTML();
+  let h = installBannerHTML() + onboardingHTML();
   if (!snap) h += `<div class="banner"><span>Συμπλήρωσε φύλο, ηλικία, ύψος και βάρος για να υπολογιστούν οι στόχοι σου.</span><button class="btn sm pri" data-nav="profile">Προφίλ</button></div>`;
   h += ledgerHTML(d, snap, tot);
   h += routineHTML(d);
-  if (UI.tab === 'meals') h += `<div class="quick">
-    <button data-act="qScan">${IC.scan}<span>Σάρωση</span></button>
-    <button data-act="qText">${IC.pen}<span>Γράψε</span></button>
-    <button data-act="qFav">${IC.star}<span>Αγαπημένα</span></button>
-    ${d.date === Dates.today() && snap ? `<button data-act="closeDay">${IC.bowl}<span>Τι να φάω;</span></button>` : ''}</div>`;
   h += `<div class="seg" role="tablist">${[['meals', 'Γεύματα'], ['ex', 'Άσκηση'], ['steps', 'Βήματα']].map(([k, l]) => `<button role="tab" aria-selected="${UI.tab === k}" data-act="tab" data-tab="${k}">${l}</button>`).join('')}</div>`;
   h += UI.tab === 'meals' ? sweetCardHTML(d, snap, tot) + mealsHTML(d) : UI.tab === 'ex' ? exHTML(d) : stepsHTML(d, snap);
   return h;
 }
+
 function ledgerHTML(d, snap, tot) {
   const isToday = d.date === Dates.today();
   if (!snap) return `<section class="hero ledger"><div class="eyebrow">${isToday ? 'Σήμερα' : Dates.label(d.date)}</div><div class="hero-num">${fmt(tot.kcal)}</div><div class="hero-sub">kcal</div></section>`;
@@ -1475,6 +1502,7 @@ function ledgerHTML(d, snap, tot) {
     </div>
     ${kindTxt}
     <div class="mrings">${miniRing(tot.p, snap.p, 'p', 'Πρωτεΐνη')}${miniRing(tot.c, snap.c, 'c', 'Υδατάνθ.')}${miniRing(tot.f, snap.f, 'f', 'Λίπος')}</div>
+    ${isToday ? `<button class="hero-link" data-act="closeDay">${IC.bowl}<span>Τι να φάω για να κλείσω τη μέρα;</span><span>›</span></button>` : ''}
   </section>`;
 }
 
@@ -1529,33 +1557,36 @@ function sweetSuggestions(d, snap, tot) {
 }
 function sweetCardHTML(d, snap, tot) {
   const s = sweetSuggestions(d, snap, tot); if (!s) return '';
+  const open = !!UI.sweetOpen;
   const row = (o, note) => `<li class="row sweet-opt"><span class="grow"><b>${esc(o.f.name)}</b><br><span class="small muted">${qtyLabel(o.qty, o.unit)} (${fmt(o.g)} g), ≈${fmt(o.kcal)} kcal${note ? '. ' + note : ''}</span></span><button class="btn sm" data-act="sweetAdd" data-fid="${o.f.id}" data-qty="${o.qty}" data-unit="${o.unit}">Προσθήκη</button></li>`;
-  return `<section class="sec sweet"><h2>Χωράει γλυκό</h2>
-    <p class="small">Περισσεύουν <b class="est">${fmt(s.room)}</b> kcal για γλυκό${s.reserveParts.length ? `, αφού κράτησα ≈${fmt(s.reserveParts.reduce((a, r) => a + r.kcal, 0))} kcal για ${s.reserveParts.map(r => r.label).join(' και ')}` : ''}.${s.bankUse > 0 ? ` Μετράνε και ${fmt(s.bankUse)} kcal που περίσσεψαν νωρίτερα μέσα στην εβδομάδα.` : ''}</p>
-    <ul class="plain">${s.pick.map(o => row(o, o.fav ? 'Από τα αγαπημένα σου' : '')).join('')}${s.protein ? row(s.protein, `Καλύπτει και μέρος από τα ${fmt(s.pLeft)} g πρωτεΐνης που λείπουν`) : ''}</ul></section>`;
+  return `<section class="sweet-c ${open ? 'open' : ''}"><button class="sweet-h" data-act="sweetToggle" aria-expanded="${open}"><span class="sw-ic">${IC.star}</span><span class="grow"><b>Χωράει γλυκό</b><span class="small muted"> έως ≈${fmt(s.room)} kcal</span></span><span class="go">${open ? '⌃' : '⌄'}</span></button>
+    ${open ? `<p class="small muted" style="margin:0 14px 6px">${s.reserveParts.length ? `Κράτησα ≈${fmt(s.reserveParts.reduce((a, r) => a + r.kcal, 0))} kcal για ${s.reserveParts.map(r => r.label).join(' και ')}.` : ''}${s.bankUse > 0 ? ` Μετράνε και ${fmt(s.bankUse)} kcal που περίσσεψαν μέσα στην εβδομάδα.` : ''}</p>
+    <ul class="plain" style="padding:0 14px 8px">${s.pick.map(o => row(o, o.fav ? 'Από τα αγαπημένα σου' : '')).join('')}${s.protein ? row(s.protein, `Καλύπτει και μέρος από τα ${fmt(s.pLeft)} g πρωτεΐνης που λείπουν`) : ''}</ul>` : ''}</section>`;
 }
 
 function entryHTML(e) {
-  const tag = e.src === 'text' ? 'από κείμενο' : e.src === 'manual' ? 'χειροκίνητα' : '';
   const q = qtyLabel(e.qty, e.unit);
-  const amount = e.g ? (q ? `${q} (${fmt(e.g)} g)` : `${fmt(e.g)} g`) : '';
+  const amount = e.items ? `${e.items.length} υλικά` : e.g ? (q ? `${q} (${fmt(e.g)} g)` : `${fmt(e.g)} g`) : '';
+  const tag = e.src === 'ai' ? 'AI' : e.total ? 'σύνολο ημέρας' : '';
   return `<li><button class="item" data-act="editEntry" data-id="${e.id}">
-    <span class="grow"><span class="nm">${esc(e.name)}</span><br><span class="sub">${[amount, tag, e.edited ? 'διορθωμένο' : ''].filter(Boolean).join(', ')}. Π ${fmt(e.p)} Υ ${fmt(e.c)} Λ ${fmt(e.f)}</span></span>
+    <span class="grow"><span class="nm">${esc(e.name)}</span><br><span class="sub">${[amount, tag].filter(Boolean).join(', ')}${amount || tag ? ' · ' : ''}Π ${fmt(e.p)} Υ ${fmt(e.c)} Λ ${fmt(e.f)}</span></span>
     <span class="kc">${e.est ? `<span class="est">${fmt(e.kcal)}</span>` : fmt(e.kcal)}${e.edited ? '<span class="man"></span>' : ''}</span></button></li>`;
 }
+
 function mealsHTML(d) {
   const y = Dates.add(d.date, -1), yd = Store.get('day:' + y);
+  UI.mealOpen = UI.mealOpen || {};
   const dayCopy = !d.meals.length && yd && yd.meals.length ? `<div class="banner"><span>Έφαγες τα ίδια με χθες; ${yd.meals.length} τρόφιμα, ≈${fmt(dayTotals(yd).kcal)} kcal.</span><button class="btn sm" data-act="copyDay" data-from="${y}">Αντιγραφή μέρας</button></div>` : '';
   return dayCopy + MEALS.map(m => {
     const es = d.meals.filter(e => e.meal === m.id), k = es.reduce((a, e) => a + (+e.kcal || 0), 0), pr = es.reduce((a, e) => a + (+e.p || 0), 0);
-    const from = !es.length ? lastMealSource(d.date, m.id) : null;
-    return `<section class="mealcard">
-      <div class="mc-h"><span class="mc-ic ic-${m.id}">${IC[m.id]}</span>
-        <div class="grow"><h3>${m.label}</h3><span class="small muted">${es.length ? `${es.length} ${es.length === 1 ? 'τρόφιμο' : 'τρόφιμα'}, ${fmt(pr)} g πρωτεΐνη` : 'Κενό'}</span></div>
+    const from = !es.length ? lastMealSource(d.date, m.id) : null, open = es.length && UI.mealOpen[m.id];
+    return `<section class="mealcard ${open ? 'open' : ''}">
+      <div class="mc-h" ${es.length ? `data-act="mealToggle" data-meal="${m.id}" role="button" tabindex="0" aria-expanded="${!!open}"` : ''}><span class="mc-ic ic-${m.id}">${IC[m.id]}</span>
+        <div class="grow"><h3>${m.label}${es.length ? `<span class="chev">${open ? '⌃' : '⌄'}</span>` : ''}</h3><span class="small muted">${es.length ? `${es.length} ${es.length === 1 ? 'καταχώρηση' : 'καταχωρήσεις'} · ${fmt(pr)} g πρωτεΐνη` : 'Κενό'}</span></div>
         ${es.length ? `<span class="pill">${fmt(k)} kcal</span>` : ''}
         <button class="iconbtn" data-act="addFood" data-meal="${m.id}" aria-label="Προσθήκη στο ${m.label.toLowerCase()}">${IC.plus}</button></div>
-      ${es.length ? `<ul class="list inner">${es.map(entryHTML).join('')}</ul>` : ''}
-      ${es.length ? `<div class="mc-f"><button class="linkish small" data-act="favSave" data-meal="${m.id}">${IC.star} Αποθήκευση ως αγαπημένο</button></div>` : from ? `<div class="mc-f"><button class="linkish small" data-act="copyMeal" data-meal="${m.id}" data-from="${from}">↺ Όπως ${fromLabel(d.date, from)}</button></div>` : ''}
+      ${open ? `<ul class="list inner">${es.map(entryHTML).join('')}</ul><div class="mc-f"><button class="linkish small" data-act="favSave" data-meal="${m.id}">${IC.star} Αποθήκευση ως αγαπημένο</button></div>` : ''}
+      ${!es.length && from ? `<div class="mc-f"><button class="linkish small" data-act="copyMeal" data-meal="${m.id}" data-from="${from}">↺ Όπως ${fromLabel(d.date, from)}</button></div>` : ''}
     </section>`;
   }).join('');
 }
@@ -1885,6 +1916,10 @@ function viewProfile() {
     <div class="radios" style="margin-bottom:10px"><label><input type="checkbox" data-set="noSupplements" ${s.noSupplements ? 'checked' : ''}>Χωρίς σκόνες και συμπληρώματα πρωτεΐνης στις προτάσεις</label></div>
     <label class="f"><span>Σημειώσεις για το AI (μπαίνουν σε κάθε αναφορά, αποθηκεύονται μόνο στο κινητό)</span><textarea data-set="aiNotes" placeholder="π.χ. Δεν ζυγίζω το φαγητό. Αγαπώ τα γλυκά και θέλω να χωράνε. Ακολουθώ πρόγραμμα γυμναστή.">${esc(s.aiNotes || '')}</textarea></label>
   </section>
+  <section class="sec"><h2>Τα φαγητά μου</h2>
+    <p class="small muted">${myFoods().length ? `${myFoods().length} δικά σου: τρόφιμα, προϊόντα, συνταγές, εκτιμήσεις AI.` : 'Τρόφιμα που φτιάχνεις, προϊόντα που σαρώνεις, συνταγές και εκτιμήσεις AI.'}</p>
+    <div class="row" style="flex-wrap:wrap"><button class="btn sm pri" data-act="foodManage">Προβολή και επεξεργασία</button><button class="btn sm" data-act="foodNew">+ Νέο τρόφιμο</button></div>
+  </section>
   <section class="sec"><h2>Συνταγές</h2>
     <p class="small muted">Σπιτικά φαγητά από τα υλικά τους. Μετά γράφεις απλώς «1 μερίδα …».</p>
     ${recipesListHTML()}<button class="btn sm" data-act="rcpNew" style="margin-top:8px">+ Νέα συνταγή</button>
@@ -1902,7 +1937,9 @@ function viewProfile() {
   </section>
   <section class="sec"><h2>Κατάσταση</h2>
     <p class="small">Αποθήκευση: <b>${info.mode === 'idb' ? 'IndexedDB' : 'localStorage (εφεδρεία)'}</b>. Μόνιμη αποθήκευση: <b>${info.persisted ? 'ναι' : 'όχι'}</b>. Offline: <b>${navigator.serviceWorker && navigator.serviceWorker.controller ? 'ενεργό' : location.protocol.startsWith('http') ? 'ενεργοποιείται μετά την επόμενη φόρτωση' : 'μη διαθέσιμο (άνοιξε την εφαρμογή από http/https)'}</b>.</p>
+    <p class="small">Λειτουργία: <b>${isStandalone() ? 'εγκατεστημένη εφαρμογή' : 'μέσα στον browser'}</b>${isStandalone() ? '' : ' <button class="linkish small" data-act="installHelp">Πώς την εγκαθιστώ σωστά;</button>'}</p>
     <p class="small">Σήμανση τιμών: <span class="est">1.234</span> εκτιμώμενη, ${M('1.234', true)} χειροκίνητη, και 1.234 χωρίς σήμανση για μέτρηση ή τιμή από τη βάση.</p>
+    <p class="note">Το Weight me up δίνει γενικές πληροφορίες και εκτιμήσεις για ενημέρωση. Δεν αποτελεί ιατρική ή διατροφική συμβουλή και δεν αντικαθιστά γιατρό ή διαιτολόγο. Αν έχεις θέμα υγείας (π.χ. διαβήτη, πάθηση καρδιάς ή νεφρών), είσαι έγκυος ή έχεις σχέση με διατροφικές διαταραχές, συμβουλέψου επαγγελματία υγείας πριν αλλάξεις διατροφή ή προπόνηση.</p>
     <div class="radios" style="margin-top:8px">${[['', 'Θέμα συστήματος'], ['light', 'Ανοιχτό'], ['dark', 'Σκούρο']].map(([k, l]) => `<label><input type="radio" name="th" data-set="theme" value="${k}" ${(s.theme || '') === k ? 'checked' : ''}>${l}</label>`).join('')}</div>
   </section>`;
 }
@@ -1973,8 +2010,8 @@ function recentFoods() {
 }
 function mealSelect(cur) { return `<select id="mealSel">${MEALS.map(m => `<option value="${m.id}" ${m.id === cur ? 'selected' : ''}>${m.label}</option>`).join('')}</select>`; }
 function openAddFood(meal, mode) {
-  mode = mode || (favMeals().length ? 'fav' : 'text');
-  const tabs = [['fav', 'Αγαπημένα'], ['text', 'Κείμενο'], ['prod', 'Προϊόν'], ['db', 'Βάση'], ['manual', 'Άλλο']];
+  mode = mode || 'text';
+  const tabs = [['text', 'Κείμενο'], ['fav', 'Δικά μου'], ['prod', 'Προϊόν'], ['db', 'Βάση'], ['manual', 'Άλλο']];
   openDlg('Προσθήκη φαγητού', `<div class="seg seg5" role="tablist" style="margin-top:0">${tabs.map(([k, l]) => `<button role="tab" aria-selected="${k === mode}" data-act="addMode" data-mode="${k}" data-meal="${meal}">${l}</button>`).join('')}</div>
     <label class="f" style="margin-top:10px"><span>Γεύμα</span>${mealSelect(meal)}</label><div id="addPane"></div>`, body => {
     const pane = $('#addPane', body);
@@ -2013,42 +2050,58 @@ function addEntries(entries, meal) {
   meal = meal || ($('#mealSel') ? $('#mealSel').value : 'b');
   const d = getDay(UI.date);
   entries.forEach(e => { e.meal = meal; d.meals.push(e); });
+  UI.mealOpen = UI.mealOpen || {}; UI.mealOpen[meal] = true; UI.tab = 'meals';
   saveDay(d); render(); toast(entries.length === 1 ? 'Προστέθηκε.' : `Προστέθηκαν ${entries.length} τρόφιμα.`);
 }
+
 function paneText(pane) {
-  pane.innerHTML = `<label class="f"><span>Τι έφαγες;</span><textarea id="tq" placeholder="π.χ. μια μερίδα μακαρόνια με κιμά, 1 κτσ ελαιόλαδο, 2 κτγ μέλι, χούφτα αμύγδαλα"></textarea></label>
-    <button class="btn" id="tparse">Ανάλυση</button><div id="tres"></div>
-    <p class="note">Καταλαβαίνει γραμμάρια, κτσ, κτγ, μερίδα, πιάτο, μπολ, φλιτζάνι, χούφτα, ποτήρι, φέτα, τεμάχια, και μεγέθη όπως «μικρή» ή «μεγάλη μερίδα». Μερίδα σημαίνει τη συνηθισμένη ποσότητα ενός μέσου ενήλικα. Η ανάλυση γίνεται τοπικά και αναγνωρίζει μόνο τρόφιμα της βάσης σου.</p>`;
+  pane.innerHTML = `<details class="howto" ${settings().textUsed ? '' : 'open'}><summary><b>Πώς λειτουργεί</b></summary>
+      <ol><li>Γράψε τι έφαγες, με ποσότητες αν θες: γραμμάρια, κτσ, κτγ, μερίδα, πιάτο, τεμάχια.</li><li>Πάτα <b>Αναγνώριση</b>. Η εφαρμογή βρίσκει κάθε τρόφιμο στη βάση σου.</li><li>Έλεγξε τα τρόφιμα και τις ποσότητες, δώσε τίτλο στο πιάτο και πάτα <b>Προσθήκη</b>.</li></ol>
+      <div class="chips">${['200γρ κοτόπουλο με 1 μερίδα ρύζι', '2 αυγά, 2 φέτες ψωμί, 1 κτγ μέλι', 'μερίδα μακαρόνια με κιμά', 'γιαούρτι με μέλι και μπανάνα'].map(x => `<button class="chip" data-ex="${esc(x)}">${esc(x)}</button>`).join('')}</div></details>
+    <label class="f"><span>Τι έφαγες;</span><textarea id="tq" placeholder="π.χ. μια μερίδα μακαρόνια με κιμά, σαλάτα με 1 κτσ ελαιόλαδο"></textarea></label>
+    <div class="row" style="gap:8px;flex-wrap:wrap"><button class="btn pri" id="tparse">Αναγνώριση</button><button class="btn" id="tai">${IC.bolt} Σύνθετο φαγητό; Ρώτα το AI</button></div><div id="tres"></div>
+    <p class="note">Η αναγνώριση γίνεται στη συσκευή και βρίσκει μόνο τρόφιμα της βάσης και τα δικά σου. Για φαγητό έξω ή σπιτικό πιάτο χωρίς συνταγή, πάτα «Ρώτα το AI».</p>`;
   const ta = $('#tq', pane), res = $('#tres', pane);
+  $$('[data-ex]', pane).forEach(b => b.addEventListener('click', () => { ta.value = b.dataset.ex; ta.focus(); }));
+  $('#tai', pane).addEventListener('click', () => openAIFood(ta.value.trim()));
   let parsed = [];
-  const renderRes = () => {
-    if (!parsed.length) { res.innerHTML = '<p class="empty">Δεν αναγνωρίστηκε κάτι. Δοκίμασε π.χ. «μια μερίδα ρύζι».</p>'; return; }
-    res.innerHTML = parsed.map((r, i) => r.food ? `<div class="parsed" data-i="${i}">
-      <div class="row"><input type="checkbox" data-inc checked aria-label="Συμπερίληψη"><span class="small muted grow">«${esc(r.raw)}»${r.assumed ? ' <span class="est">υπόθεση ποσότητας</span>' : ''}</span></div>
-      <label class="f" style="margin:6px 0"><span>Τρόφιμο</span><select data-food>${r.alts.map(f => `<option value="${f.id}" ${f.id === r.food.id ? 'selected' : ''}>${esc(f.name)}</option>`).join('')}</select></label>
-      <div data-qwbox>${qtyWidgetHTML(r.food, Math.round(r.qty * 100) / 100, r.qunit === 'g' && r.food.liquid ? 'ml' : r.qunit)}</div><div class="preview" data-pv></div></div>`
-      : `<div class="parsed miss"><span class="small">Δεν βρέθηκε: «${esc(r.query || r.raw)}». Καταχώρησέ το από «Χειροκίνητα» ή πρόσθεσέ το στη βάση τροφίμων.</span></div>`).join('')
-      + (parsed.some(r => r.food) ? '<div class="dlg-f"><button class="btn pri" id="tadd">Προσθήκη επιλεγμένων</button></div>' : '');
-    $$('.parsed[data-i]', res).forEach(upd);
-  };
   const fOf = b => foods().byId.get($('[data-food]', b).value);
-  const upd = box => { const f = fOf(box), r = qtyRead(box, f), m = macrosFor(f, r.g); $('[data-pv]', box).innerHTML = `<span>${fmt(r.g)} g</span><span><b class="est">${fmt(m.kcal)}</b> kcal</span><span>Π ${fmt(m.p)}</span><span>Υ ${fmt(m.c)}</span><span>Λ ${fmt(m.f)}</span>`; };
+  const upd = box => { const f = fOf(box), r = qtyRead(box, f), m = macrosFor(f, r.g); $('[data-pv]', box).innerHTML = `<span>${fmt(r.g)} g</span><span><b class="est">${fmt(m.kcal)}</b> kcal</span><span>Π ${fmt(m.p)}</span><span>Υ ${fmt(m.c)}</span><span>Λ ${fmt(m.f)}</span>`; updTotal(); };
+  const collect = () => { const out = []; $$('.parsed[data-i]', res).forEach(b => { if (!$('[data-inc]', b).checked) return; const f = fOf(b), r = qtyRead(b, f); if (f && r.g > 0) out.push(makeEntry(f, r, 'text', true)); }); return out; };
+  const updTotal = () => { const t = $('#ttot', res); if (!t) return; const es = collect(), s = k => es.reduce((a, e) => a + e[k], 0); t.innerHTML = es.length ? `Σύνολο: <b>${fmt(s('kcal'))}</b> kcal · Π ${fmt(s('p'))} · Υ ${fmt(s('c'))} · Λ ${fmt(s('f'))}` : ''; };
+  const renderRes = () => {
+    if (!parsed.length) { res.innerHTML = '<p class="empty">Δεν αναγνωρίστηκε κάτι. Δοκίμασε π.χ. «μια μερίδα ρύζι», ή πάτα «Ρώτα το AI».</p>'; return; }
+    const found = parsed.filter(r => r.food);
+    res.innerHTML = (found.length > 1 ? `<div class="parsed combo"><label class="f"><span>Τίτλος πιάτου</span><input type="text" id="ttitle" value="${esc(suggestTitle(found.map(r => r.food)))}"></label>
+        <div class="radios"><label><input type="radio" name="tmode" value="one" checked>Ένα πιάτο με σύνολο</label><label><input type="radio" name="tmode" value="many">Ξεχωριστά τρόφιμα</label></div>
+        <p class="small" id="ttot" style="margin:8px 0 0"></p></div>` : '')
+      + parsed.map((r, i) => r.food ? `<details class="parsed" data-i="${i}" ${found.length === 1 ? 'open' : ''}><summary class="row"><input type="checkbox" data-inc checked aria-label="Συμπερίληψη"><span class="grow"><b class="small">${esc(r.food.name)}</b> <span class="small muted">«${esc(r.raw)}»${r.assumed ? ' · υπόθεση ποσότητας' : ''}</span></span></summary>
+        <label class="f" style="margin:8px 0 6px"><span>Τρόφιμο</span><select data-food>${r.alts.map(f => `<option value="${f.id}" ${f.id === r.food.id ? 'selected' : ''}>${esc(f.name)}</option>`).join('')}</select></label>
+        <div data-qwbox>${qtyWidgetHTML(r.food, Math.round(r.qty * 100) / 100, r.qunit === 'g' && r.food.liquid ? 'ml' : r.qunit)}</div><div class="preview" data-pv></div></details>`
+        : `<div class="parsed miss"><span class="small">Δεν βρέθηκε: «${esc(r.query || r.raw)}».</span> <button class="linkish small" data-aiq="${esc(r.query || r.raw)}">Ρώτα το AI</button></div>`).join('')
+      + (found.length ? '<div class="dlg-f"><button class="btn pri" id="tadd">Προσθήκη</button></div>' : '');
+    $$('.parsed[data-i]', res).forEach(upd); updTotal();
+  };
   $('#tparse', pane).addEventListener('click', () => { parsed = Parser.parse(ta.value, foods().index); renderRes(); });
   res.addEventListener('input', e => { const b = e.target.closest('.parsed[data-i]'); if (b) upd(b); });
   res.addEventListener('change', e => {
+    if (e.target.matches('[data-inc]')) { updTotal(); return; }
     const b = e.target.closest('.parsed[data-i]'); if (!b) return;
-    if (e.target.matches('[data-food]')) { const old = qtyRead(b, foods().byId.get(parsed[+b.dataset.i].food.id)), f = fOf(b); $('[data-qwbox]', b).innerHTML = qtyWidgetHTML(f, old.qty, old.unit); }
+    if (e.target.matches('[data-food]')) { const old = qtyRead(b, foods().byId.get(parsed[+b.dataset.i].food.id)), f = fOf(b); $('[data-qwbox]', b).innerHTML = qtyWidgetHTML(f, old.qty, old.unit); $('summary b', b).textContent = f.name; }
     upd(b);
   });
   res.addEventListener('click', e => {
+    const q = e.target.closest('[data-aiq]'); if (q) { openAIFood(q.dataset.aiq); return; }
     if (e.target.id !== 'tadd') return;
-    const out = [];
-    $$('.parsed[data-i]', res).forEach(b => { if (!$('[data-inc]', b).checked) return; const f = fOf(b), r = qtyRead(b, f); if (f && r.g > 0) out.push(makeEntry(f, r, 'text', true)); });
+    const out = collect();
     if (!out.length) { toast('Δεν επιλέχθηκε κάτι.'); return; }
-    addEntries(out); closeDlg();
+    const one = out.length > 1 && (($('input[name=tmode]:checked', res) || {}).value || 'one') === 'one';
+    const st = settings(); if (!st.textUsed) { st.textUsed = true; Store.set('settings', st); }
+    addEntries(one ? [combineEntries(($('#ttitle', res).value || '').trim() || 'Γεύμα', out)] : out); closeDlg();
   });
   setTimeout(() => ta.focus(), 50);
 }
+
 function paneManual(pane) {
   pane.innerHTML = `<label class="f"><span>Περιγραφή</span><input type="text" id="mn" placeholder="π.χ. Μπάρα πρωτεΐνης (ετικέτα)"></label>
     <div class="grid4"><label class="f"><span>kcal</span><input type="text" inputmode="decimal" id="mk"></label><label class="f"><span>Πρωτ. g</span><input type="text" inputmode="decimal" id="mp"></label>
@@ -2065,27 +2118,29 @@ function paneManual(pane) {
 function openEditEntry(id) {
   const d = getDay(UI.date), e = d.meals.find(x => x.id === id); if (!e) return;
   const f = e.foodId ? foods().byId.get(e.foodId) : null;
-  const fx = f && e.per100 ? Object.assign({}, f, e.per100) : null;
-  openDlg('Επεξεργασία', `<p><b>${esc(e.name)}</b>${e.src === 'text' ? ' <span class="small muted">(από ανάλυση κειμένου)</span>' : ''}</p>
+  const fx = f && e.per100 && !e.items ? Object.assign({}, f, e.per100) : null;
+  openDlg('Επεξεργασία', `<label class="f"><span>Όνομα</span><input type="text" id="en" value="${esc(e.name)}"></label>
+    ${e.items ? `<div class="parsed"><b class="small">Υλικά</b><ul class="ing">${e.items.map(it => `<li><span class="grow">${esc(it.name)}</span><span class="small muted">${qtyLabel(it.qty, it.unit) || fmt(it.g) + ' g'} · ${fmt(it.kcal)} kcal</span></li>`).join('')}</ul>
+      <button class="linkish small" id="esplit">Διάσπαση σε ξεχωριστά τρόφιμα (για να αλλάξεις ποσότητες)</button></div>` : ''}
     ${fx ? `<label class="f"><span>Ποσότητα</span><div id="eqw">${qtyWidgetHTML(fx, e.qty ?? e.g, e.unit ?? 'g')}</div></label>` : ''}
     <div class="grid4"><label class="f"><span>kcal</span><input type="text" inputmode="decimal" id="ek" value="${Math.round(e.kcal)}"></label><label class="f"><span>Πρωτ. g</span><input type="text" inputmode="decimal" id="ep" value="${Math.round(e.p * 10) / 10}"></label>
     <label class="f"><span>Υδατ. g</span><input type="text" inputmode="decimal" id="ec" value="${Math.round(e.c * 10) / 10}"></label><label class="f"><span>Λίπος g</span><input type="text" inputmode="decimal" id="ef" value="${Math.round(e.f * 10) / 10}"></label></div>
     <label class="f"><span>Γεύμα</span>${mealSelect(e.meal)}</label>
     <div class="radios" style="margin-bottom:6px"><label><input type="checkbox" id="eest" ${e.est ? 'checked' : ''}>Εκτιμώμενη τιμή</label><label><input type="checkbox" id="esw" ${e.sweet ? 'checked' : ''}>Γλυκό</label></div>
-    <p class="note">Αλλάζοντας την ποσότητα ξαναϋπολογίζονται οι τιμές. Αν τις αλλάξεις απευθείας, η καταχώρηση σημειώνεται ως χειροκίνητα διορθωμένη.</p>
     <div class="dlg-f"><button class="btn danger" id="edel">Διαγραφή</button><span class="grow"></span><button class="btn pri" id="esave">Αποθήκευση</button></div>`, body => {
     const qw = $('#eqw', body);
     const recalc = () => { const r = qtyRead(qw, fx), m = macrosFor(e.per100, r.g); $('#ek', body).value = Math.round(m.kcal); $('#ep', body).value = Math.round(m.p * 10) / 10; $('#ec', body).value = Math.round(m.c * 10) / 10; $('#ef', body).value = Math.round(m.f * 10) / 10; };
     if (qw) { qw.addEventListener('input', recalc); qw.addEventListener('change', recalc); }
+    const sp = $('#esplit', body); if (sp) sp.addEventListener('click', () => { const i = d.meals.findIndex(x => x.id === id); d.meals.splice(i, 1, ...splitEntry(e)); saveDay(d); closeDlg(); render(); toast('Το πιάτο χωρίστηκε σε τρόφιμα.'); });
     $('#edel', body).addEventListener('click', () => { d.meals = d.meals.filter(x => x.id !== id); saveDay(d); closeDlg(); render(); toast('Διαγράφηκε.'); });
     $('#esave', body).addEventListener('click', () => {
       const vals = { kcal: numIn($('#ek', body).value), p: numIn($('#ep', body).value), c: numIn($('#ec', body).value), f: numIn($('#ef', body).value) };
       if (vals.kcal === null) { toast('Οι θερμίδες χρειάζονται τιμή.'); return; }
       if (qw) { const r = qtyRead(qw, fx); if (!(r.g > 0)) { toast('Δώσε ποσότητα μεγαλύτερη από 0.'); return; } e.g = Math.round(r.g * 10) / 10; e.qty = r.qty; e.unit = r.unit; }
-      const calc = e.per100 ? macrosFor(e.per100, e.g) : null;
-      const differs = calc && ['kcal', 'p', 'c', 'f'].some(k => Math.abs((vals[k] ?? 0) - calc[k]) > (k === 'kcal' ? 1 : 0.15));
-      Object.assign(e, { kcal: vals.kcal, p: vals.p ?? 0, c: vals.c ?? 0, f: vals.f ?? 0, meal: $('#mealSel', body).value, est: $('#eest', body).checked, sweet: $('#esw', body).checked });
-      e.edited = e.per100 ? differs : e.edited;
+      const calc = e.per100 && !e.items ? macrosFor(e.per100, e.g) : null;
+      const differs = calc ? ['kcal', 'p', 'c', 'f'].some(k => Math.abs((vals[k] ?? 0) - calc[k]) > (k === 'kcal' ? 1 : 0.15)) : e.items ? Math.abs(vals.kcal - e.items.reduce((a, i) => a + i.kcal, 0)) > 1 : e.edited;
+      Object.assign(e, { name: $('#en', body).value.trim() || e.name, kcal: vals.kcal, p: vals.p ?? 0, c: vals.c ?? 0, f: vals.f ?? 0, meal: $('#mealSel', body).value, est: $('#eest', body).checked, sweet: $('#esw', body).checked });
+      e.edited = !!differs;
       saveDay(d); closeDlg(); render(); toast('Αποθηκεύτηκε.');
     });
   });
@@ -2158,16 +2213,24 @@ function openExManage() {
 
 /* ----- Διαχείριση τροφίμων ----- */
 const CAT_LABELS = { meat: 'Κρέας', fish: 'Ψάρι', egg: 'Αυγά', dairy: 'Γαλακτοκομικά', cheese: 'Τυρί', fat: 'Λάδι/βούτυρο', grain_cooked: 'Μαγειρεμένα άμυλα', grain_dry: 'Ωμά άμυλα/δημητριακά', bread: 'Ψωμί/αρτοσκευάσματα', dish: 'Φαγητό/όσπρια', spread: 'Αλοιφές/σάλτσες', fruit: 'Φρούτα', veg: 'Λαχανικά', nut: 'Ξηροί καρποί', sugar: 'Ζάχαρη', sweet: 'Γλυκό', icecream: 'Παγωτό', drink: 'Ποτό', other: 'Άλλο' };
-function openFoodManage(q0 = '') {
-  openDlg('Βάση τροφίμων', `<div class="row"><input type="search" id="fmq" placeholder="Αναζήτηση" value="${esc(q0)}" class="grow"><button class="btn sm pri" data-act="foodNew">+ Νέο</button></div><ul class="results" id="fmres" style="max-height:60vh"></ul>`, body => {
+function openFoodManage(q0 = '', mineOnly) {
+  if (mineOnly === undefined) mineOnly = myFoods().length > 0;
+  openDlg('Τα φαγητά μου', `<div class="row" style="flex-wrap:wrap;gap:6px"><button class="btn sm pri" data-act="foodNew">+ Νέο τρόφιμο</button><button class="btn sm" data-act="rcpNew">+ Συνταγή</button><button class="btn sm" data-act="labelNew">+ Από ετικέτα</button></div>
+    <input type="search" id="fmq" placeholder="Αναζήτηση" value="${esc(q0)}" style="margin-top:10px">
+    <div class="chips"><button class="chip" data-fm="1" aria-pressed="${mineOnly}">Δικά μου (${myFoods().length})</button><button class="chip" data-fm="0" aria-pressed="${!mineOnly}">Όλα (${foods().list.length})</button></div>
+    <ul class="results" id="fmres" style="max-height:55vh"></ul>
+    <p class="note">Πάτα ένα τρόφιμο για να το επεξεργαστείς. Τα δικά σου τρόφιμα, τα προϊόντα και οι συνταγές εμφανίζονται και στην αναζήτηση και στην αναγνώριση κειμένου.</p>`, body => {
     const q = $('#fmq', body), res = $('#fmres', body);
     const run = () => {
-      const v = q.value.trim(), arr = v ? Parser.search(v, foods().index, 40) : foods().list.slice().sort((a, b) => (b.custom || b.modified ? 1 : 0) - (a.custom || a.modified ? 1 : 0) || a.name.localeCompare(b.name, 'el'));
-      res.innerHTML = arr.map(f => `<li><button class="item" data-act="foodEdit" data-id="${f.id}"><span class="grow"><span class="nm">${esc(f.name)}</span><br><span class="sub">${fmt(f.kcal)} kcal, Π ${fmt(f.p, 1)} Υ ${fmt(f.c, 1)} Λ ${fmt(f.f, 1)} / 100 g${f.src === 'recipe' ? ', συνταγή' : f.src === 'off' ? ', Open Food Facts' : f.src === 'label' ? ', από ετικέτα' : f.custom ? ', δικό σου' : f.modified ? ', τροποποιημένο' : ''}</span></span></button></li>`).join('') || '<li class="empty">Δεν βρέθηκε.</li>';
+      const v = q.value.trim(), pool = mineOnly ? myFoods() : foods().list;
+      const arr = v ? Parser.search(v, Parser.prepareIndex(pool), 60) : pool.slice().sort((a, b) => a.name.localeCompare(b.name, 'el'));
+      res.innerHTML = arr.map(f => `<li><button class="item" data-act="foodEdit" data-id="${f.id}"><span class="grow"><span class="nm">${esc(f.name)}</span><br><span class="sub">${fmt(f.kcal)} kcal, Π ${fmt(f.p, 1)} Υ ${fmt(f.c, 1)} Λ ${fmt(f.f, 1)} / 100 g${myFoods().includes(f) ? ' · ' + srcLabel(f) : ''}</span></span><span class="go">✎</span></button></li>`).join('') || `<li class="empty">${mineOnly ? 'Δεν έχεις ακόμα δικά σου τρόφιμα. Φτιάξε ένα με τα κουμπιά πάνω.' : 'Δεν βρέθηκε.'}</li>`;
     };
     q.addEventListener('input', run); run();
+    $$('[data-fm]', body).forEach(c => c.addEventListener('click', () => { mineOnly = c.dataset.fm === '1'; $$('[data-fm]', body).forEach(x => x.setAttribute('aria-pressed', x === c)); run(); }));
   });
 }
+
 function openFoodEdit(id) {
   if (id) { const rf = foods().byId.get(id); if (rf && rf.src === 'recipe') { openRecipeEditor(id); return; } }
   if (id) { const pf = foods().byId.get(id); if (pf && (pf.barcode || pf.src === 'off' || pf.src === 'label')) { openLabelForm(pf); return; } }
@@ -2393,7 +2456,7 @@ function viewProgress() {
   if (learning && learning.logged14 < 10) h += `<p class="small">Μαθαίνω τη ρουτίνα σου: <b>${learning.logged14}/10</b> καταγεγραμμένες μέρες και <b>${Math.min(learning.weigh14, 6)}/6</b> ζυγίσεις στις τελευταίες 2 εβδομάδες.</p><div class="bar thin"><i style="width:${Math.min(100, learning.logged14 * 10)}%"></i></div>`;
   h += recs.length ? `<ul class="recs">${recs.map(r => `<li class="rec ${r.lvl}"><div class="small muted">${lvlLbl[r.lvl]}, ${r.area.toLowerCase()}</div><b>${esc(r.title)}</b><p>${esc(r.text)}</p>${r.src ? `<p class="small muted src">Βάση: ${esc(r.src)}</p>` : ''}</li>`).join('')}</ul>`
     : '<p class="empty">Δεν υπάρχουν ακόμα αρκετά δεδομένα για προτάσεις.</p>';
-  h += `</section>`;
+  h += `<p class="note" style="margin-top:12px">Οι προτάσεις βασίζονται σε κανόνες από τη βιβλιογραφία και στα δεδομένα σου. Είναι γενικές πληροφορίες, όχι ιατρική συμβουλή. Αν έχεις θέμα υγείας, συμβουλέψου γιατρό ή διαιτολόγο.</p></section>`;
   // Ενέργεια
   h += `<section class="sec"><h2>Κατανάλωση ενέργειας</h2>`;
   if (ad.ready) {
@@ -2492,12 +2555,18 @@ document.addEventListener('click', e => {
     case 'volPeriod': UI.volPeriod = +a.dataset.p; render(); break;
     case 'export': doExport(); break;
     case 'closeDay': openCloseDay(); break;
+    case 'mealToggle': UI.mealOpen = UI.mealOpen || {}; UI.mealOpen[a.dataset.meal] = !UI.mealOpen[a.dataset.meal]; render(); break;
+    case 'sweetToggle': UI.sweetOpen = !UI.sweetOpen; render(); break;
+    case 'installApp': doInstall(); break;
+    case 'installHelp': openInstallHelp(); break;
+    case 'installDismiss': UI.installDismissed = true; render(); break;
+    case 'myFoodPick': { const f = foods().byId.get(a.dataset.id), det = $('#myDet'); if (f && det) { foodDetail(det, f, null, null); det.scrollIntoView({ behavior: 'smooth' }); } break; }
     case 'goProfile': UI.view = 'profile'; render(); window.scrollTo(0, 0); break;
     case 'goSteps': UI.view = 'day'; UI.date = Dates.today(); UI.tab = 'steps'; render(); setTimeout(() => { const e = $('.seg'); if (e) e.scrollIntoView({ behavior: 'smooth' }); }, 30); break;
     case 'goMeals': UI.view = 'day'; UI.tab = 'meals'; render(); setTimeout(() => { const e = $('.seg'); if (e) e.scrollIntoView({ behavior: 'smooth' }); }, 30); break;
     case 'goEx': UI.view = 'day'; UI.tab = 'ex'; render(); setTimeout(() => { const e = $('.seg'); if (e) e.scrollIntoView({ behavior: 'smooth' }); }, 30); break;
     case 'goPhotos': UI.view = 'progress'; render(); setTimeout(() => { const e = $('#phFile'); if (e) e.closest('.sec').scrollIntoView({ behavior: 'smooth' }); }, 60); break;
-    case 'rtToggle': UI.rtOpen = !(UI.rtOpen ?? true); render(); break;
+    case 'rtToggle': UI.rtOpen = !(UI.rtOpen ?? false); render(); break;
     case 'guide': openGuide(); break;
     case 'bulkTotals': openBulkTotals(); break;
     case 'onbHide': { const s = settings(); s.onbHidden = true; Store.set('settings', s); render(); break; }
@@ -2592,6 +2661,7 @@ document.addEventListener('change', e => {
     toast('Αποθηκεύτηκε.');
   }
 });
+document.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('[data-act=mealToggle]')) { e.preventDefault(); e.target.click(); } });
 window.addEventListener('resize', () => { clearTimeout(window._rz); window._rz = setTimeout(drawCharts, 150); });
 if (window.matchMedia) matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', () => drawCharts());
 
@@ -2739,7 +2809,7 @@ function openSaveFav(mealId) {
     <div class="dlg-f"><button class="btn pri" id="fvSave">Αποθήκευση</button></div>`, body => {
     $('#fvSave', body).addEventListener('click', () => {
       const name = $('#fvName', body).value.trim() || m.label;
-      const items = es.map(e => ({ foodId: e.foodId, name: e.name, qty: e.qty, unit: e.unit, g: e.g, kcal: e.kcal, p: e.p, c: e.c, f: e.f, est: e.est, sweet: e.sweet }));
+      const items = es.map(e => ({ foodId: e.foodId, name: e.name, qty: e.qty, unit: e.unit, g: e.g, kcal: e.kcal, p: e.p, c: e.c, f: e.f, est: e.est, sweet: e.sweet, sweetKcal: e.sweetKcal, items: e.items }));
       Store.set('favmeals', favMeals().concat([{ id: 'fv_' + uid(), name, items }])); closeDlg(); toast('Αποθηκεύτηκε στα αγαπημένα.');
     });
   });
@@ -2747,16 +2817,17 @@ function openSaveFav(mealId) {
 function favToEntries(fv) {
   return fv.items.map(it => {
     const f = it.foodId && foods().byId.get(it.foodId);
-    if (f && it.g) return makeEntry(f, { qty: it.qty ?? it.g, unit: it.unit || 'g', g: it.g }, 'db', !!it.est);
-    return { id: uid(), name: it.name, foodId: null, g: null, per100: null, kcal: it.kcal, p: it.p, c: it.c, f: it.f, src: 'manual', est: !!it.est, sweet: !!it.sweet };
+    if (f && it.g && !it.items) return makeEntry(f, { qty: it.qty ?? it.g, unit: it.unit || 'g', g: it.g }, 'db', !!it.est);
+    return Object.assign({ id: uid(), name: it.name, foodId: null, g: it.items ? it.g : null, per100: null, kcal: it.kcal, p: it.p, c: it.c, f: it.f, src: it.items ? 'text' : 'manual', est: !!it.est, sweet: !!it.sweet }, it.items ? { items: it.items, sweetKcal: it.sweetKcal } : {});
   });
 }
 function paneFav(pane) {
-  const fv = favMeals();
-  pane.innerHTML = fv.length ? `<ul class="plain">${fv.map(x => { const k = x.items.reduce((a, i) => a + (+i.kcal || 0), 0), p = x.items.reduce((a, i) => a + (+i.p || 0), 0); return `<li class="row sweet-opt"><span class="grow"><b>${esc(x.name)}</b><br><span class="small muted">${x.items.map(i => esc(i.name)).join(', ')}. ≈${fmt(k)} kcal, Π ${fmt(p)} g</span></span><button class="btn sm pri" data-act="favAdd" data-id="${x.id}">Προσθήκη</button><button class="x" data-act="favDel" data-id="${x.id}" aria-label="Διαγραφή">✕</button></li>`; }).join('')}</ul>`
-    : '<p class="empty">Δεν έχεις αγαπημένα ακόμα. Κατέγραψε ένα γεύμα και πάτα «☆ Αγαπημένο» δίπλα στο όνομά του.</p>';
-  const rs = recipes();
-  pane.innerHTML += `<h3 style="margin:14px 0 4px">Συνταγές</h3>${rs.length ? `<ul class="plain">${rs.map(r => `<li class="row sweet-opt"><span class="grow"><b>${esc(r.name)}</b><br><span class="small muted">1 μερίδα (${fmt(r.portion)} g), ≈${fmt(r.portion * r.kcal / 100)} kcal, Π ${fmt(r.portion * r.p / 100)} g</span></span><button class="btn sm pri" data-act="rcpAdd" data-id="${r.id}">Προσθήκη</button></li>`).join('')}</ul>` : ''}<button class="linkish small" data-act="rcpNew">+ Νέα συνταγή</button>`;
+  const fv = favMeals(), rs = recipes(), mine = myFoods().filter(f => f.src !== 'recipe');
+  pane.innerHTML = `<div class="row" style="flex-wrap:wrap;gap:6px;margin-bottom:6px"><button class="btn sm" data-act="foodNew">+ Νέο τρόφιμο</button><button class="btn sm" data-act="rcpNew">+ Συνταγή</button><button class="btn sm" data-act="foodManage">Όλα τα φαγητά μου</button></div>
+    <h3 class="gh">Αγαπημένα γεύματα</h3>${fv.length ? `<ul class="plain">${fv.map(x => { const k = x.items.reduce((a, i) => a + (+i.kcal || 0), 0), p = x.items.reduce((a, i) => a + (+i.p || 0), 0); return `<li class="row sweet-opt"><span class="grow"><b>${esc(x.name)}</b><br><span class="small muted">${x.items.map(i => esc(i.name)).join(', ')} · ≈${fmt(k)} kcal, Π ${fmt(p)} g</span></span><button class="btn sm pri" data-act="favAdd" data-id="${x.id}">Προσθήκη</button><button class="x" data-act="favDel" data-id="${x.id}" aria-label="Διαγραφή">✕</button></li>`; }).join('')}</ul>` : '<p class="small muted">Κατέγραψε ένα γεύμα, άνοιξέ το και πάτα «Αποθήκευση ως αγαπημένο».</p>'}
+    <h3 class="gh">Συνταγές</h3>${rs.length ? `<ul class="plain">${rs.map(r => `<li class="row sweet-opt"><span class="grow"><b>${esc(r.name)}</b><br><span class="small muted">1 μερίδα (${fmt(r.portion)} g) · ≈${fmt(r.portion * r.kcal / 100)} kcal, Π ${fmt(r.portion * r.p / 100)} g</span></span><button class="btn sm pri" data-act="rcpAdd" data-id="${r.id}">Προσθήκη</button><button class="x" data-act="foodEdit" data-id="${r.id}" aria-label="Επεξεργασία">✎</button></li>`).join('')}</ul>` : '<p class="small muted">Σπιτικά φαγητά από τα υλικά τους. Πάτα «+ Συνταγή».</p>'}
+    <h3 class="gh">Τρόφιμα και προϊόντα μου</h3>${mine.length ? `<ul class="plain">${mine.map(f => `<li class="row sweet-opt"><span class="grow"><b>${esc(f.name)}</b><br><span class="small muted">${srcLabel(f)} · ${fmt(f.kcal)} kcal/100 g</span></span><button class="btn sm" data-act="myFoodPick" data-id="${f.id}">Επιλογή</button><button class="x" data-act="foodEdit" data-id="${f.id}" aria-label="Επεξεργασία">✎</button></li>`).join('')}</ul>` : '<p class="small muted">Τρόφιμα που φτιάχνεις, προϊόντα που σαρώνεις και εκτιμήσεις AI εμφανίζονται εδώ.</p>'}
+    <div id="myDet"></div>`;
 }
 
 /* ----- «Τι να φάω για να κλείσω τη μέρα» ----- */
@@ -3346,7 +3417,7 @@ function routineHTML(d) {
   if (d.date !== Dates.today()) return '';
   const it = routineItems(d.date), req = it.filter(x => !x.opt), n = it.filter(x => x.done).length;
   const next = it.find(x => !x.done && !x.opt) || it.find(x => !x.done);
-  const open = UI.rtOpen ?? true;
+  const open = UI.rtOpen ?? false;
   return `<section class="sec rtcard">
     <button class="rt-h" data-act="rtToggle" aria-expanded="${open}"><span class="rt-prog"><svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15" class="mr-bg2"/><circle cx="18" cy="18" r="15" class="mr-fg2" stroke-dasharray="${(94.2 * n / Math.max(1, it.length)).toFixed(1)} 94.2" transform="rotate(-90 18 18)"/></svg><b>${n}/${it.length}</b></span>
       <span class="grow"><b>Η ρουτίνα σου σήμερα</b><br><span class="small muted">${req.every(x => x.done) ? 'Όλα έγιναν. Μπράβο!' : next ? 'Επόμενο: ' + next.t.toLowerCase() : ''}</span></span><span class="go">${open ? '⌃' : '⌄'}</span></button>
@@ -3447,6 +3518,113 @@ function measureForBf(date) {
   for (const k of ['neck', 'hip']) if (last[k] === undefined) { const src = ms.slice().reverse().find(x => x[k] !== undefined && Dates.idx(last.d) - Dates.idx(x.d) <= 120); if (src) last[k] = src[k]; }
   return last;
 }
+
+/* ===================== ΕΚΔΟΣΗ 9: ΕΥΚΟΛΙΑ ΧΡΗΣΗΣ ===================== */
+
+/* ----- Εγκατάσταση ως εφαρμογή (όχι συντόμευση) ----- */
+let installPrompt = null;
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); installPrompt = e; if (UI.view === 'day' || UI.view === 'profile') render(); });
+window.addEventListener('appinstalled', () => { installPrompt = null; toast('Η εφαρμογή εγκαταστάθηκε. Άνοιξέ τη από το εικονίδιό της.', 4000); render(); });
+const isStandalone = () => (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
+function installBannerHTML() {
+  if (isStandalone() || !location.protocol.startsWith('http') || UI.installDismissed) return '';
+  return `<div class="banner install"><span><b>Άνοιξέ τη σαν εφαρμογή</b><br><span class="small muted">Τώρα τρέχει μέσα στον browser.</span></span>
+    ${installPrompt ? '<button class="btn sm pri" data-act="installApp">Εγκατάσταση</button>' : '<button class="btn sm" data-act="installHelp">Πώς;</button>'}<button class="x" data-act="installDismiss" aria-label="Κλείσιμο">✕</button></div>`;
+}
+async function doInstall() {
+  if (!installPrompt) { openInstallHelp(); return; }
+  installPrompt.prompt(); const r = await installPrompt.userChoice.catch(() => null); installPrompt = null;
+  if (r && r.outcome === 'accepted') toast('Εγκαθίσταται…'); render();
+}
+function openInstallHelp() {
+  openDlg('Εγκατάσταση ως εφαρμογή', `<p class="small">Αν βλέπεις το σήμα του Chrome στο εικονίδιο ή τη γραμμή διευθύνσεων μέσα στην εφαρμογή, μπήκε ως <b>συντόμευση</b> και όχι ως <b>εφαρμογή</b>. Τα δεδομένα σου δεν χάνονται στα παρακάτω βήματα. Για σιγουριά, κάνε πρώτα Export.</p>
+    <ol class="steps"><li>Κράτα πατημένο το εικονίδιο στην αρχική οθόνη και πάτα <b>Αφαίρεση</b>. Αν ρωτήσει για διαγραφή δεδομένων, πάτα <b>όχι</b>.</li>
+      <li>Άνοιξε τη διεύθυνση της εφαρμογής στο <b>Chrome</b>.</li>
+      <li>Πάτα <b>⋮ → «Εγκατάσταση και δημιουργία συντόμευσης»</b> (ή «Εγκατάσταση εφαρμογής»).</li>
+      <li>Στο παράθυρο που ανοίγει, διάλεξε <b>«Εγκατάσταση»</b> και <b>όχι</b> «Δημιουργία συντόμευσης».</li>
+      <li>Σε κινητά Xiaomi, Redmi ή POCO: Ρυθμίσεις → Εφαρμογές → Chrome → Άδειες → ενεργοποίησε το <b>«Συντομεύσεις αρχικής οθόνης»</b> και ξανακάνε το βήμα 3.</li></ol>
+    <p class="note">Έλεγχος: η σωστά εγκατεστημένη εφαρμογή εμφανίζεται στις Ρυθμίσεις → Εφαρμογές ως «Weight me up», ανοίγει σε πλήρη οθόνη και δεν έχει σήμα Chrome.</p>`);
+}
+
+/* ----- Σύνθετο πιάτο: μία καταχώρηση με υλικά ----- */
+function combineEntries(title, entries) {
+  const sum = k => entries.reduce((a, e) => a + (+e[k] || 0), 0);
+  return { id: uid(), name: title, foodId: null, per100: null, g: Math.round(sum('g')), kcal: sum('kcal'), p: sum('p'), c: sum('c'), f: sum('f'), src: 'text', est: true,
+    sweetKcal: entries.filter(e => e.sweet).reduce((a, e) => a + e.kcal, 0),
+    items: entries.map(e => ({ foodId: e.foodId, name: e.name, qty: e.qty, unit: e.unit, g: e.g, kcal: e.kcal, p: e.p, c: e.c, f: e.f, per100: e.per100, sweet: e.sweet })) };
+}
+function splitEntry(e) {
+  return (e.items || []).map(it => Object.assign({ id: uid(), meal: e.meal, src: 'text', est: true, foodId: it.foodId || null }, it, { id: uid(), meal: e.meal }));
+}
+function suggestTitle(foodsArr) {
+  const short = f => f.name.split(/[(\/]/)[0].trim().split(' ').slice(0, 2).join(' ');
+  const n = foodsArr.map((f, i) => i ? short(f).toLocaleLowerCase('el') : short(f));
+  if (n.length === 1) return n[0];
+  if (n.length === 2) return `${n[0]} με ${n[1]}`;
+  if (n.length === 3) return `${n[0]} με ${n[1]} και ${n[2]}`;
+  return `${n[0]} με ${n[1]}, ${n[2]} και άλλα`;
+}
+
+/* ----- Εκτίμηση σύνθετου φαγητού με AI (copy–paste, χωρίς σύνδεση της εφαρμογής) ----- */
+function aiFoodPrompt(desc, qty) {
+  return `Είσαι διατροφολόγος. Εκτίμησε τη διατροφική αξία του παρακάτω φαγητού, όπως φτιάχνεται ή σερβίρεται συνήθως στην Ελλάδα.
+Φαγητό: ${desc || '(περιγραφή)'}
+Ποσότητα: ${qty || '1 κανονική μερίδα ενήλικα'}
+Αν η περιγραφή είναι ασαφής, κάνε λογικές υποθέσεις (π.χ. λάδι στο μαγείρεμα) και γράψ' τες στο "notes".
+Απάντησε ΜΟΝΟ με μία γραμμή JSON, χωρίς άλλο κείμενο, σε αυτή τη μορφή:
+{"name":"σύντομο όνομα","portion_g":350,"kcal":520,"protein":28,"carbs":45,"fat":24,"confidence":"low|medium|high","notes":"υποθέσεις"}
+Οι τιμές αφορούν ΟΛΗ την ποσότητα, όχι τα 100 g.`;
+}
+function parseAiFood(txt) {
+  const m = (txt || '').replace(/[“”«»]/g, '"').match(/\{[\s\S]*?\}/); if (!m) return null;
+  let o; try { o = JSON.parse(m[0]); } catch { try { o = JSON.parse(m[0].replace(/(\d),(\d)/g, '$1.$2').replace(/'/g, '"')); } catch { return null; } }
+  const n = v => { const x = parseFloat(String(v ?? '').replace(',', '.')); return isFinite(x) ? x : null; };
+  const r = { name: String(o.name || '').trim(), g: n(o.portion_g), kcal: n(o.kcal), p: n(o.protein), c: n(o.carbs), f: n(o.fat), conf: o.confidence || '', notes: o.notes || '' };
+  if (r.kcal === null || r.p === null || r.c === null || r.f === null) return null;
+  return r;
+}
+function openAIFood(prefill) {
+  const meal = $('#mealSel') ? $('#mealSel').value : autoMeal();
+  openDlg('Σύνθετο φαγητό με AI', `<p class="small">Για φαγητό έξω, σπιτικό πιάτο χωρίς συνταγή ή οτιδήποτε δεν υπάρχει στη βάση. Η εφαρμογή δεν στέλνει τίποτα μόνη της: αντιγράφεις ένα έτοιμο μήνυμα στο AI και επικολλάς πίσω την απάντηση.</p>
+    <h3 class="gh">1. Περιέγραψε το φαγητό</h3>
+    <label class="f"><span>Τι έφαγες</span><input type="text" id="afD" value="${esc(prefill || '')}" placeholder="π.χ. παστίτσιο ταβέρνας, σουβλάκι μερίδα με πατάτες"></label>
+    <label class="f"><span>Πόσο</span><input type="text" id="afQ" placeholder="π.χ. 1 μερίδα, μισό πιάτο, 1 τεμάχιο"></label>
+    <h3 class="gh">2. Αντίγραψε και στείλε στο AI</h3>
+    <div class="row" style="flex-wrap:wrap;gap:6px"><button class="btn pri sm" id="afCopy">Αντιγραφή μηνύματος</button><a class="btn sm" href="https://claude.ai/new" target="_blank" rel="noopener">Claude</a><a class="btn sm" href="https://gemini.google.com/" target="_blank" rel="noopener">Gemini</a><a class="btn sm" href="https://chatgpt.com/" target="_blank" rel="noopener">ChatGPT</a></div>
+    <h3 class="gh">3. Επικόλλησε την απάντηση</h3>
+    <textarea id="afA" placeholder='{"name":"Παστίτσιο","portion_g":380,"kcal":640,...}'></textarea>
+    <div id="afPv"></div>`, body => {
+    $('#afCopy', body).addEventListener('click', async () => { const t = aiFoodPrompt($('#afD', body).value.trim(), $('#afQ', body).value.trim()); try { await navigator.clipboard.writeText(t); } catch { const ta = document.createElement('textarea'); ta.value = t; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); } toast('Αντιγράφηκε. Επικόλλησέ το στο AI.'); });
+    const pv = $('#afPv', body);
+    $('#afA', body).addEventListener('input', () => {
+      const r = parseAiFood($('#afA', body).value);
+      if (!r) { pv.innerHTML = $('#afA', body).value.trim() ? '<p class="note" style="border-color:var(--warn)">Δεν αναγνωρίζω την απάντηση. Επικόλλησε ολόκληρη τη γραμμή που ξεκινά με { και τελειώνει με }.</p>' : ''; return; }
+      const at = r.p * 4 + r.c * 4 + r.f * 9, off = Math.abs(at - r.kcal) > Math.max(40, r.kcal * 0.2);
+      pv.innerHTML = `<div class="parsed"><label class="f"><span>Όνομα</span><input type="text" id="afN" value="${esc(r.name || $('#afD', body).value)}"></label>
+        <div class="grid4"><label class="f"><span>kcal</span><input type="text" inputmode="decimal" id="afK" value="${Math.round(r.kcal)}"></label><label class="f"><span>Πρωτ.</span><input type="text" inputmode="decimal" id="afP" value="${Math.round(r.p)}"></label><label class="f"><span>Υδατ.</span><input type="text" inputmode="decimal" id="afC" value="${Math.round(r.c)}"></label><label class="f"><span>Λίπος</span><input type="text" inputmode="decimal" id="afF" value="${Math.round(r.f)}"></label></div>
+        ${r.g ? `<p class="small muted">Ποσότητα ≈${fmt(r.g)} g. Βεβαιότητα AI: ${esc(r.conf)}.</p>` : ''}${r.notes ? `<p class="small muted">Υποθέσεις: ${esc(r.notes)}</p>` : ''}
+        ${off ? `<p class="note" style="border-color:var(--warn)">Τα μακροθρεπτικά αντιστοιχούν σε ≈${fmt(at)} kcal. Έλεγξε τις τιμές.</p>` : ''}
+        <label class="f"><span>Γεύμα</span>${mealSelect(meal)}</label>
+        <div class="radios"><label><input type="checkbox" id="afSave" checked>Αποθήκευση στα φαγητά μου, για να το βρίσκω ξανά</label></div>
+        <div class="dlg-f"><button class="btn pri" id="afAdd">Προσθήκη</button></div></div>`;
+      $('#afAdd', pv).addEventListener('click', () => {
+        const name = $('#afN', pv).value.trim() || 'Φαγητό', v = id => numIn($('#' + id, pv).value) || 0, k = v('afK');
+        if (!(k > 0)) { toast('Χρειάζονται θερμίδες.'); return; }
+        const entry = { id: uid(), name, foodId: null, g: r.g || null, per100: null, kcal: k, p: v('afP'), c: v('afC'), f: v('afF'), src: 'ai', est: true };
+        if ($('#afSave', pv).checked) {
+          const g = r.g && r.g > 0 ? r.g : 100, id = 'ai_' + uid();
+          saveCustomFood({ id, name, aliases: [name], src: 'ai', est: true, cat: 'dish', kcal: Math.round(k / g * 1000) / 10, p: Math.round(entry.p / g * 1000) / 10, c: Math.round(entry.c / g * 1000) / 10, f: Math.round(entry.f / g * 1000) / 10, portion: Math.round(g), piece: Math.round(g) });
+          entry.foodId = id; entry.per100 = { kcal: k / g * 100, p: entry.p / g * 100, c: entry.c / g * 100, f: entry.f / g * 100 }; entry.g = g; entry.qty = 1; entry.unit = 'portion';
+        }
+        addEntries([entry], $('#mealSel', pv).value); closeDlg();
+      });
+    });
+  });
+}
+
+/* ----- «Δικά μου» ----- */
+const myFoods = () => foods().list.filter(f => f.custom || f.modified || ['off', 'label', 'recipe', 'ai'].includes(f.src)).sort((a, b) => a.name.localeCompare(b.name, 'el'));
+const srcLabel = f => f.src === 'recipe' ? 'συνταγή' : f.src === 'off' ? 'προϊόν' : f.src === 'label' ? 'από ετικέτα' : f.src === 'ai' ? 'εκτίμηση AI' : f.modified ? 'τροποποιημένο' : 'δικό μου';
 
 </script>
 </body>
