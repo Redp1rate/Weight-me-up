@@ -408,6 +408,36 @@ dialog{border-radius:26px 26px 0 0}
 .sweet{border:0;background:linear-gradient(160deg,var(--accent-soft),var(--surface) 65%)}
 @media (max-width:360px){.hero-num{font-size:2.5rem}.hero-ring{width:80px;height:80px}.quick button span{font-size:.7rem}}
 @media (prefers-reduced-motion:reduce){.hr-fg{transition:none}}
+
+/* v7 */
+.rt{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.rt li button{width:100%;display:flex;align-items:center;gap:12px;text-align:left;border:0;background:var(--sunk);border-radius:14px;padding:10px 12px;color:var(--ink)}
+.rt li.done button{background:transparent;opacity:.62}
+.rt li.done b{text-decoration:line-through;text-decoration-color:var(--muted)}
+.rt .ck{width:24px;height:24px;border-radius:50%;border:2px solid color-mix(in srgb,var(--accent) 45%,var(--line));flex:none;display:grid;place-items:center;color:var(--accent-ink)}
+.rt li.done .ck{background:var(--accent);border-color:var(--accent)}
+.rt .ck svg{width:15px;height:15px}
+.rt .go{color:var(--muted);font-size:1.2rem}
+.rt .freq{display:block;font-size:.68rem;font-weight:650;letter-spacing:.03em;color:var(--accent);text-transform:none}
+.opt{font-size:.68rem;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:0 6px;font-weight:500}
+.rt-h{display:flex;align-items:center;gap:12px;width:100%;border:0;background:none;text-align:left;padding:0;color:var(--ink);margin-bottom:10px}
+.rt-prog{position:relative;width:44px;height:44px;flex:none}
+.rt-prog svg{width:44px;height:44px}
+.rt-prog circle{fill:none;stroke-width:4;stroke-linecap:round}
+.mr-bg2{stroke:var(--sunk)} .mr-fg2{stroke:var(--accent)}
+.rt-prog b{position:absolute;inset:0;display:grid;place-items:center;font-size:.72rem}
+.rtcard .go{font-size:1rem}
+.gh{font-size:.9rem;margin:14px 0 6px;color:var(--accent)}
+.guide{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.guide li{background:var(--sunk);border-radius:14px;padding:10px 12px}
+.mf{margin:0 0 12px}
+.how{font-size:.8rem;color:var(--muted);margin:5px 2px 0;line-height:1.4}
+.bulk{display:grid;gap:4px;margin-top:8px}
+.bh,.br{display:grid;grid-template-columns:5.2em repeat(4,1fr);gap:4px;align-items:center}
+.bh span{font-size:.72rem;color:var(--muted);font-weight:600}
+.br input{min-height:38px;padding:6px;text-align:center}
+.bd{font-size:.8rem;font-weight:600}
+.br.has{opacity:.6}
 @media (prefers-reduced-motion:reduce){dialog[open]{animation:none}#toast{transition:none}.ring .fg{transition:none}}
 </style>
 </head>
@@ -1268,7 +1298,7 @@ function toast(msg, ms = 2200) { const t = $('#toast'); t.textContent = msg; t.c
 /* ===== ΜΟΝΤΕΛΟ ===== */
 const MEALS = [{ id: 'b', label: 'Πρωινό', end: 11, share: .25 }, { id: 'l', label: 'Μεσημεριανό', end: 17, share: .35 }, { id: 'd', label: 'Βραδινό', end: 23, share: .3 }, { id: 's', label: 'Σνακ', end: 24, share: .1 }];
 const DEF_PROFILE = { sex: 'm', age: '', height: '', activity: 'moderate', goal: 'maintain', goalPct: '', proteinPerKg: '', fatPct: '', bfManual: '', overrides: { tdee: '', kcal: '', p: '', c: '', f: '' } };
-const DEF_SETTINGS = { watchCorrection: 12, energyMode: 'static', baseFactor: 1.15, stallN: 3, lastBackup: null, highMode: 'none', highBoost: '', minKcal: 1800, useAdaptive: true, noSupplements: true, autoTimer: true, defaultRest: 120 };
+const DEF_SETTINGS = { watchCorrection: 12, energyMode: 'static', baseFactor: 1.15, stallN: 3, lastBackup: null, highMode: 'none', highBoost: '', minKcal: 1800, useAdaptive: true, noSupplements: true, autoTimer: true, defaultRest: 120, weeklyDay: 0, onbHidden: false };
 const profile = () => { const p = Store.get('profile', {}) || {}; return Object.assign({}, DEF_PROFILE, p, { overrides: Object.assign({}, DEF_PROFILE.overrides, p.overrides) }); };
 const settings = () => Object.assign({}, DEF_SETTINGS, Store.get('settings', {}));
 const saveProfile = p => { Store.set('profile', p); refreshTodaySnap(); };
@@ -1294,7 +1324,7 @@ let memoVer = -1; const memo = new Map();
 function cached(key, fn) { if (Store.ver() !== memoVer) { memo.clear(); memoVer = Store.ver(); } if (!memo.has(key)) memo.set(key, fn()); return memo.get(key); }
 
 const ADAPT_WINDOW = 28;
-function bfOn(date) { return cached('bf' + date, () => { const kg = weightTrendOn(date); return kg ? Calc.bodyFat(profile(), measureOn(date), kg, scaleBfAvg(date)) : null; }); }
+function bfOn(date) { return cached('bf' + date, () => { const kg = weightTrendOn(date); return kg ? Calc.bodyFat(profile(), measureForBf(date), kg, scaleBfAvg(date)) : null; }); }
 function adaptiveOn(date) {
   return cached('ad' + date, () => {
     const start = Dates.add(date, -ADAPT_WINDOW), end = Dates.add(date, -1), s0 = Dates.idx(start);
@@ -1404,9 +1434,10 @@ function backupBanner() {
 }
 function viewDay() {
   const d = getDay(UI.date), snap = daySnap(d), tot = dayTotals(d);
-  let h = backupBanner();
+  let h = onboardingHTML();
   if (!snap) h += `<div class="banner"><span>Συμπλήρωσε φύλο, ηλικία, ύψος και βάρος για να υπολογιστούν οι στόχοι σου.</span><button class="btn sm pri" data-nav="profile">Προφίλ</button></div>`;
   h += ledgerHTML(d, snap, tot);
+  h += routineHTML(d);
   if (UI.tab === 'meals') h += `<div class="quick">
     <button data-act="qScan">${IC.scan}<span>Σάρωση</span></button>
     <button data-act="qText">${IC.pen}<span>Γράψε</span></button>
@@ -1780,6 +1811,10 @@ function viewProfile() {
     <p class="small muted">Για ακριβέστερο ποσοστό λίπους, καταχώρησε μετρήσεις σώματος στην Πρόοδο.</p>
   </section>
   <section class="sec"><h2>Υπολογισμοί</h2><div id="profResults">${profResultsHTML()}</div></section>
+  <section class="sec"><h2>Ρουτίνα</h2>
+    <label class="f"><span>Ημέρα εβδομαδιαίων μετρήσεων (μεζούρα, check-in)</span><select data-set="weeklyDay">${DOW_FULL.map((n, i) => `<option value="${i}" ${+(s.weeklyDay ?? 0) === i ? 'selected' : ''}>${n}</option>`).join('')}</select></label>
+    <div class="row" style="flex-wrap:wrap"><button class="btn sm" data-act="guide">Τι μετράω, πότε και γιατί</button><button class="btn sm" data-act="bulkTotals">Μέρες από άλλη εφαρμογή</button>${s.onbHidden ? '<button class="btn sm" data-act="onbShow">Εμφάνιση «Ξεκίνα εδώ»</button>' : ''}</div>
+  </section>
   <section class="sec"><h2>Κατανομή εβδομάδας</h2>
     <div class="radios" style="flex-direction:column;align-items:stretch">
       ${[['none', 'Ίδιες θερμίδες κάθε μέρα'], ['weekend', 'Περισσότερες το Σαββατοκύριακο (ΣΚ)'], ['long', 'Περισσότερες Παρασκευή–Κυριακή (ΠΣΚ)']].map(([k, l]) => `<label><input type="radio" name="hm" data-set="highMode" value="${k}" ${s.highMode === k ? 'checked' : ''}>${l}</label>`).join('')}
@@ -2160,26 +2195,6 @@ function openFoodEdit(id) {
 }
 
 /* ----- Μετρήσεις σώματος ----- */
-function openMeasure(date) {
-  const m = measures().find(x => x.d === date) || {}, p = profile();
-  const fld = (k, l) => `<label class="f"><span>${l}</span><input type="text" inputmode="decimal" id="ms_${k}" value="${m[k] ?? ''}"></label>`;
-  openDlg('Μέτρηση σώματος', `<label class="f"><span>Ημερομηνία</span><input type="date" id="ms_d" value="${date || Dates.today()}"></label>
-    <div class="grid3">${fld('waist', 'Μέση (cm)*')}${fld('neck', 'Λαιμός (cm)')}${fld('hip', 'Γλουτοί (cm)')}</div>
-    <div class="grid3">${fld('chest', 'Στήθος (cm)')}${fld('arm', 'Μπράτσο (cm)')}${fld('thigh', 'Μηρός (cm)')}</div>
-    ${fld('scaleBf', 'Λίπος από ζυγαριά (%, προαιρ.)')}
-    <p class="note">Μέτρα το πρωί, πριν φας, χαλαρός, με τη μεζούρα οριζόντια και εφαρμοστή χωρίς να πιέζει. <b>Μέση</b> στο ύψος του αφαλού, στο τέλος μιας κανονικής εκπνοής. <b>Λαιμός</b> ακριβώς κάτω από το «μήλο του Αδάμ». <b>Γλουτοί</b> στο πιο φαρδύ σημείο. <b>Μπράτσο</b> στο πιο φαρδύ σημείο με τεντωμένο, χαλαρό χέρι. <b>Μηρός</b> στο μέσο της απόστασης γοφού–γονάτου. Μία φορά την εβδομάδα αρκεί.${p.sex === 'f' ? '' : ' Οι γλουτοί δεν χρειάζονται για το ποσοστό λίπους στους άνδρες, αλλά είναι χρήσιμοι για την παρακολούθηση.'}</p>
-    <div class="dlg-f">${m.d ? '<button class="btn danger" id="ms_del">Διαγραφή</button><span class="grow"></span>' : ''}<button class="btn pri" id="ms_save">Αποθήκευση</button></div>`, body => {
-    $('#ms_save', body).addEventListener('click', () => {
-      const d = $('#ms_d', body).value; if (!d) return;
-      const rec = { d }; ['waist', 'neck', 'hip', 'chest', 'arm', 'thigh', 'scaleBf'].forEach(k => { const v = numIn($('#ms_' + k, body).value); if (v !== null) rec[k] = v; });
-      if (rec.waist === undefined) { toast('Η μέση είναι απαραίτητη.'); return; }
-      if (rec.waist < 40 || rec.waist > 250) { toast('Μη έγκυρη τιμή μέσης.'); return; }
-      Store.set('measures', measures().filter(x => x.d !== d && x.d !== m.d).concat([rec])); refreshTodaySnap(); closeDlg(); render(); toast('Η μέτρηση αποθηκεύτηκε.');
-    });
-    const del = $('#ms_del', body); if (del) del.addEventListener('click', () => { if (confirm('Διαγραφή μέτρησης;')) { Store.set('measures', measures().filter(x => x.d !== m.d)); refreshTodaySnap(); closeDlg(); render(); } });
-  });
-}
-
 /* ----- Backup ----- */
 async function doExport() {
   await Store.flush();
@@ -2473,6 +2488,16 @@ document.addEventListener('click', e => {
     case 'volPeriod': UI.volPeriod = +a.dataset.p; render(); break;
     case 'export': doExport(); break;
     case 'closeDay': openCloseDay(); break;
+    case 'goProfile': UI.view = 'profile'; render(); window.scrollTo(0, 0); break;
+    case 'goSteps': UI.view = 'day'; UI.date = Dates.today(); UI.tab = 'steps'; render(); setTimeout(() => { const e = $('.seg'); if (e) e.scrollIntoView({ behavior: 'smooth' }); }, 30); break;
+    case 'goMeals': UI.view = 'day'; UI.tab = 'meals'; render(); setTimeout(() => { const e = $('.seg'); if (e) e.scrollIntoView({ behavior: 'smooth' }); }, 30); break;
+    case 'goEx': UI.view = 'day'; UI.tab = 'ex'; render(); setTimeout(() => { const e = $('.seg'); if (e) e.scrollIntoView({ behavior: 'smooth' }); }, 30); break;
+    case 'goPhotos': UI.view = 'progress'; render(); setTimeout(() => { const e = $('#phFile'); if (e) e.closest('.sec').scrollIntoView({ behavior: 'smooth' }); }, 60); break;
+    case 'rtToggle': UI.rtOpen = !(UI.rtOpen ?? true); render(); break;
+    case 'guide': openGuide(); break;
+    case 'bulkTotals': openBulkTotals(); break;
+    case 'onbHide': { const s = settings(); s.onbHidden = true; Store.set('settings', s); render(); break; }
+    case 'onbShow': { const s = settings(); s.onbHidden = false; Store.set('settings', s); UI.view = 'day'; render(); break; }
     case 'fab': case 'qText': openAddFood(autoMeal(), act === 'qText' ? 'text' : undefined); break;
     case 'qFav': openAddFood(autoMeal(), 'fav'); break;
     case 'qScan': openAddFood(autoMeal(), 'prod'); setTimeout(() => { const b = $('#pdScan'); if (b) b.click(); }, 60); break;
@@ -2489,7 +2514,7 @@ document.addEventListener('click', e => {
     case 'tmSub': Timer.add(-15); break;
     case 'tmStop': Timer.stop(); break;
     case 'aiOpen': openAI(); break;
-    case 'checkin': openCheckin(); break;
+    case 'checkin': openCheckin(a.dataset.ws); break;
     case 'scaleImport': openScaleImport(); break;
     case 'wRange': UI.wRange = +a.dataset.r; render(); break;
     case 'phView': openPhoto(a.dataset.id); break;
@@ -2552,6 +2577,7 @@ document.addEventListener('change', e => {
   if (t.dataset.set !== undefined && !t.closest('.exc')) {
     const s = settings(), k = t.dataset.set;
     if (['energyMode', 'theme', 'highMode', 'aiNotes'].includes(k)) s[k] = t.value;
+    else if (k === 'weeklyDay') s[k] = +t.value;
     else if (['useAdaptive', 'noSupplements', 'autoTimer'].includes(k)) s[k] = t.checked;
     else if (k === 'highBoost') { const v = numIn(t.value); s[k] = v === null ? '' : Math.max(0, v); }
     else { const v = numIn(t.value); if (v === null || v < 0) { toast('Μη έγκυρη τιμή.'); return; } s[k] = k === 'stallN' ? Math.max(2, Math.round(v)) : k === 'defaultRest' ? Math.max(15, Math.round(v)) : k === 'watchCorrection' ? Math.min(50, v) : v; }
@@ -2771,8 +2797,8 @@ function openCloseDay() {
 /* ----- Εβδομαδιαίο check-in ----- */
 const CHECK_Q = [['sleep', 'Ύπνος', 'κακός', 'άριστος'], ['hunger', 'Πείνα', 'καθόλου', 'συνεχώς'], ['energy', 'Ενέργεια', 'χαμηλή', 'υψηλή'], ['stress', 'Στρες', 'χαμηλό', 'πολύ υψηλό'], ['perf', 'Απόδοση στην προπόνηση', 'χειρότερη', 'καλύτερη']];
 const checkins = () => Store.get('checkins', {}) || {};
-function openCheckin() {
-  const ws = Dates.weekStart(Dates.today()), c = Object.assign({}, checkins()[ws] || {});
+function openCheckin(wsArg) {
+  const ws = wsArg || Dates.weekStart(Dates.today()), c = Object.assign({}, checkins()[ws] || {});
   openDlg('Εβδομαδιαίο check-in', `<p class="small muted">Πώς ήταν η εβδομάδα ${Dates.short(ws)} – ${Dates.short(Dates.add(ws, 6))};</p>
     ${CHECK_Q.map(([k, l, lo, hi]) => `<div class="ci" data-k="${k}"><div class="row between"><b>${l}</b><span class="small muted">1 ${lo}, 5 ${hi}</span></div><div class="chips">${[1, 2, 3, 4, 5].map(v => `<button class="chip" data-v="${v}" aria-pressed="${c[k] === v}">${v}</button>`).join('')}</div></div>`).join('')}
     <label class="f"><span>Σημείωση (προαιρετικά)</span><input type="text" id="ciNote" value="${esc(c.note || '')}" placeholder="π.χ. πόνος στον ώμο, ταξίδι, γιορτές"></label>
@@ -3256,6 +3282,166 @@ function sleepStats(endDate, n) {
   return v.length ? { avg: v.reduce((a, b) => a + b, 0) / v.length, n: v.length, short: v.filter(x => x < 7).length } : null;
 }
 const fmtSleep = h => { const hh = Math.floor(h), mm = Math.round((h - hh) * 60); return mm === 60 ? `${hh + 1}ω` : `${hh}ω ${String(mm).padStart(2, '0')}λ`; };
+
+/* ===================== ΕΚΔΟΣΗ 7: ΡΟΥΤΙΝΑ, ΞΕΚΙΝΑ ΕΔΩ, ΜΑΖΙΚΗ ΕΙΣΑΓΩΓΗ, ΜΕΤΡΗΣΕΙΣ ===================== */
+const DOW_FULL = ['Κυριακή', 'Δευτέρα', 'Τρίτη', 'Τετάρτη', 'Πέμπτη', 'Παρασκευή', 'Σάββατο'];
+const daysSince = d => d ? Dates.idx(Dates.today()) - Dates.idx(d) : Infinity;
+const checkSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>';
+
+/* ----- «Ξεκίνα εδώ» ----- */
+function onboardingSteps() {
+  const p = profile(), s = settings();
+  return [
+    { k: 'profile', t: 'Συμπλήρωσε το προφίλ', d: 'Ηλικία, ύψος, βάρος, στόχος', done: !!(p.age && p.height && weights().length), act: 'goProfile' },
+    { k: 'scale', t: 'Φέρε το ιστορικό της ζυγαριάς', d: 'Εισαγωγή CSV, αν η ζυγαριά σου έχει εφαρμογή', done: weights().some(w => w.src === 'scale') || weights().length >= 7, act: 'scaleImport', opt: true },
+    { k: 'past', t: 'Πέρασε μέρες από άλλη εφαρμογή', d: 'Αν κατέγραφες φαγητό αλλού', done: Store.keys('day:').filter(k => (Store.get(k).meals || []).length).length >= 7, act: 'bulkTotals', opt: true },
+    { k: 'program', t: 'Πέρασε το πρόγραμμα του γυμναστή', d: 'Ημέρες, ασκήσεις, σετ, επαναλήψεις', done: programs().list.length > 0, act: 'progNew' },
+    { k: 'measure', t: 'Πρώτη μέτρηση με μεζούρα', d: 'Μέση, λαιμός, γλουτοί (2 λεπτά)', done: measures().length > 0, act: 'measureAdd' },
+    { k: 'notes', t: 'Σημειώσεις για το AI', d: 'Τι σου αρέσει, τι αποφεύγεις', done: !!(s.aiNotes || '').trim(), act: 'goProfile', opt: true },
+  ];
+}
+function onboardingHTML() {
+  if (settings().onbHidden) return '';
+  const st = onboardingSteps(), req = st.filter(x => !x.opt), doneReq = req.every(x => x.done);
+  if (doneReq && st.every(x => x.done)) return '';
+  const n = st.filter(x => x.done).length;
+  return `<section class="sec onb"><div class="row between"><h2>Ξεκίνα εδώ</h2><span class="small muted">${n}/${st.length}</span></div>
+    <div class="bar thin" style="margin:4px 0 10px"><i style="width:${n / st.length * 100}%"></i></div>
+    <ul class="rt">${st.map(x => `<li class="${x.done ? 'done' : ''}"><button data-act="${x.act}" ${x.done ? 'disabled' : ''}><span class="ck">${x.done ? checkSvg : ''}</span><span class="grow"><b>${x.t}</b>${x.opt ? ' <span class="opt">προαιρετικό</span>' : ''}<br><span class="small muted">${x.d}</span></span>${x.done ? '' : '<span class="go">›</span>'}</button></li>`).join('')}</ul>
+    ${doneReq ? '<button class="linkish small" data-act="onbHide" style="margin-top:8px">Απόκρυψη</button>' : ''}</section>`;
+}
+
+/* ----- Ρουτίνα ημέρας ----- */
+function routineItems(date) {
+  const s = settings(), d = getDay(date), wd = +(s.weeklyDay ?? 0), dow = Dates.dowNum(date), items = [];
+  const slots = new Set(d.meals.map(e => e.meal));
+  // Κάθε μέρα
+  items.push({ k: 'weigh', freq: 'Κάθε μέρα', t: 'Ζύγιση', w: 'Πρωί, μετά την τουαλέτα, πριν φας ή πιεις', done: weights().some(x => x.d === date), act: 'goSteps' });
+  items.push({ k: 'meals', freq: 'Κάθε μέρα', t: 'Φαγητό', w: d.meals.length ? `${d.meals.length} καταγραφές σε ${slots.size} γεύματα` : 'Κάθε γεύμα, όσο πιο κοντά στην ώρα του', done: slots.size >= 2, act: 'goMeals' });
+  const hasSteps = numIn((d.watch || {}).steps) !== null, hasSleep = numIn((d.watch || {}).sleep) !== null;
+  items.push({ k: 'watch', freq: 'Κάθε μέρα', t: 'Ύπνος και βήματα', w: `Ύπνος το πρωί, βήματα το βράδυ, από το ρολόι${hasSleep && !hasSteps ? '. Λείπουν τα βήματα' : !hasSleep && hasSteps ? '. Λείπει ο ύπνος' : ''}`, done: hasSteps && hasSleep, act: 'goSteps' });
+  const trains = activeProgram() || allSessions().some(x => daysSince(x.date) <= 14);
+  if (trains) items.push({ k: 'train', freq: 'Μέρες προπόνησης', t: 'Προπόνηση', w: 'Κιλά, επαναλήψεις και RIR σε κάθε σετ', done: d.ex.some(e => Calc.sessionStats(e)), act: 'goEx', opt: true });
+  // Κάθε εβδομάδα (την ημέρα που επέλεξες ή την επόμενη αν ξεχάστηκε)
+  const lastM = measures().length ? measures()[measures().length - 1].d : null, sinceM = lastM ? Dates.idx(date) - Dates.idx(lastM) : Infinity;
+  const weeklyDue = dow === wd || dow === (wd + 1) % 7;
+  if (lastM === date || (sinceM >= 6 && (weeklyDue || sinceM >= 9))) items.push({ k: 'measure', freq: 'Κάθε εβδομάδα', t: 'Μεζούρα', w: 'Μέση, λαιμός, γλουτοί, πρωί πριν φας (2 λεπτά)', done: lastM === date, act: 'measureAdd' });
+  const ws = Dates.weekStart(date), ci = checkins();
+  const ciWeek = dow === 1 && wd === 0 ? Dates.add(ws, -7) : ws;
+  if (dow === wd || (dow === (wd + 1) % 7 && !ci[ciWeek])) items.push({ k: 'checkin', freq: 'Κάθε εβδομάδα', t: 'Check-in', w: 'Ύπνος, πείνα, ενέργεια, στρες, απόδοση (1 λεπτό)', done: !!ci[ciWeek], act: 'checkin', ws: ciWeek });
+  // Κάθε 2 εβδομάδες
+  const lb = s.lastBackup ? Dates.key(new Date(s.lastBackup)) : null, nDays = Store.keys('day:').length;
+  if (lb === date || (nDays >= 5 && (!lb || daysSince(lb) >= 14))) items.push({ k: 'backup', freq: 'Κάθε 2 εβδομάδες', t: 'Αντίγραφο ασφαλείας', w: 'Export και αποθήκευση στο Drive', done: lb === date, act: 'export' });
+  // Κάθε μήνα
+  const ph = photos(), lp = ph.length ? ph[0].d : null, firstDay = Store.keys('day:')[0];
+  if (lp === date || ((lp ? daysSince(lp) >= 28 : firstDay && daysSince(firstDay.slice(4)) >= 3))) items.push({ k: 'photo', freq: 'Κάθε μήνα', t: 'Φωτογραφίες προόδου', w: 'Μπροστά, πλάι, πίσω, ίδιο φως (προαιρετικό)', done: lp === date, act: 'goPhotos', opt: true });
+  return items;
+}
+function routineHTML(d) {
+  if (d.date !== Dates.today()) return '';
+  const it = routineItems(d.date), req = it.filter(x => !x.opt), n = it.filter(x => x.done).length;
+  const next = it.find(x => !x.done && !x.opt) || it.find(x => !x.done);
+  const open = UI.rtOpen ?? true;
+  return `<section class="sec rtcard">
+    <button class="rt-h" data-act="rtToggle" aria-expanded="${open}"><span class="rt-prog"><svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15" class="mr-bg2"/><circle cx="18" cy="18" r="15" class="mr-fg2" stroke-dasharray="${(94.2 * n / Math.max(1, it.length)).toFixed(1)} 94.2" transform="rotate(-90 18 18)"/></svg><b>${n}/${it.length}</b></span>
+      <span class="grow"><b>Η ρουτίνα σου σήμερα</b><br><span class="small muted">${req.every(x => x.done) ? 'Όλα έγιναν. Μπράβο!' : next ? 'Επόμενο: ' + next.t.toLowerCase() : ''}</span></span><span class="go">${open ? '⌃' : '⌄'}</span></button>
+    ${open ? `<ul class="rt">${it.map(x => `<li class="${x.done ? 'done' : ''}"><button data-act="${x.act}"${x.ws ? ` data-ws="${x.ws}"` : ''}><span class="ck">${x.done ? checkSvg : ''}</span><span class="grow"><span class="freq">${x.freq}</span><b>${x.t}</b>${x.opt ? ' <span class="opt">προαιρετικό</span>' : ''}<br><span class="small muted">${x.w}</span></span><span class="go">›</span></button></li>`).join('')}</ul>
+      <button class="linkish small" data-act="guide" style="margin-top:6px">Τι μετράω, πότε και γιατί</button>` : ''}
+  </section>`;
+}
+function openGuide() {
+  const wd = DOW_FULL[+(settings().weeklyDay ?? 0)];
+  const row = (t, when, time, why) => `<li><b>${t}</b> <span class="small muted">${when}${time ? `, ${time}` : ''}</span><br><span class="small">${why}</span></li>`;
+  openDlg('Τι μετράω και πότε', `
+    <h3 class="gh">Κάθε μέρα</h3><ul class="guide">
+      ${row('Ζύγιση', 'πρωί, μετά την τουαλέτα, πριν φας ή πιεις', '10″', 'Ένα νούμερο μόνο του δεν σημαίνει τίποτα, γιατί το νερό το αλλάζει ±1 kg. Η εφαρμογή κοιτά τον μέσο όρο 7 ημερών, και από αυτόν υπολογίζει πόσο πραγματικά καις.')}
+      ${row('Φαγητό', 'κάθε γεύμα', '1–2′ ανά γεύμα', 'Με οικιακά μέτρα (κτσ, μερίδα, τεμάχιο) αρκεί. Σημασία έχει να γράφεις με τον ίδιο τρόπο κάθε μέρα και να μην ξεχνάς γεύματα, όχι η απόλυτη ακρίβεια.')}
+      ${row('Ύπνος', 'πρωί, από το ρολόι', '10″', 'Κάτω από 7 ώρες αυξάνεται η πείνα και χειροτερεύει η ανάκαμψη.')}
+      ${row('Βήματα', 'βράδυ, από το ρολόι', '10″', 'Η καθημερινή κίνηση είναι μεγάλο κομμάτι της κατανάλωσης και ο πιο εύκολος τρόπος να την αυξήσεις.')}
+      ${row('Προπόνηση', 'τις μέρες που γυμνάζεσαι', 'κατά τη διάρκεια', 'Κιλά, επαναλήψεις και RIR (πόσες επαναλήψεις σου έμεναν). Από αυτά προκύπτουν η πρόοδος και τα προτεινόμενα βάρη.')}
+    </ul>
+    <h3 class="gh">Κάθε εβδομάδα (${wd})</h3><ul class="guide">
+      ${row('Μεζούρα', 'πρωί, πριν φας', '2′', 'Μέση κάθε φορά. Λαιμός και γλουτοί για το ποσοστό λίπους. Αν τους αφήσεις κενούς, κρατιέται η προηγούμενη τιμή. Η μέση δείχνει την απώλεια λίπους ακόμα κι όταν η ζυγαριά δεν κουνιέται.')}
+      ${row('Check-in', '5 ερωτήσεις', '1′', 'Ύπνος, πείνα, ενέργεια, στρες, απόδοση. Δείχνουν νωρίς αν το έλλειμμα είναι υπερβολικό.')}
+      ${row('Ρώτα το AI', 'προαιρετικό, μετά το check-in', '5′', 'Αντιγράφεις την αναφορά σε όποιο AI θέλεις.')}
+    </ul>
+    <h3 class="gh">Κάθε 2 εβδομάδες</h3><ul class="guide">
+      ${row('Αντίγραφο ασφαλείας', 'Προφίλ → Export', '30″', 'Τα δεδομένα ζουν μόνο στο κινητό. Κράτα το αρχείο στο Drive.')}
+      ${row('Εισαγωγή ζυγαριάς', 'προαιρετικό', '1′', 'Αν δεν γράφεις το βάρος χειροκίνητα, φέρε το CSV από την εφαρμογή της ζυγαριάς.')}
+    </ul>
+    <h3 class="gh">Κάθε μήνα (προαιρετικά)</h3><ul class="guide">
+      ${row('Φωτογραφίες', 'μπροστά, πλάι, πίσω', '2′', 'Ίδιο φως, ώρα και απόσταση. Στην αναδόμηση δείχνουν αλλαγές που η ζυγαριά δεν δείχνει.')}
+      ${row('Στήθος, μπράτσο, μηρός', 'μαζί με τη μεζούρα της εβδομάδας', '1′', 'Δείχνουν αν χτίζεις μυ ενώ χάνεις λίπος.')}
+    </ul>
+    <h3 class="gh">Δεν χρειάζεται</h3><ul class="guide">
+      <li class="small">Να ζυγίζεις το φαγητό. Να αγχώνεσαι για ένα «κακό» νούμερο στη ζυγαριά. Να κοιτάς το λίπος της ζυγαριάς κάθε μέρα. Να καταγράφεις τέλεια: μια μέρα με πρόχειρη καταγραφή είναι καλύτερη από μια μέρα χωρίς καταγραφή.</li>
+    </ul>
+    <p class="note">Την ημέρα των εβδομαδιαίων μετρήσεων την αλλάζεις στο Προφίλ → Ρουτίνα. Η κάρτα «Η ρουτίνα σου σήμερα» σου δείχνει κάθε μέρα μόνο ό,τι αφορά εκείνη τη μέρα.</p>`);
+}
+
+/* ----- Μαζική εισαγωγή ημερήσιων συνόλων ----- */
+let bulkDays = 14;
+function openBulkTotals() {
+  const rows = [];
+  for (let i = 1; i <= bulkDays; i++) { const dd = Dates.add(Dates.today(), -i), d = Store.get('day:' + dd); rows.push({ dd, has: !!(d && d.meals.length), kcal: d && d.meals.length ? dayTotals(d).kcal : null }); }
+  openDlg('Μέρες από άλλη εφαρμογή', `<p class="small">Γράψε για κάθε μέρα τα <b>σύνολα</b> της άλλης εφαρμογής: θερμίδες, πρωτεΐνη, υδατάνθρακες, λιπαρά. Άφησε κενές τις μέρες που δεν κατέγραψες <b>πλήρως</b>. Μια μέρα με ξεχασμένο γεύμα θα έκανε την εκτίμηση κατανάλωσης χαμηλότερη από την πραγματική.</p>
+    <div class="bulk"><div class="bh"><span>Ημέρα</span><span>kcal</span><span>Πρωτ.</span><span>Υδατ.</span><span>Λίπ.</span></div>
+    ${rows.map(r => `<div class="br ${r.has ? 'has' : ''}" data-d="${r.dd}"><span class="bd">${Dates.dow(r.dd)} ${Dates.short(r.dd)}</span>${r.has ? `<span class="small muted" style="grid-column:span 4">έχει ήδη ${fmt(r.kcal)} kcal</span>` : ['k', 'p', 'c', 'f'].map(f => `<input type="text" inputmode="decimal" data-bf="${f}" aria-label="${f}">`).join('')}</div>`).join('')}</div>
+    <button class="linkish small" id="bkMore" style="margin-top:8px">+ 7 παλαιότερες μέρες</button>
+    <div class="dlg-f"><button class="btn pri" id="bkSave">Αποθήκευση</button></div>
+    <p class="note">Κάθε μέρα αποθηκεύεται ως μία καταχώρηση «Σύνολο ημέρας», που μετρά κανονικά στα σύνολα, στην εβδομάδα και στο προσαρμοστικό TDEE. Για να λειτουργήσει το TDEE, χρειάζονται και ζυγίσεις για τις ίδιες μέρες.</p>`, body => {
+    $('#bkMore', body).addEventListener('click', () => { bulkDays += 7; openBulkTotals(); });
+    $('#bkSave', body).addEventListener('click', () => {
+      let n = 0, bad = 0;
+      $$('.br[data-d]', body).forEach(r => {
+        const v = k => { const i = $(`[data-bf="${k}"]`, r); return i ? numIn(i.value) : null; };
+        const k = v('k'); if (k === null) return;
+        if (k < 300 || k > 8000) { bad++; return; }
+        const d = getDay(r.dataset.d);
+        d.meals.push({ id: uid(), meal: 'd', name: 'Σύνολο ημέρας (από άλλη εφαρμογή)', foodId: null, g: null, per100: null, kcal: k, p: v('p') || 0, c: v('c') || 0, f: v('f') || 0, src: 'manual', est: false, total: true });
+        saveDay(d); n++;
+      });
+      if (bad) { toast(`${bad} μέρες έχουν μη ρεαλιστικές θερμίδες (κάτω από 300 ή πάνω από 8.000) και δεν αποθηκεύτηκαν.`, 4000); if (!n) return; }
+      bulkDays = 14; closeDlg(); render(); toast(n ? `Αποθηκεύτηκαν ${n} μέρες.` : 'Δεν συμπληρώθηκε καμία μέρα.');
+    });
+  });
+}
+
+/* ----- Μετρήσεις με οδηγίες ----- */
+const MEASURE_GUIDE = {
+  waist: ['Μέση', 'Στο ύψος του αφαλού. Όρθιος, κοιλιά χαλαρή (μην τη ρουφάς), μέτρα στο τέλος μιας κανονικής εκπνοής.', true],
+  neck: ['Λαιμός', 'Ακριβώς κάτω από το «μήλο του Αδάμ», με τη μεζούρα λίγο προς τα κάτω μπροστά. Κεφάλι ίσια, ώμοι χαλαροί. Αν το αφήσεις κενό, κρατιέται η προηγούμενη τιμή.'],
+  hip: ['Γλουτοί', 'Στο πιο φαρδύ σημείο των γλουτών, με τα πόδια ενωμένα. Αν το αφήσεις κενό, κρατιέται η προηγούμενη τιμή.'],
+  chest: ['Στήθος', 'Στο ύψος των θηλών, με τη μεζούρα να περνά κάτω από τις μασχάλες και πάνω από τις ωμοπλάτες στην πλάτη. Χέρια χαλαρά κάτω, μέτρα στο τέλος κανονικής εκπνοής. Είναι πιο εύκολο αν σε βοηθήσει κάποιος ή αν χρησιμοποιήσεις καθρέφτη.'],
+  arm: ['Μπράτσο', 'Στο πιο φαρδύ σημείο του δικεφάλου, με το χέρι τεντωμένο και χαλαρό δίπλα στο σώμα. Πάντα το ίδιο χέρι.'],
+  thigh: ['Μηρός', 'Στο μέσο της απόστασης από τη βουβωνική πτυχή μέχρι το πάνω μέρος του γονάτου. Όρθιος, βάρος και στα δύο πόδια. Πάντα το ίδιο πόδι.'],
+};
+function openMeasure(date) {
+  const m = measures().find(x => x.d === date) || {}, prev = measures().filter(x => x.d < (date || Dates.today())).pop() || {};
+  const fld = k => { const [l, how, req] = MEASURE_GUIDE[k]; return `<div class="mf"><label class="f" style="margin:0"><span>${l} (cm)${req ? ' *' : ''}</span><input type="text" inputmode="decimal" id="ms_${k}" value="${m[k] ?? ''}" placeholder="${prev[k] !== undefined ? 'προηγ. ' + fmt(prev[k], 1) : ''}"></label><p class="how">${how}</p></div>`; };
+  openDlg('Μέτρηση σώματος', `<label class="f"><span>Ημερομηνία</span><input type="date" id="ms_d" value="${date || Dates.today()}"></label>
+    <p class="note">Πρωί, πριν φας, με εσώρουχο. Η μεζούρα οριζόντια, να ακουμπά το δέρμα χωρίς να το πιέζει. Μέτρα 2 φορές και γράψε τον μέσο όρο.</p>
+    <h3 class="gh">Κάθε εβδομάδα</h3>${fld('waist')}${fld('neck')}${fld('hip')}
+    <details ${m.chest || m.arm || m.thigh ? 'open' : ''}><summary class="gh" style="cursor:pointer">Κάθε μήνα (προαιρετικά)</summary>${fld('chest')}${fld('arm')}${fld('thigh')}</details>
+    <label class="f" style="margin-top:10px"><span>Λίπος από ζυγαριά (%, προαιρετικά)</span><input type="text" inputmode="decimal" id="ms_scaleBf" value="${m.scaleBf ?? ''}"></label>
+    <div class="dlg-f">${m.d ? '<button class="btn danger" id="ms_del">Διαγραφή</button><span class="grow"></span>' : ''}<button class="btn pri" id="ms_save">Αποθήκευση</button></div>`, body => {
+    $('#ms_save', body).addEventListener('click', () => {
+      const d = $('#ms_d', body).value; if (!d) return;
+      const rec = { d }; ['waist', 'neck', 'hip', 'chest', 'arm', 'thigh', 'scaleBf'].forEach(k => { const v = numIn($('#ms_' + k, body).value); if (v !== null) rec[k] = v; });
+      if (rec.waist === undefined) { toast('Η μέση είναι απαραίτητη.'); return; }
+      if (rec.waist < 40 || rec.waist > 250) { toast('Μη έγκυρη τιμή μέσης.'); return; }
+      Store.set('measures', measures().filter(x => x.d !== d && x.d !== m.d).concat([rec])); refreshTodaySnap(); closeDlg(); render(); toast('Η μέτρηση αποθηκεύτηκε.');
+    });
+    const del = $('#ms_del', body); if (del) del.addEventListener('click', () => { if (confirm('Διαγραφή μέτρησης;')) { Store.set('measures', measures().filter(x => x.d !== m.d)); refreshTodaySnap(); closeDlg(); render(); } });
+  });
+}
+/* Για το ποσοστό λίπους: η τελευταία μέση, και λαιμός/γλουτοί από την πιο πρόσφατη μέτρηση που τους έχει (έως 120 ημέρες πίσω) */
+function measureForBf(date) {
+  const ms = measures().filter(x => x.d <= date); if (!ms.length) return null;
+  const last = Object.assign({}, ms[ms.length - 1]);
+  for (const k of ['neck', 'hip']) if (last[k] === undefined) { const src = ms.slice().reverse().find(x => x[k] !== undefined && Dates.idx(last.d) - Dates.idx(x.d) <= 120); if (src) last[k] = src[k]; }
+  return last;
+}
 
 </script>
 </body>
