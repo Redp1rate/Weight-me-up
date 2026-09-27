@@ -345,7 +345,7 @@ body{background:radial-gradient(120% 60% at 50% -10%,color-mix(in srgb,var(--acc
 .mring circle{fill:none;stroke-width:4.5;stroke-linecap:round}
 .mr-t{min-width:0}
 .mr-bg{stroke:rgba(255,255,255,.14)}
-.mring[data-m="p"] .mr-fg{stroke:#fff} .mring[data-m="c"] .mr-fg{stroke:#9DBBEA} .mring[data-m="f"] .mr-fg{stroke:#C9D3E3}
+.mring[data-m="p"] .mr-fg{stroke:var(--p)} .mring[data-m="c"] .mr-fg{stroke:var(--c)} .mring[data-m="f"] .mr-fg{stroke:var(--f)}
 .mr-fg.over{stroke:#FF8A80!important}
 .mring b{display:block;font-size:.92rem;font-weight:750;line-height:1.15;white-space:nowrap}
 .mring b span{font-size:.68rem;font-weight:500;opacity:.65}
@@ -473,6 +473,58 @@ details.parsed[open] > summary::after{content:"⌃"}
 .banner.install{background:var(--accent-soft)}
 #tai svg{width:16px;height:16px;vertical-align:-3px}
 .rt li button:not(.skip) .freq{margin-bottom:1px}
+
+/* ================= v10: χρώμα με φειδώ ================= */
+:root{
+  --p:#F07167; --c:#F4B942; --f:#2EC4B6;             /* πρωτεΐνη κοραλί, υδατάνθρακες κεχριμπαρί, λίπος τιρκουάζ */
+  --good:#1FA971; --over:#E5484D; --warn:#D98A04; --info:#7C6CF2;
+  --mb:#F59E0B; --ml:#14B8A6; --md:#6D5EF0; --ms:#EC4899; --silver:#A3AEC0;
+}
+:root[data-theme="dark"]{--p:#FF8A7A;--c:#FFC857;--f:#4FD8C9;--good:#34D399;--over:#FF6B6B;--warn:#F5B942;--info:#A89BFF;--mb:#FBBF24;--ml:#2DD4BF;--md:#9B8CFF;--ms:#F472B6;--silver:#6B7A93}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--p:#FF8A7A;--c:#FFC857;--f:#4FD8C9;--good:#34D399;--over:#FF6B6B;--warn:#F5B942;--info:#A89BFF;--mb:#FBBF24;--ml:#2DD4BF;--md:#9B8CFF;--ms:#F472B6;--silver:#6B7A93}}
+/* Κάρτα ημέρας: μπλε βάση, χρωματιστές λεπτομέρειες */
+.hero-kv .kv-food svg{color:var(--c);opacity:1} .hero-kv .kv-target svg{color:#C9D6EA;opacity:1} .hero-kv .kv-burn svg{color:var(--p);opacity:1}
+.hr-ov{stroke:var(--over)}
+.hero-num.over{color:#FFB4AB}
+.mring[data-m="p"]{--mc:var(--p)} .mring[data-m="c"]{--mc:var(--c)} .mring[data-m="f"]{--mc:var(--f)}
+.hero-link svg{color:var(--c);opacity:1}
+/* Γεύματα: κάθε γεύμα το χρώμα του */
+.mc-ic{background:color-mix(in srgb,var(--mt) 14%,transparent);color:var(--mt)}
+.ic-b{--mt:var(--mb)} .ic-l{--mt:var(--ml)} .ic-d{--mt:var(--md)} .ic-s{--mt:var(--ms)}
+.mealcard{border-left:0}
+.mealcard.open .mc-h{background:linear-gradient(90deg,color-mix(in srgb,var(--accent) 4%,transparent),transparent)}
+/* Γλυκό */
+.sw-ic{background:color-mix(in srgb,var(--ms) 14%,transparent);color:var(--ms)}
+.sweet-c.open{box-shadow:var(--shadow),inset 3px 0 0 var(--ms)}
+/* Ρουτίνα & «Ξεκίνα εδώ» */
+.rt li.done .ck{background:var(--good);border-color:var(--good);color:#fff}
+.rt .freq{color:var(--info)}
+.mr-fg2{stroke:var(--good)}
+.onb .bar > i, .rtcard .bar > i{background:var(--good)}
+/* Προτάσεις */
+.rec{border-left-width:4px}
+.rec.act{border-left-color:var(--accent)} .rec.watch{border-left-color:var(--warn)} .rec.good{border-left-color:var(--good)} .rec.info{border-left-color:var(--info)}
+.rec .small.muted:first-child{font-weight:600;letter-spacing:.02em}
+.rec.act .small.muted:first-child{color:var(--accent)} .rec.watch .small.muted:first-child{color:var(--warn)} .rec.good .small.muted:first-child{color:var(--good)} .rec.info .small.muted:first-child{color:var(--info)}
+/* Εβδομάδα */
+.weekbal .big.neg,.tbl .neg{color:var(--good)} .weekbal .big.pos,.tbl .pos{color:var(--over)}
+.stat{position:relative;overflow:hidden}
+.stat::before{content:"";position:absolute;left:0;top:10px;bottom:10px;width:3px;border-radius:2px;background:var(--sc,var(--silver))}
+.stats .stat:nth-child(1){--sc:var(--c)} .stats .stat:nth-child(2){--sc:var(--accent)} .stats .stat:nth-child(3){--sc:var(--mb)} .stats .stat:nth-child(4){--sc:var(--p)}
+.stats .stat:nth-child(5){--sc:var(--f)} .stats .stat:nth-child(6){--sc:var(--ml)} .stats .stat:nth-child(7){--sc:var(--md)} .stats .stat:nth-child(8){--sc:var(--silver)}
+/* Όγκος προπόνησης */
+.volrow.ok .fill{background:var(--good)} .volrow.low .fill{background:var(--warn)} .volrow.high .fill{background:var(--over)}
+.vb .band{background:color-mix(in srgb,var(--good) 16%,transparent)}
+/* Ανατροφοδότηση ασκήσεων */
+.fb.up{background:color-mix(in srgb,var(--good) 14%,transparent)} .fb.stall{background:color-mix(in srgb,var(--warn) 16%,transparent)} .fb.down{background:color-mix(in srgb,var(--over) 12%,transparent)}
+.plan{color:var(--info)}
+/* Κουμπιά/chips: μπλε κύρια, λεπτομέρειες χρώματος */
+.quick button svg{color:var(--accent)}
+.howto{border-left:3px solid var(--info)}
+.parsed.combo{background:color-mix(in srgb,var(--ml) 10%,var(--surface))}
+.banner.install{background:color-mix(in srgb,var(--info) 12%,var(--surface))}
+.tag{color:var(--mb)}
+.bottom button[aria-current="page"] svg{color:var(--accent-ink)}
 @media (prefers-reduced-motion:reduce){dialog[open]{animation:none}#toast{transition:none}.ring .fg{transition:none}}
 </style>
 </head>
@@ -1496,9 +1548,9 @@ function ledgerHTML(d, snap, tot) {
         <text x="50" y="54" text-anchor="middle" class="hr-pct">${pct}%</text></svg>
     </div>
     <div class="hero-kv">
-      <div>${IC.bowl}<span>Φαγητό</span><b>${tot.est ? '≈' : ''}${fmt(tot.kcal)}</b></div>
-      <div>${IC.target}<span>Στόχος</span><b>≈${fmt(snap.kcal)}${t.kcalManual && isToday ? '✎' : ''}</b></div>
-      ${exp ? `<div>${IC.flame}<span>Καύση</span><b>≈${fmt(exp.v)}</b></div>` : ''}
+      <div class="kv-food">${IC.bowl}<span>Φαγητό</span><b>${tot.est ? '≈' : ''}${fmt(tot.kcal)}</b></div>
+      <div class="kv-target">${IC.target}<span>Στόχος</span><b>≈${fmt(snap.kcal)}${t.kcalManual && isToday ? '✎' : ''}</b></div>
+      ${exp ? `<div class="kv-burn">${IC.flame}<span>Καύση</span><b>≈${fmt(exp.v)}</b></div>` : ''}
     </div>
     ${kindTxt}
     <div class="mrings">${miniRing(tot.p, snap.p, 'p', 'Πρωτεΐνη')}${miniRing(tot.c, snap.c, 'c', 'Υδατάνθ.')}${miniRing(tot.f, snap.f, 'f', 'Λίπος')}</div>
@@ -1752,7 +1804,7 @@ function lineChart(c, series, opts = {}) {
   if (hi - lo < minR) { const m = (hi + lo) / 2; lo = m - minR / 2; hi = m + minR / 2; } const padV = (hi - lo) * 0.08; lo -= padV; hi += padV;
   const X = d => pad.l + (Dates.idx(d) - t0) / (t1 - t0) * (w - pad.l - pad.r), Y = v => pad.t + (hi - v) / (hi - lo) * (h - pad.t - pad.b);
   gridLines(x, pad, w, [hi - padV, (hi + lo) / 2, lo + padV], Y, v => fmt(v, 1));
-  if (opts.ref !== undefined && opts.ref >= lo && opts.ref <= hi) { const yy = Math.round(Y(opts.ref)) + .5; x.save(); x.strokeStyle = cssVar('--c'); x.setLineDash([6, 4]); x.lineWidth = 1.5; x.beginPath(); x.moveTo(pad.l, yy); x.lineTo(w - pad.r, yy); x.stroke(); x.fillStyle = cssVar('--c'); x.textAlign = 'left'; x.textBaseline = 'bottom'; x.fillText(opts.refLabel || '', pad.l + 4, yy - 3); x.restore(); }
+  if (opts.ref !== undefined && opts.ref >= lo && opts.ref <= hi) { const yy = Math.round(Y(opts.ref)) + .5; x.save(); x.strokeStyle = cssVar('--good'); x.setLineDash([6, 4]); x.lineWidth = 1.5; x.beginPath(); x.moveTo(pad.l, yy); x.lineTo(w - pad.r, yy); x.stroke(); x.fillStyle = cssVar('--good'); x.textAlign = 'left'; x.textBaseline = 'bottom'; x.fillText(opts.refLabel || '', pad.l + 4, yy - 3); x.restore(); }
   x.fillStyle = cssVar('--muted'); x.textBaseline = 'top'; [[start, 'left'], [end, 'right']].forEach(([d, al]) => { x.textAlign = al; x.fillText(Dates.short(d), X(d), h - pad.b + 7); });
   for (const s of series) {
     const P = s.pts.map(p => [X(p.d), Y(p.v)]);
@@ -1798,7 +1850,7 @@ function barChart(c, bars, opts = {}) {
 }
 function drawCharts() {
   const cb = $('#chBal'); if (cb) {
-    const bars = []; for (let i = 7; i >= 0; i--) { const ws = Dates.add(UI.week, -7 * i), st = weekStats(ws); bars.push({ label: Dates.short(ws), v: st.balDays ? st.bal : null, hl: ws === UI.week, color: st.bal < 0 ? cssVar('--accent') : cssVar('--over') }); }
+    const bars = []; for (let i = 7; i >= 0; i--) { const ws = Dates.add(UI.week, -7 * i), st = weekStats(ws); bars.push({ label: Dates.short(ws), v: st.balDays ? st.bal : null, hl: ws === UI.week, color: st.bal < 0 ? cssVar('--good') : cssVar('--over') }); }
     barChart(cb, bars, { signed: true, min: 500 });
   }
   const cdd = $('#chDays'); if (cdd) {
@@ -1807,24 +1859,24 @@ function drawCharts() {
   }
   const cw = $('#chW'); if (cw) {
     const end = Dates.add(UI.week, 6), start = Dates.add(end, -83), pts = weights().filter(p => p.d >= start && p.d <= end);
-    lineChart(cw, [{ pts: pts.map(p => ({ d: p.d, v: p.kg })), color: cssVar('--f'), dots: true },
+    lineChart(cw, [{ pts: pts.map(p => ({ d: p.d, v: p.kg })), color: cssVar('--silver'), dots: true },
                    { pts: pts.map(p => ({ d: p.d, v: weightTrendOn(p.d) })), color: cssVar('--accent'), line: true, area: true, label: v => fmt(v, 1) + ' kg' }], { start, end, empty: 'Καμία ζύγιση στις τελευταίες 12 εβδομάδες' });
   }
   const cm = $('#chWaist'); if (cm) {
     const ms = measures().filter(m => numIn(m.waist) !== null);
-    lineChart(cm, [{ pts: ms.map(m => ({ d: m.d, v: +m.waist })), color: cssVar('--accent'), dots: true, line: true, area: true, r: 3, label: v => fmt(v, 1) + ' cm' }], { minRange: 4, empty: 'Καμία μέτρηση μέσης ακόμα' });
+    lineChart(cm, [{ pts: ms.map(m => ({ d: m.d, v: +m.waist })), color: cssVar('--ml'), dots: true, line: true, area: true, r: 3, label: v => fmt(v, 1) + ' cm' }], { minRange: 4, empty: 'Καμία μέτρηση μέσης ακόμα' });
   }
   const cl = $('#chWLong'); if (cl) {
     const end = Dates.today(), all = weights(), start = UI.wRange ? Dates.add(end, -UI.wRange) : (all[0] || { d: end }).d, pts = all.filter(p => p.d >= start);
     const weekly = arr => { const m = new Map(); arr.forEach(p => { const k = Dates.weekStart(p.d); if (!m.has(k)) m.set(k, []); m.get(k).push(p.v); }); return [...m.entries()].map(([d, v]) => ({ d, v: v.reduce((a, b) => a + b, 0) / v.length })); };
     if (pts.length > 150) lineChart(cl, [{ pts: weekly(pts.map(p => ({ d: p.d, v: p.kg }))), color: cssVar('--accent'), line: true, area: true, label: v => fmt(v, 1) + ' kg' }], { start, end, empty: 'Καμία ζύγιση' });
-    else lineChart(cl, [{ pts: pts.map(p => ({ d: p.d, v: p.kg })), color: cssVar('--f'), dots: true }, { pts: pts.map(p => ({ d: p.d, v: weightTrendOn(p.d) })), color: cssVar('--accent'), line: true, area: true, label: v => fmt(v, 1) + ' kg' }], { start, end, empty: 'Καμία ζύγιση σε αυτό το διάστημα' });
+    else lineChart(cl, [{ pts: pts.map(p => ({ d: p.d, v: p.kg })), color: cssVar('--silver'), dots: true }, { pts: pts.map(p => ({ d: p.d, v: weightTrendOn(p.d) })), color: cssVar('--accent'), line: true, area: true, label: v => fmt(v, 1) + ' kg' }], { start, end, empty: 'Καμία ζύγιση σε αυτό το διάστημα' });
     const cs = $('#chSBf'); if (cs) { const sp = scaleBf().filter(p => p.d >= start).map(p => ({ d: p.d, v: p.bf })); lineChart(cs, [{ pts: sp.length > 60 ? weekly(sp) : sp, color: cssVar('--c'), line: true, area: true, label: v => fmt(v, 1) + '%' }], { start, end, minRange: 3, empty: 'Καμία μέτρηση λίπους από ζυγαριά' }); }
   }
   const csl = $('#chSleep'); if (csl) {
     const end = Dates.today(), start = Dates.add(end, -27), pts = [];
     for (let i = 27; i >= 0; i--) { const dd = Dates.add(end, -i), d = Store.get('day:' + dd), s = d && numIn((d.watch || {}).sleep); if (s) pts.push({ d: dd, v: s }); }
-    lineChart(csl, [{ pts, color: cssVar('--accent'), line: true, dots: true, area: true, r: 2.5, label: v => fmtSleep(v) }], { start, end, minRange: 3, ref: 7, refLabel: '7 ώρες', empty: 'Δεν έχεις καταγράψει ύπνο' });
+    lineChart(csl, [{ pts, color: cssVar('--md'), line: true, dots: true, area: true, r: 2.5, label: v => fmtSleep(v) }], { start, end, minRange: 3, ref: 7, refLabel: '7 ώρες', empty: 'Δεν έχεις καταγράψει ύπνο' });
   }
   const ch = $('#chEx'); if (ch && ch._data) lineChart(ch, [{ pts: ch._data, color: cssVar('--accent'), dots: true, line: true, area: true, r: 3, label: v => fmt(v, 1) }], { minRange: 1 });
 }
@@ -1937,7 +1989,7 @@ function viewProfile() {
   </section>
   <section class="sec"><h2>Κατάσταση</h2>
     <p class="small">Αποθήκευση: <b>${info.mode === 'idb' ? 'IndexedDB' : 'localStorage (εφεδρεία)'}</b>. Μόνιμη αποθήκευση: <b>${info.persisted ? 'ναι' : 'όχι'}</b>. Offline: <b>${navigator.serviceWorker && navigator.serviceWorker.controller ? 'ενεργό' : location.protocol.startsWith('http') ? 'ενεργοποιείται μετά την επόμενη φόρτωση' : 'μη διαθέσιμο (άνοιξε την εφαρμογή από http/https)'}</b>.</p>
-    <p class="small">Λειτουργία: <b>${isStandalone() ? 'εγκατεστημένη εφαρμογή' : 'μέσα στον browser'}</b>${isStandalone() ? '' : ' <button class="linkish small" data-act="installHelp">Πώς την εγκαθιστώ σωστά;</button>'}</p>
+    <p class="small">Λειτουργία: <b>${otherBrowser() ? 'συντόμευση του ' + otherBrowser() : isStandalone() ? 'εγκατεστημένη εφαρμογή' : 'μέσα στον browser'}</b>${isStandalone() && !otherBrowser() ? '' : ' <button class="linkish small" data-act="installHelp">Πώς την εγκαθιστώ σωστά;</button>'}</p>
     <p class="small">Σήμανση τιμών: <span class="est">1.234</span> εκτιμώμενη, ${M('1.234', true)} χειροκίνητη, και 1.234 χωρίς σήμανση για μέτρηση ή τιμή από τη βάση.</p>
     <p class="note">Το Weight me up δίνει γενικές πληροφορίες και εκτιμήσεις για ενημέρωση. Δεν αποτελεί ιατρική ή διατροφική συμβουλή και δεν αντικαθιστά γιατρό ή διαιτολόγο. Αν έχεις θέμα υγείας (π.χ. διαβήτη, πάθηση καρδιάς ή νεφρών), είσαι έγκυος ή έχεις σχέση με διατροφικές διαταραχές, συμβουλέψου επαγγελματία υγείας πριν αλλάξεις διατροφή ή προπόνηση.</p>
     <div class="radios" style="margin-top:8px">${[['', 'Θέμα συστήματος'], ['light', 'Ανοιχτό'], ['dark', 'Σκούρο']].map(([k, l]) => `<label><input type="radio" name="th" data-set="theme" value="${k}" ${(s.theme || '') === k ? 'checked' : ''}>${l}</label>`).join('')}</div>
@@ -2559,6 +2611,7 @@ document.addEventListener('click', e => {
     case 'sweetToggle': UI.sweetOpen = !UI.sweetOpen; render(); break;
     case 'installApp': doInstall(); break;
     case 'installHelp': openInstallHelp(); break;
+    case 'copyUrl': { const u = location.href.split('#')[0].split('?')[0]; (navigator.clipboard ? navigator.clipboard.writeText(u) : Promise.reject()).then(() => toast('Η διεύθυνση αντιγράφηκε.'), () => toast(u, 5000)); break; }
     case 'installDismiss': UI.installDismissed = true; render(); break;
     case 'myFoodPick': { const f = foods().byId.get(a.dataset.id), det = $('#myDet'); if (f && det) { foodDetail(det, f, null, null); det.scrollIntoView({ behavior: 'smooth' }); } break; }
     case 'goProfile': UI.view = 'profile'; render(); window.scrollTo(0, 0); break;
@@ -3525,25 +3578,29 @@ function measureForBf(date) {
 let installPrompt = null;
 window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); installPrompt = e; if (UI.view === 'day' || UI.view === 'profile') render(); });
 window.addEventListener('appinstalled', () => { installPrompt = null; toast('Η εφαρμογή εγκαταστάθηκε. Άνοιξέ τη από το εικονίδιό της.', 4000); render(); });
+const otherBrowser = () => (navigator.brave && 'Brave') || (/Firefox\//.test(navigator.userAgent) && 'Firefox') || (/SamsungBrowser/.test(navigator.userAgent) && 'Samsung Internet') || (/OPR\/|Opera/.test(navigator.userAgent) && 'Opera') || (/EdgA\//.test(navigator.userAgent) && 'Edge') || (/MiuiBrowser|XiaoMi/.test(navigator.userAgent) && 'Mi Browser') || null;
 const isStandalone = () => (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
 function installBannerHTML() {
-  if (isStandalone() || !location.protocol.startsWith('http') || UI.installDismissed) return '';
+  if (!location.protocol.startsWith('http') || UI.installDismissed) return '';
+  const ob = otherBrowser();
+  if (isStandalone() && !ob) return '';
+  if (ob) return `<div class="banner install"><span><b>Άνοιξέ τη στον Chrome</b><br><span class="small muted">Στον ${ob} μπαίνει μόνο ως συντόμευση. Πραγματική εφαρμογή φτιάχνει μόνο ο Google Chrome.</span></span><button class="btn sm" data-act="installHelp">Πώς;</button><button class="x" data-act="installDismiss" aria-label="Κλείσιμο">✕</button></div>`;
   return `<div class="banner install"><span><b>Άνοιξέ τη σαν εφαρμογή</b><br><span class="small muted">Τώρα τρέχει μέσα στον browser.</span></span>
     ${installPrompt ? '<button class="btn sm pri" data-act="installApp">Εγκατάσταση</button>' : '<button class="btn sm" data-act="installHelp">Πώς;</button>'}<button class="x" data-act="installDismiss" aria-label="Κλείσιμο">✕</button></div>`;
 }
-async function doInstall() {
-  if (!installPrompt) { openInstallHelp(); return; }
-  installPrompt.prompt(); const r = await installPrompt.userChoice.catch(() => null); installPrompt = null;
-  if (r && r.outcome === 'accepted') toast('Εγκαθίσταται…'); render();
-}
+
 function openInstallHelp() {
-  openDlg('Εγκατάσταση ως εφαρμογή', `<p class="small">Αν βλέπεις το σήμα του Chrome στο εικονίδιο ή τη γραμμή διευθύνσεων μέσα στην εφαρμογή, μπήκε ως <b>συντόμευση</b> και όχι ως <b>εφαρμογή</b>. Τα δεδομένα σου δεν χάνονται στα παρακάτω βήματα. Για σιγουριά, κάνε πρώτα Export.</p>
-    <ol class="steps"><li>Κράτα πατημένο το εικονίδιο στην αρχική οθόνη και πάτα <b>Αφαίρεση</b>. Αν ρωτήσει για διαγραφή δεδομένων, πάτα <b>όχι</b>.</li>
-      <li>Άνοιξε τη διεύθυνση της εφαρμογής στο <b>Chrome</b>.</li>
-      <li>Πάτα <b>⋮ → «Εγκατάσταση και δημιουργία συντόμευσης»</b> (ή «Εγκατάσταση εφαρμογής»).</li>
-      <li>Στο παράθυρο που ανοίγει, διάλεξε <b>«Εγκατάσταση»</b> και <b>όχι</b> «Δημιουργία συντόμευσης».</li>
-      <li>Σε κινητά Xiaomi, Redmi ή POCO: Ρυθμίσεις → Εφαρμογές → Chrome → Άδειες → ενεργοποίησε το <b>«Συντομεύσεις αρχικής οθόνης»</b> και ξανακάνε το βήμα 3.</li></ol>
-    <p class="note">Έλεγχος: η σωστά εγκατεστημένη εφαρμογή εμφανίζεται στις Ρυθμίσεις → Εφαρμογές ως «Weight me up», ανοίγει σε πλήρη οθόνη και δεν έχει σήμα Chrome.</p>`);
+  const ob = otherBrowser();
+  openDlg('Εγκατάσταση ως εφαρμογή', `${ob ? `<p class="note" style="border-color:var(--warn)">Τώρα είσαι στον <b>${ob}</b>. Πραγματική εφαρμογή στο Android φτιάχνει <b>μόνο ο Google Chrome</b>. Οι άλλοι browsers βάζουν συντόμευση, ακόμα κι αν γράφουν «Εγκατάσταση». Τα δεδομένα είναι ξεχωριστά σε κάθε browser, γι' αυτό μεταφέρονται με Export και Import.</p>` : ''}
+    <ol class="steps">
+      <li>Εδώ, στην τωρινή εφαρμογή: <b>Προφίλ → Export</b>. Αποθήκευσε το αρχείο, π.χ. στις Λήψεις ή στο Drive.</li>
+      <li>Άνοιξε τον <b>Google Chrome</b>. Αν δεν τον έχεις, κατέβασέ τον από το Play Store. Δεν χρειάζεται να γίνει ο βασικός σου browser.</li>
+      <li>Στον Chrome, άνοιξε τη διεύθυνση: <b>${esc(location.href.split('#')[0].split('?')[0])}</b></li>
+      <li>Πάτα <b>⋮ → «Εγκατάσταση εφαρμογής»</b> (ή «Εγκατάσταση και δημιουργία συντόμευσης»). Στο παράθυρο διάλεξε <b>«Εγκατάσταση»</b>, όχι «Δημιουργία συντόμευσης».</li>
+      <li>Άνοιξε τη νέα εφαρμογή από το εικονίδιό της → <b>Προφίλ → Import</b> → διάλεξε το αρχείο του βήματος 1.</li>
+      <li>Αφαίρεσε την παλιά συντόμευση από την αρχική οθόνη.</li></ol>
+    <button class="btn sm" data-act="copyUrl" style="margin:6px 0">Αντιγραφή διεύθυνσης</button>
+    <p class="note">Έλεγχος: στις Ρυθμίσεις → Εφαρμογές πρέπει να υπάρχει εφαρμογή με όνομα <b>«Weight me up»</b>. Αν πατώντας τις πληροφορίες της εφαρμογής σε πηγαίνει σε browser, είναι ακόμα συντόμευση. Σε Xiaomi, Redmi ή POCO, αν δεν εμφανιστεί το εικονίδιο: Ρυθμίσεις → Εφαρμογές → Chrome → Άδειες → «Συντομεύσεις αρχικής οθόνης».</p>`);
 }
 
 /* ----- Σύνθετο πιάτο: μία καταχώρηση με υλικά ----- */
