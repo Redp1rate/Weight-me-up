@@ -1,7 +1,7 @@
 /* Service worker: offline λειτουργία μετά την πρώτη φόρτωση.
    Αύξησε το VERSION όταν ανεβάζεις νέα έκδοση του index.html. */
-const VERSION = 'isozygio-v7';
-const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon.svg', './icon-192.png', './icon-512.png', './zxing.min.js'];
+const VERSION = 'isozygio-v8-1';
+const ASSETS = ['./', './index.html', './manifest.webmanifest', './logo-mask.png', './icon-192.png', './icon-512.png', './zxing.min.js'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(VERSION).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
 });

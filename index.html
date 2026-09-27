@@ -9,7 +9,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Weight me up">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="icon" href="icon-192.png" type="image/png">
 <link rel="apple-touch-icon" href="icon-192.png">
 <title>Weight me up</title>
 <style>
@@ -313,7 +313,7 @@ body{background:radial-gradient(120% 60% at 50% -10%,color-mix(in srgb,var(--acc
 .top{border-bottom:0;background:color-mix(in srgb,var(--bg) 80%,transparent)}
 .top .wrap{min-height:58px}
 .brand{font-size:1.12rem;font-weight:800;letter-spacing:-.03em;color:var(--ink);display:flex;align-items:center;gap:8px;white-space:nowrap}
-.logo{width:22px;height:22px;border-radius:50%;background:conic-gradient(var(--accent) 0 72%,color-mix(in srgb,var(--accent) 20%,transparent) 72% 100%);-webkit-mask:radial-gradient(circle,transparent 6.5px,#000 7px);mask:radial-gradient(circle,transparent 6.5px,#000 7px)}
+.logo{width:28px;height:28px;flex:none;background:var(--accent);-webkit-mask:url(logo-mask.png) center/contain no-repeat;mask:url(logo-mask.png) center/contain no-repeat}
 .datenav{background:var(--surface);border-radius:999px;box-shadow:var(--shadow);padding:2px}
 .datenav button{border-radius:999px;padding:7px 10px}
 .datenav .lbl{font-size:.88rem;min-width:5.6em;white-space:nowrap}
@@ -411,7 +411,10 @@ dialog{border-radius:26px 26px 0 0}
 
 /* v7 */
 .rt{list-style:none;margin:0;padding:0;display:grid;gap:6px}
-.rt li button{width:100%;display:flex;align-items:center;gap:12px;text-align:left;border:0;background:var(--sunk);border-radius:14px;padding:10px 12px;color:var(--ink)}
+.rtrow{display:flex;gap:6px;align-items:stretch}
+.rtrow > button:first-child{flex:1}
+.rt .skip{border:0;background:none;color:var(--muted);font-size:.74rem;padding:0 6px;border-radius:10px;white-space:nowrap}
+.rt li button:not(.skip){width:100%;display:flex;align-items:center;gap:12px;text-align:left;border:0;background:var(--sunk);border-radius:14px;padding:10px 12px;color:var(--ink)}
 .rt li.done button{background:transparent;opacity:.62}
 .rt li.done b{text-decoration:line-through;text-decoration-color:var(--muted)}
 .rt .ck{width:24px;height:24px;border-radius:50%;border:2px solid color-mix(in srgb,var(--accent) 45%,var(--line));flex:none;display:grid;place-items:center;color:var(--accent-ink)}
@@ -643,7 +646,7 @@ const BUILTIN_EXERCISES = [
       ['cable_crunch','Κοιλιακοί στην τροχαλία'],['ab_wheel','Ab wheel','bw'],['russian_twist','Russian twists','bw'],['side_plank','Πλάγια σανίδα (δευτ.)','bw'],['pallof','Pallof press']]
     .map(([id,n,t])=>({id,name:n,group:'Κορμός',type:t||'w'})),
   ...[['run','Τρέξιμο'],['walk','Περπάτημα'],['treadmill','Διάδρομος'],['bike','Ποδήλατο'],['stationary_bike','Στατικό ποδήλατο'],
-      ['elliptical','Ελλειπτικό'],['rowing','Κωπηλατικό μηχάνημα'],['stairs','Stair climber'],['swim','Κολύμβηση'],['hiit','HIIT / κυκλική']]
+      ['elliptical','Ελλειπτικό'],['dance','Χορός'],['rowing','Κωπηλατικό μηχάνημα'],['stairs','Stair climber'],['swim','Κολύμβηση'],['hiit','HIIT / κυκλική']]
     .map(([id,n])=>({id,name:n,group:'Καρδιο',type:'c'})),
 ];
 
@@ -1605,15 +1608,16 @@ function exHTML(d) {
 function stepsHTML(d, snap) {
   const s = settings(), w = d.watch || {}, adj = Calc.watchAdjusted(numIn(w.kcal), s.watchCorrection);
   const wt = weights().find(x => x.d === d.date), exp = Calc.dayExpenditure(snap, w, s);
-  return `<section class="sec"><h2>Δεδομένα ρολογιού</h2>
+  const useWatch = s.energyMode === 'watch';
+  return `<section class="sec"><h2>Ύπνος και βήματα</h2>
     <div class="grid2">
-      <label class="f"><span>Βήματα</span><input type="text" inputmode="numeric" data-watch="steps" value="${w.steps ?? ''}" placeholder="π.χ. 9500"></label>
-      <label class="f"><span>Θερμίδες δραστηριότητας (kcal)</span><input type="text" inputmode="numeric" data-watch="kcal" value="${w.kcal ?? ''}" placeholder="από την εφαρμογή του ρολογιού"></label>
+      <label class="f"><span>Ύπνος (ώρες, π.χ. 7,5 ή 7:30)</span><input type="text" inputmode="decimal" data-watch="sleep" value="${w.sleep ? fmt(w.sleep, 2) : ''}" placeholder="το πρωί"></label>
+      <label class="f"><span>Βήματα</span><input type="text" inputmode="numeric" data-watch="steps" value="${w.steps ?? ''}" placeholder="το βράδυ"></label>
     </div>
-    <label class="f"><span>Ύπνος (ώρες, π.χ. 7,5 ή 7:30)</span><input type="text" inputmode="decimal" data-watch="sleep" value="${w.sleep ? fmt(w.sleep, 2) : ''}" placeholder="από την εφαρμογή του ρολογιού"></label>
-    <div id="watchAdj">${watchAdjHTML(w, adj, s)}</div>
-    <label class="f"><span>Χειροκίνητη διορθωμένη τιμή (προαιρετικά)</span><input type="text" inputmode="numeric" data-watch="kcalOverride" value="${w.kcalOverride ?? ''}" placeholder="${adj !== null ? Math.round(adj) : 'αυτόματα'}"></label>
-    <p class="note">Χρησιμοποίησε τις ενεργές θερμίδες (δακτύλιος δραστηριότητας) και όχι το σύνολο με τον βασικό μεταβολισμό, αν η εφαρμογή του ρολογιού δείχνει και τα δύο. Τα βήματα είναι μέτρηση του ρολογιού. Οι θερμίδες είναι εκτίμηση του ρολογιού, γι' αυτό μειώνονται κατά ${fmt(s.watchCorrection, 1)}%.</p>
+    ${useWatch ? `<label class="f"><span>Θερμίδες δραστηριότητας (kcal)</span><input type="text" inputmode="numeric" data-watch="kcal" value="${w.kcal ?? ''}" placeholder="από την εφαρμογή του ρολογιού"></label>` : ''}
+    ${useWatch ? `<div id="watchAdj">${watchAdjHTML(w, adj, s)}</div>
+    <label class="f"><span>Χειροκίνητη διορθωμένη τιμή (προαιρετικά)</span><input type="text" inputmode="numeric" data-watch="kcalOverride" value="${w.kcalOverride ?? ''}" placeholder="${adj !== null ? Math.round(adj) : 'αυτόματα'}"></label>` : '<div id="watchAdj" hidden></div>'}
+    <p class="note">${useWatch ? 'Χρησιμοποίησε τις ενεργές θερμίδες (δακτύλιος δραστηριότητας) και όχι το σύνολο με τον βασικό μεταβολισμό, αν η εφαρμογή του ρολογιού δείχνει και τα δύο. Τα βήματα είναι μέτρηση του ρολογιού. Οι θερμίδες είναι εκτίμηση του ρολογιού, γι\' αυτό μειώνονται κατά ${fmt(s.watchCorrection, 1)}%.' : 'Οι θερμίδες του ρολογιού δεν χρειάζονται. Η εφαρμογή υπολογίζει πόσο καις από το φαγητό και την τάση του βάρους σου, που είναι ακριβέστερο και περιλαμβάνει γυμναστήριο, χορό και κάθε άλλη κίνηση. Βήματα και ύπνος χρησιμοποιούνται για τις προτάσεις.'}</p>
   </section>
   <section class="sec"><h2>Ζύγιση</h2>
     <label class="f"><span>Βάρος ${d.date === Dates.today() ? 'σήμερα' : 'στις ' + Dates.short(d.date)} (kg)</span><input type="text" inputmode="decimal" data-act-input="weighDay" value="${wt ? wt.kg : ''}" placeholder="${(weightOn(d.date) || {}).kg ?? 'π.χ. 82,4'}"></label>
@@ -1813,7 +1817,7 @@ function viewProfile() {
   <section class="sec"><h2>Υπολογισμοί</h2><div id="profResults">${profResultsHTML()}</div></section>
   <section class="sec"><h2>Ρουτίνα</h2>
     <label class="f"><span>Ημέρα εβδομαδιαίων μετρήσεων (μεζούρα, check-in)</span><select data-set="weeklyDay">${DOW_FULL.map((n, i) => `<option value="${i}" ${+(s.weeklyDay ?? 0) === i ? 'selected' : ''}>${n}</option>`).join('')}</select></label>
-    <div class="row" style="flex-wrap:wrap"><button class="btn sm" data-act="guide">Τι μετράω, πότε και γιατί</button><button class="btn sm" data-act="bulkTotals">Μέρες από άλλη εφαρμογή</button>${s.onbHidden ? '<button class="btn sm" data-act="onbShow">Εμφάνιση «Ξεκίνα εδώ»</button>' : ''}</div>
+    <div class="row" style="flex-wrap:wrap"><button class="btn sm" data-act="guide">Τι μετράω, πότε και γιατί</button><button class="btn sm" data-act="bulkTotals">Μέρες από άλλη εφαρμογή</button><button class="btn sm" data-act="onbShow">Εμφάνιση «Ξεκίνα εδώ»</button></div>
   </section>
   <section class="sec"><h2>Κατανομή εβδομάδας</h2>
     <div class="radios" style="flex-direction:column;align-items:stretch">
@@ -2497,7 +2501,8 @@ document.addEventListener('click', e => {
     case 'guide': openGuide(); break;
     case 'bulkTotals': openBulkTotals(); break;
     case 'onbHide': { const s = settings(); s.onbHidden = true; Store.set('settings', s); render(); break; }
-    case 'onbShow': { const s = settings(); s.onbHidden = false; Store.set('settings', s); UI.view = 'day'; render(); break; }
+    case 'onbShow': { const s = settings(); s.onbHidden = false; s.onbSkip = {}; Store.set('settings', s); UI.view = 'day'; render(); window.scrollTo(0, 0); break; }
+    case 'onbSkip': { const s = settings(); s.onbSkip = Object.assign({}, s.onbSkip, { [a.dataset.k]: true }); Store.set('settings', s); render(); break; }
     case 'fab': case 'qText': openAddFood(autoMeal(), act === 'qText' ? 'text' : undefined); break;
     case 'qFav': openAddFood(autoMeal(), 'fav'); break;
     case 'qScan': openAddFood(autoMeal(), 'prod'); setTimeout(() => { const b = $('#pdScan'); if (b) b.click(); }, 60); break;
@@ -3301,14 +3306,14 @@ function onboardingSteps() {
   ];
 }
 function onboardingHTML() {
-  if (settings().onbHidden) return '';
-  const st = onboardingSteps(), req = st.filter(x => !x.opt), doneReq = req.every(x => x.done);
-  if (doneReq && st.every(x => x.done)) return '';
-  const n = st.filter(x => x.done).length;
-  return `<section class="sec onb"><div class="row between"><h2>Ξεκίνα εδώ</h2><span class="small muted">${n}/${st.length}</span></div>
-    <div class="bar thin" style="margin:4px 0 10px"><i style="width:${n / st.length * 100}%"></i></div>
-    <ul class="rt">${st.map(x => `<li class="${x.done ? 'done' : ''}"><button data-act="${x.act}" ${x.done ? 'disabled' : ''}><span class="ck">${x.done ? checkSvg : ''}</span><span class="grow"><b>${x.t}</b>${x.opt ? ' <span class="opt">προαιρετικό</span>' : ''}<br><span class="small muted">${x.d}</span></span>${x.done ? '' : '<span class="go">›</span>'}</button></li>`).join('')}</ul>
-    ${doneReq ? '<button class="linkish small" data-act="onbHide" style="margin-top:8px">Απόκρυψη</button>' : ''}</section>`;
+  const s = settings(); if (s.onbHidden) return '';
+  const skip = s.onbSkip || {}, st = onboardingSteps(), isDone = x => x.done || skip[x.k];
+  const left = st.filter(x => !isDone(x)); if (!left.length) return '';
+  const n = st.length - left.length;
+  return `<section class="sec onb"><div class="row between"><h2>Ξεκίνα εδώ <span class="small muted">${n}/${st.length}</span></h2><button class="x" data-act="onbHide" aria-label="Κλείσιμο" title="Κλείσιμο">✕</button></div>
+    <div class="bar thin" style="margin:2px 0 10px"><i style="width:${n / st.length * 100}%"></i></div>
+    <ul class="rt">${left.map(x => `<li><div class="rtrow"><button data-act="${x.act}"><span class="ck"></span><span class="grow"><b>${x.t}</b><br><span class="small muted">${x.d}</span></span><span class="go">›</span></button>${x.opt ? `<button class="skip" data-act="onbSkip" data-k="${x.k}">Παράλειψη</button>` : ''}</div></li>`).join('')}</ul>
+    <p class="small muted" style="margin:8px 0 0">Αν το κλείσεις, το ξαναβρίσκεις στο Προφίλ → Ρουτίνα.</p></section>`;
 }
 
 /* ----- Ρουτίνα ημέρας ----- */
