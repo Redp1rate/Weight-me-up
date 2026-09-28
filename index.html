@@ -2,6 +2,8 @@
 <html lang="el">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-k8Dnbj/KSuZpqBKlcLhRoHeZKMPXubbwY6NFSvDwMg8='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://images.openfoodfacts.org https://static.openfoodfacts.org https://world.openfoodfacts.org; connect-src 'self' https://world.openfoodfacts.org; worker-src 'self'; manifest-src 'self'; media-src 'self' blob: mediastream:; object-src 'none'; base-uri 'self'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#F3F5F8" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0A1220" media="(prefers-color-scheme: dark)">
@@ -525,6 +527,52 @@ details.parsed[open] > summary::after{content:"⌃"}
 .banner.install{background:color-mix(in srgb,var(--info) 12%,var(--surface))}
 .tag{color:var(--mb)}
 .bottom button[aria-current="page"] svg{color:var(--accent-ink)}
+
+/* v11 */
+#undo{position:fixed;left:12px;right:12px;bottom:calc(96px + env(safe-area-inset-bottom,0px));z-index:21;display:flex;align-items:center;gap:10px;background:var(--ink);color:var(--bg);padding:10px 12px 10px 16px;border-radius:14px;font-size:.9rem;transform:translateY(20px);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s}
+#undo.show{opacity:1;transform:none;pointer-events:auto}
+#undo span{flex:1}
+#undo button{border:0;background:none;color:var(--c);font-weight:700;padding:6px 8px}
+.note.safety{border-left-color:var(--warn);background:color-mix(in srgb,var(--warn) 9%,transparent);border-radius:0 10px 10px 0;padding:8px 10px;color:var(--ink)}
+.banner.backup{background:color-mix(in srgb,var(--warn) 11%,var(--surface))}
+@media (prefers-reduced-motion:reduce){#undo{transition:none}}
+
+/* v12 */
+.daydone{display:flex;align-items:center;gap:12px;width:100%;margin:14px 0 4px;border:1.5px dashed color-mix(in srgb,var(--good) 50%,var(--line));background:var(--surface);border-radius:18px;padding:12px 14px;text-align:left;color:var(--ink)}
+.daydone .ck{width:26px;height:26px;border-radius:50%;border:2px solid var(--good);display:grid;place-items:center;flex:none;color:#fff;font-weight:800}
+.daydone.on{border-style:solid;background:color-mix(in srgb,var(--good) 10%,var(--surface))}
+.daydone.on .ck{background:var(--good)}
+.setno{width:30px;height:30px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--muted);font-weight:700;font-size:.8rem}
+tr.wu .setno{background:color-mix(in srgb,var(--c) 22%,var(--surface));color:var(--ink);border-color:transparent}
+tr.wu input{opacity:.6}
+.pgi{border-top:1px solid var(--line);padding:10px 0}
+.pgg{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:6px}
+.pgg label{display:flex;flex-direction:column;gap:3px;font-size:.68rem;color:var(--muted)}
+.pgg input{min-height:36px;padding:4px;text-align:center;width:100%;background:var(--surface);border:1px solid var(--line)}
+.pgg label > span:first-child{white-space:nowrap}
+.pgg .rng{display:flex;align-items:center;gap:2px}
+.pgg .rng input{min-width:0}
+@media (max-width:380px){.pgg{grid-template-columns:repeat(3,1fr)}}
+.coach-status{font-size:.86rem;color:var(--muted);margin:0 0 10px}
+.cb{border-radius:16px;padding:10px 12px;margin:8px 0;background:var(--sunk)}
+.cb-h{font-size:.74rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
+.cb-keep{background:color-mix(in srgb,var(--good) 9%,var(--surface))} .cb-keep .cb-h{color:var(--good)}
+.cb-change{background:color-mix(in srgb,var(--accent) 8%,var(--surface))} .cb-change .cb-h{color:var(--accent)}
+.cb-watch{background:color-mix(in srgb,var(--warn) 10%,var(--surface))} .cb-watch .cb-h{color:var(--warn)}
+.cb ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.cb li{display:grid;gap:2px}
+.cb li .btn{justify-self:start;margin-top:4px}
+.allrecs{margin-top:10px}
+.allrecs > summary{cursor:pointer;color:var(--accent);font-weight:600;font-size:.9rem;padding:6px 0}
+.allrecs .recs{margin-top:8px}
+.rec.sup{opacity:.6}
+.rec .btn{margin-top:6px}
+.ev{font-size:.68rem;border-radius:999px;padding:1px 7px;font-weight:600;white-space:nowrap}
+.ev-high{background:color-mix(in srgb,var(--good) 16%,transparent);color:var(--good)}
+.ev-moderate{background:color-mix(in srgb,var(--info) 14%,transparent);color:var(--info)}
+.ev-heuristic{background:color-mix(in srgb,var(--silver) 25%,transparent);color:var(--muted)}
+.swapbtns{display:flex;flex-direction:column;gap:4px}
+.exc .hd .x{padding:6px 8px}
 @media (prefers-reduced-motion:reduce){dialog[open]{animation:none}#toast{transition:none}.ring .fg{transition:none}}
 </style>
 </head>
@@ -549,6 +597,7 @@ details.parsed[open] > summary::after{content:"⌃"}
 <button id="fab" data-act="fab" aria-label="Προσθήκη φαγητού" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
 <div id="timer" hidden><div class="wrap tm-in"><b id="tmTxt">0:00</b><div class="tm-bar"><i id="tmBar"></i></div><button class="btn sm" data-act="tmSub">−15″</button><button class="btn sm" data-act="tmAdd">+15″</button><button class="x" data-act="tmStop" aria-label="Διακοπή χρονομέτρου">✕</button></div></div>
 <div id="toast" role="status" aria-live="polite"></div>
+<div id="undo" role="status" aria-live="polite"><span id="undoMsg"></span><button data-act="undo">Αναίρεση</button></div>
 <script>
 /* ===== ΕΝΣΩΜΑΤΩΜΕΝΗ ΒΑΣΗ ΤΡΟΦΙΜΩΝ =====
    Τιμές ανά 100 g (ή 100 ml για υγρά). Πηγή: τυπικές τιμές USDA FoodData Central
@@ -889,8 +938,18 @@ const Calc = (() => {
     let tdee = formulaTdee, tdeeSrc = 'formula';
     if (num(o.tdee) !== null) { tdee = num(o.tdee); tdeeSrc = 'manual'; }
     else if (opts.useAdaptive && ad && ad.confidence > 0) { tdee = ad.confidence * ad.tdee + (1 - ad.confidence) * formulaTdee; tdeeSrc = ad.confidence >= 0.99 ? 'adaptive' : 'blend'; }
-    const pct = num(profile.goalPct) ?? g.pct;
-    const kcal = num(o.kcal) ?? tdee * (1 + pct / 100);
+    /* Προστασία: κανένα έλλειμμα για ανηλίκους ή BMI < 18,5· έως −10% για BMI 18,5–20·
+       απόλυτο κάτω όριο 1.500 kcal (άνδρες) / 1.200 kcal (γυναίκες), που δεν παρακάμπτεται. */
+    const age = num(profile.age), hM = num(profile.height) / 100, bmi = kg / (hM * hM);
+    const minor = age !== null && age < 18, lowBmi = bmi < 18.5, lean = !lowBmi && bmi < 20;
+    const safety = [];
+    let pct = num(profile.goalPct) ?? g.pct;
+    if ((minor || lowBmi) && pct < 0) { pct = 0; safety.push(minor ? 'minor' : 'lowBmi'); }
+    else if (lean && pct < -10) { pct = -10; safety.push('lean'); }
+    const floor = profile.sex === 'f' ? 1200 : 1500;
+    let kcal = num(o.kcal) ?? tdee * (1 + pct / 100);
+    if ((minor || lowBmi) && kcal < tdee) { kcal = tdee; if (!safety.length) safety.push(minor ? 'minor' : 'lowBmi'); }
+    if (kcal < floor) { kcal = floor; safety.push('floor'); }
     let p, pBasis;
     if (num(o.p) !== null) { p = num(o.p); pBasis = 'manual'; }
     else if (num(profile.proteinPerKg) !== null) { p = num(profile.proteinPerKg) * kg; pBasis = 'bw'; }
@@ -905,6 +964,7 @@ const Calc = (() => {
       actF, formulaTdee, tdee, tdeeSrc, tdeeManual: tdeeSrc === 'manual', pct, ppk: g.ppk, pffm: g.pffm, pBasis, fatPct,
       kcal, kcalManual: num(o.kcal) !== null, p, pManual: pBasis === 'manual', f, fManual: num(o.f) !== null, c, cManual: num(o.c) !== null,
       carbWarning: num(o.c) === null && cRaw < 0, macroKcal: p * 4 + c * 4 + f * 9, weight: kg, goal: profile.goal,
+      bmi, minor, lowBmi, lean, floor, safety,
     };
   }
 
@@ -985,24 +1045,31 @@ const Calc = (() => {
 
   /* ---- Προπόνηση ---- */
   function e1rm(w, r) { return w > 0 && r > 0 ? (r === 1 ? w : w * (1 + r / 30)) : 0; }
-  function sessionStats(ex) {
-    const sets = (ex.sets || []).filter(s => (+s.r > 0) || (+s.min > 0) || (+s.km > 0));
+  /* Στατιστικά συνεδρίας. Τα σετ ζεστάματος (wu) εξαιρούνται. bwKg: σωματικό βάρος για ασκήσεις
+     σωματικού βάρους με πρόσθετο φορτίο (φορτίο συστήματος = σώμα + πρόσθετο). */
+  function sessionStats(ex, bwKg) {
+    const sets = (ex.sets || []).filter(s => !s.wu && ((+s.r > 0) || (+s.min > 0) || (+s.km > 0)));
     if (!sets.length) return null;
     if (ex.type === 'c') {
       const min = sets.reduce((a, s) => a + (+s.min || 0), 0), km = sets.reduce((a, s) => a + (+s.km || 0), 0);
       return { min, km, pace: km > 0 && min > 0 ? min / km : null };
     }
-    let top = null, best = 0, vol = 0, maxReps = 0;
+    let top = null, vol = 0, maxReps = 0, bestK = { e: 0 }, bestU = { e: 0 }, sys = false;
     for (const s of sets) {
       const w = +s.w || 0, r = +s.r || 0;
-      // e1RM μόνο για σετ έως 12 επαναλήψεων με γνωστό RIR ή χωρίς: προσθέτουμε το RIR στις επαναλήψεις (Epley-RIR)
-      const rir = s.rir === '' || s.rir === undefined || s.rir === null ? 0 : +s.rir;
+      const rirKnown = s.rir !== '' && s.rir !== undefined && s.rir !== null;
       vol += w * r; maxReps = Math.max(maxReps, r);
-      const e = r + rir <= 15 ? e1rm(w, r + rir) : 0;
-      if (e > best) best = e;
+      const load = ex.type === 'bw' && bwKg && w > 0 ? bwKg + w : w;
+      if (ex.type === 'bw' && bwKg && w > 0) sys = true;
+      const eff = rirKnown ? r + +s.rir : r;
+      const e = eff <= 15 ? e1rm(load, eff) : 0;
+      if (rirKnown && e > bestK.e) bestK = { e, conf: eff <= 10 ? 'high' : 'medium' };
+      if (!rirKnown && e > bestU.e) bestU = { e, conf: r <= 5 ? 'medium' : 'low' };
       if (!top || w > top.w || (w === top.w && r > top.r)) top = { w, r };
     }
-    return { top, e1rm: best, vol, maxReps, sets: sets.length };
+    // Προτιμώνται σετ με γνωστό RIR· αλλιώς απλό Epley με χαμηλότερη αξιοπιστία
+    const best = bestK.e > 0 ? bestK : bestU;
+    return { top, e1rm: best.e, e1rmConf: best.conf || 'low', vol, maxReps, sets: sets.length, sys };
   }
   /* Τάση e1RM (%/εβδομάδα) από παλινδρόμηση στις συνεδρίες των τελευταίων εβδομάδων */
   function trend(history, type) {
@@ -1012,7 +1079,8 @@ const Calc = (() => {
     const xs = h.map(x => x.dayIdx), ys = h.map(x => val(x.stats));
     const r = linreg(xs, ys); if (!r) return null;
     const mean = ys.reduce((a, b) => a + b, 0) / ys.length;
-    return { pctWk: r.b * 7 / mean * 100, n: h.length, spanDays: xs[xs.length - 1] - xs[0], last: ys[ys.length - 1] };
+    const confs = h.map(x => x.stats.e1rmConf || 'low'), good = confs.filter(c => c !== 'low').length / confs.length;
+    return { pctWk: r.b * 7 / mean * 100, n: h.length, spanDays: xs[xs.length - 1] - xs[0], last: ys[ys.length - 1], conf: type === 'c' || (type === 'bw' && !h[h.length - 1].stats.top.w) ? 'high' : good >= 0.7 ? (confs.filter(c => c === 'high').length / confs.length >= 0.5 ? 'high' : 'medium') : 'low' };
   }
   function progression(history, type, stallN, goal) {
     const h = history.filter(x => x.stats);
@@ -1046,47 +1114,58 @@ const Calc = (() => {
   /* Εβδομαδιαίος όγκος ανά μυ (κλασματική μέτρηση, Pelland κ.ά. 2024).
      sessions: [{date, ex:{sets, type}, def:{prim, sec}}]. Σκληρό σετ: RIR ≤ 4 ή άγνωστο. */
   function muscleVolume(sessions, weeks) {
+    /* Διαβαθμισμένη μέτρηση (Robinson 2024): RIR 0–3 ή άγνωστο = 1, RIR 4–5 = 0,5, RIR ≥6 = 0.
+       Κύριος μυς ×1, δευτερεύων ×0,5 (Pelland 2026). Ζεστάματα εξαιρούνται. */
     const out = {};
-    const add = (m, k, v, date) => { const o = out[m] || (out[m] = { sets: 0, soft: 0, days: new Set() }); o[k] += v; if (k === 'sets') o.days.add(date); };
-    let hard = 0, soft = 0, unknown = 0, rirSum = 0, rirN = 0;
+    const add = (m, v, date, soft) => { const o = out[m] || (out[m] = { sets: 0, soft: 0, days: new Set() }); if (soft) o.soft += v; else { o.sets += v; o.days.add(date); } };
+    let hard = 0, moderate = 0, soft = 0, unknown = 0, rirSum = 0, rirN = 0, warm = 0;
     for (const s of sessions) {
       if (!s.def || s.ex.type === 'c') continue;
       for (const st of s.ex.sets || []) {
         if (!(+st.r > 0)) continue;
-        const rirKnown = st.rir !== '' && st.rir !== undefined && st.rir !== null;
-        const isHard = !rirKnown || +st.rir <= 4;
-        if (!rirKnown) unknown++; else { rirSum += +st.rir; rirN++; }
-        if (isHard) hard++; else soft++;
-        for (const m of s.def.prim || []) add(m, isHard ? 'sets' : 'soft', 1, s.date);
-        for (const m of s.def.sec || []) add(m, isHard ? 'sets' : 'soft', 0.5, s.date);
+        if (st.wu) { warm++; continue; }
+        const rirKnown = st.rir !== '' && st.rir !== undefined && st.rir !== null, rir = +st.rir;
+        if (!rirKnown) unknown++; else { rirSum += rir; rirN++; }
+        const wgt = !rirKnown || rir <= 3 ? 1 : rir <= 5 ? 0.5 : 0;
+        if (wgt === 1) hard++; else if (wgt === 0.5) moderate++; else soft++;
+        for (const m of s.def.prim || []) add(m, wgt ? wgt : 1, s.date, !wgt);
+        for (const m of s.def.sec || []) add(m, (wgt ? wgt : 1) * 0.5, s.date, !wgt);
       }
     }
     for (const m in out) { out[m].perWeek = out[m].sets / weeks; out[m].freq = out[m].days.size / weeks; }
-    return { muscles: out, hard, soft, unknown, avgRir: rirN ? rirSum / rirN : null, rirN };
+    return { muscles: out, hard, moderate, soft, unknown, warm, avgRir: rirN ? rirSum / rirN : null, rirN };
   }
 
   /* Διπλή προοδευτικότητα (double progression): όταν όλα τα σετ φτάσουν το πάνω όριο επαναλήψεων,
      αυξάνεται το βάρος. history: προηγούμενες συνεδρίες της άσκησης (παλαιότερη πρώτη). */
   function nextWeight(history, plan, def) {
     if (!plan || !history.length || (def && def.type === 'c')) return null;
-    const work = ex => (ex.sets || []).filter(s => +s.r > 0);
+    const work = ex => (ex.sets || []).filter(s => !s.wu && +s.r > 0);
     const last = work(history[history.length - 1].ex); if (!last.length) return null;
     const maxW = Math.max(...last.map(s => +s.w || 0));
     const ws = last.filter(s => (+s.w || 0) === maxW), minR = Math.min(...ws.map(s => +s.r));
     const name = (def && def.name || '').toLowerCase();
-    const inc = /αλτήρ|αλτηρ/.test(name) ? 2 : /πρέσα|leg press|hack|deadlift|θανάτου/.test(name) ? 5 : 2.5;
-    const r25 = x => Math.round(x / 2.5) * 2.5;
+    const inc = num(plan.inc) || num(def && def.inc) || (/αλτήρ|αλτηρ/.test(name) ? 2 : /πρέσα|leg press|hack|deadlift|θανάτου/.test(name) ? 5 : 2.5);
+    const rs = x => Math.round(x / inc) * inc;
+    const rirs = ws.map(s => s.rir === '' || s.rir === undefined || s.rir === null ? null : +s.rir).filter(x => x !== null);
+    const avgRir = rirs.length === ws.length && rirs.length ? rirs.reduce((a, b) => a + b, 0) / rirs.length : null;
+    const hasT = num(plan.rirLo) !== null && num(plan.rirHi) !== null, tLo = num(plan.rirLo), tHi = num(plan.rirHi);
+    const tTxt = hasT ? ` (στόχος RIR ${tLo}–${tHi})` : '';
+    const topAll = ws.length >= plan.sets && minR >= plan.hi;
     if (maxW === 0) {
-      return ws.length >= plan.sets && minR >= plan.hi
-        ? { w: 0, text: `Έπιασες ${plan.hi} σε όλα τα σετ. Πρόσθεσε βάρος (γιλέκο/ζώνη) ή δύσκολη παραλλαγή.` }
-        : { w: 0, text: `Στόχος: +1 επανάληψη από την προηγούμενη φορά.` };
+      return topAll ? { w: 0, text: `Έπιασες ${plan.hi} σε όλα τα σετ. Πρόσθεσε βάρος (γιλέκο ή ζώνη) ή δύσκολη παραλλαγή.` } : { w: 0, text: 'Στόχος: +1 επανάληψη από την προηγούμενη φορά.' };
     }
-    const rirOk = ws.every(s => s.rir === '' || s.rir === undefined || s.rir === null || +s.rir <= 3);
-    if (ws.length >= plan.sets && minR >= plan.hi && rirOk) return { w: maxW + inc, up: true, text: `Έπιασες ${plan.hi} επαναλήψεις σε όλα τα σετ με ${fmtNum(maxW)} kg, οπότε ανέβα +${fmtNum(inc)} kg.` };
+    if (topAll) {
+      if (hasT && avgRir !== null && avgRir < tLo) return { w: maxW, text: `Έπιασες ${plan.hi} επαναλήψεις, αλλά πιο κοντά στην αποτυχία από τον στόχο (RIR ${fmtNum(avgRir)}, στόχος ${tLo}–${tHi}). Κράτα ${fmtNum(maxW)} kg μέχρι να βγαίνουν πιο άνετα.` };
+      if (hasT && avgRir !== null && avgRir >= tHi + 3) return { w: maxW + 2 * inc, up: true, text: `Έπιασες ${plan.hi} επαναλήψεις και ήταν αρκετά πιο εύκολο από τον στόχο (RIR ${fmtNum(avgRir)}, στόχος ${tLo}–${tHi}). Ανέβα +${fmtNum(2 * inc)} kg.` };
+      if (!hasT && avgRir !== null && avgRir > 3) return { w: maxW + inc, up: true, text: `Έπιασες ${plan.hi} επαναλήψεις με άνεση. Ανέβα +${fmtNum(inc)} kg.` };
+      return { w: maxW + inc, up: true, text: `Έπιασες ${plan.hi} επαναλήψεις σε όλα τα σετ με ${fmtNum(maxW)} kg${avgRir !== null ? ` και RIR ${fmtNum(avgRir)}` : ''}. Ανέβα +${fmtNum(inc)} kg.` };
+    }
     const prev = history.length >= 2 ? work(history[history.length - 2].ex) : null;
     const prevBelow = prev && prev.length && Math.max(...prev.map(s => +s.w || 0)) === maxW && Math.min(...prev.filter(s => (+s.w || 0) === maxW).map(s => +s.r)) < plan.lo;
-    if (minR < plan.lo && prevBelow) { const w = Math.max(0, r25(maxW * 0.9)); return { w, down: true, text: `Κάτω από ${plan.lo} επαναλήψεις δύο φορές με ${fmtNum(maxW)} kg. Κατέβα στα ${fmtNum(w)} kg και χτίσε ξανά.` }; }
-    return { w: maxW, text: `Ίδιο βάρος (${fmtNum(maxW)} kg). Στόχος +1 επανάληψη, μέχρι ${plan.sets}×${plan.hi}.` };
+    if (minR < plan.lo && prevBelow) { const w = Math.max(0, rs(maxW * 0.9)); return { w, down: true, text: `Κάτω από ${plan.lo} επαναλήψεις δύο φορές με ${fmtNum(maxW)} kg. Κατέβα στα ${fmtNum(w)} kg και χτίσε ξανά.` }; }
+    if (hasT && avgRir !== null && avgRir > tHi + 1) return { w: maxW, text: `Ίδιο βάρος (${fmtNum(maxW)} kg). Ήταν πιο εύκολο από τον στόχο${tTxt}: κάνε περισσότερες επαναλήψεις, πιο κοντά στην αποτυχία.` };
+    return { w: maxW, text: `Ίδιο βάρος (${fmtNum(maxW)} kg). Στόχος +1 επανάληψη, μέχρι ${plan.sets}×${plan.hi}${tTxt}.` };
   }
   function fmtSet(t, bw) { return bw || t.w === 0 ? `${t.r} επαν.` : `${fmtNum(t.w)} kg × ${t.r}`; }
   function fmtPace(p) { const m = Math.floor(p), s = Math.round((p - m) * 60); return `${m}:${String(s).padStart(2, '0')}`; }
@@ -1387,7 +1466,7 @@ const MEALS = [{ id: 'b', label: 'Πρωινό', end: 11, share: .25 }, { id: 'l
 const DEF_PROFILE = { sex: 'm', age: '', height: '', activity: 'moderate', goal: 'maintain', goalPct: '', proteinPerKg: '', fatPct: '', bfManual: '', overrides: { tdee: '', kcal: '', p: '', c: '', f: '' } };
 const DEF_SETTINGS = { watchCorrection: 12, energyMode: 'static', baseFactor: 1.15, stallN: 3, lastBackup: null, highMode: 'none', highBoost: '', minKcal: 1800, useAdaptive: true, noSupplements: true, autoTimer: true, defaultRest: 120, weeklyDay: 0, onbHidden: false };
 const profile = () => { const p = Store.get('profile', {}) || {}; return Object.assign({}, DEF_PROFILE, p, { overrides: Object.assign({}, DEF_PROFILE.overrides, p.overrides) }); };
-const settings = () => Object.assign({}, DEF_SETTINGS, Store.get('settings', {}));
+const settings = () => Object.assign({}, DEF_SETTINGS, Store.get('settings', {}), { energyMode: 'static' });
 const saveProfile = p => { Store.set('profile', p); refreshTodaySnap(); };
 const saveSettings = s => { Store.set('settings', s); refreshTodaySnap(); };
 const weights = () => (Store.get('weights', []) || []).slice().sort((a, b) => a.d < b.d ? -1 : 1);
@@ -1415,18 +1494,20 @@ function bfOn(date) { return cached('bf' + date, () => { const kg = weightTrendO
 function adaptiveOn(date) {
   return cached('ad' + date, () => {
     const start = Dates.add(date, -ADAPT_WINDOW), end = Dates.add(date, -1), s0 = Dates.idx(start);
-    const intake = [], excluded = [];
+    const intake = [], excluded = [], complete = [];
     for (const k of Store.keys('day:')) {
       const d = Store.get(k); if (d.date < start || d.date > end || !d.meals.length) continue;
       const kcal = dayTotals(d).kcal;
       // Ημέρες με πρόσληψη < 50% του στόχου θεωρούνται πιθανώς ελλιπώς καταγεγραμμένες
       if (d.snap && kcal < 0.5 * d.snap.kcal) { excluded.push(d.date); continue; }
-      intake.push({ d: Dates.idx(d.date) - s0, kcal });
+      const row = { d: Dates.idx(d.date) - s0, kcal }; intake.push(row); if (d.complete) complete.push(row);
     }
     const ws = weights().filter(w => w.d >= start && w.d <= date).map(w => ({ d: Dates.idx(w.d) - s0, kg: w.kg }));
     const kg = weightTrendOn(date), bf = bfOn(date);
-    const r = Calc.adaptiveTdee(intake, ws, ADAPT_WINDOW, bf && kg ? kg * bf.bf / 100 : null);
-    r.excluded = excluded; return r;
+    // Αν υπάρχουν ≥7 μέρες σημειωμένες ως «ολοκληρωμένες», χρησιμοποιούνται μόνο αυτές
+    const useComplete = complete.length >= 7;
+    const r = Calc.adaptiveTdee(useComplete ? complete : intake, ws, ADAPT_WINDOW, bf && kg ? kg * bf.bf / 100 : null);
+    r.excluded = excluded; r.completeN = complete.length; r.loggedN = intake.length; r.usedComplete = useComplete; return r;
   });
 }
 function baseTargets(date) {
@@ -1436,7 +1517,7 @@ function baseTargets(date) {
     return Calc.targets(profile(), kg, { bf: bf ? bf.bf : null, bfSrc: bf ? bf.src : null, adaptive: ad.ready ? ad : null, useAdaptive: s.useAdaptive });
   });
 }
-function splitFor(t) { const s = settings(); return Calc.split(t.kcal, s.highMode, numIn(s.highBoost), numIn(s.minKcal) || 0); }
+function splitFor(t) { const s = settings(); return Calc.split(t.kcal, s.highMode, numIn(s.highBoost), Math.max(numIn(s.minKcal) || 0, t.floor || 0)); }
 function dayTargets(date) { const t = baseTargets(date); return t ? Calc.dayTarget(t, Dates.dowNum(date), splitFor(t)) : null; }
 const snapOf = dt => dt ? { kcal: dt.kcal, p: dt.p, c: dt.c, f: dt.f, tdee: dt.tdee, bmr: dt.bmr, kind: dt.kind, delta: dt.delta } : null;
 
@@ -1513,14 +1594,15 @@ function render() {
 /* ===== ΠΡΟΒΟΛΗ ΗΜΕΡΑΣ ===== */
 function backupBanner() {
   const s = settings(), n = Store.keys('day:').length;
-  if (n < 5) return '';
+  if (n < 5 || UI.backupDismissed) return '';
   const days = s.lastBackup ? Math.floor((Date.now() - s.lastBackup) / 864e5) : null;
   if (days !== null && days < 14) return '';
-  return `<div class="banner"><span>${days === null ? 'Δεν έχεις κρατήσει ακόμα αντίγραφο ασφαλείας.' : `Τελευταίο αντίγραφο ασφαλείας πριν ${days} ημέρες.`} Τα δεδομένα ζουν μόνο σε αυτή τη συσκευή.</span><button class="btn sm" data-act="export">Export</button></div>`;
+  return `<div class="banner backup"><span><b>${days === null ? 'Δεν έχεις κρατήσει αντίγραφο ασφαλείας' : `Τελευταίο αντίγραφο πριν ${days} ημέρες`}</b><br><span class="small muted">${n} ημέρες καταγραφών ζουν μόνο σε αυτό το κινητό.</span></span><button class="btn sm pri" data-act="export">Export</button><button class="x" data-act="backupDismiss" aria-label="Αργότερα">✕</button></div>`;
 }
+
 function viewDay() {
   const d = getDay(UI.date), snap = daySnap(d), tot = dayTotals(d);
-  let h = installBannerHTML() + onboardingHTML();
+  let h = installBannerHTML() + backupBanner() + onboardingHTML();
   if (!snap) h += `<div class="banner"><span>Συμπλήρωσε φύλο, ηλικία, ύψος και βάρος για να υπολογιστούν οι στόχοι σου.</span><button class="btn sm pri" data-nav="profile">Προφίλ</button></div>`;
   h += ledgerHTML(d, snap, tot);
   h += routineHTML(d);
@@ -1640,7 +1722,7 @@ function mealsHTML(d) {
       ${open ? `<ul class="list inner">${es.map(entryHTML).join('')}</ul><div class="mc-f"><button class="linkish small" data-act="favSave" data-meal="${m.id}">${IC.star} Αποθήκευση ως αγαπημένο</button></div>` : ''}
       ${!es.length && from ? `<div class="mc-f"><button class="linkish small" data-act="copyMeal" data-meal="${m.id}" data-from="${from}">↺ Όπως ${fromLabel(d.date, from)}</button></div>` : ''}
     </section>`;
-  }).join('');
+  }).join('') + (d.meals.length ? `<button class="daydone ${d.complete ? 'on' : ''}" data-act="dayComplete"><span class="ck">${d.complete ? '✓' : ''}</span><span class="grow"><b>${d.complete ? 'Η καταγραφή της ημέρας ολοκληρώθηκε' : 'Ολοκλήρωσα την καταγραφή της ημέρας'}</b><br><span class="small muted">${d.complete ? 'Η μέρα μετράει με πλήρη βάρος στον υπολογισμό της κατανάλωσης. Πάτα για αναίρεση.' : 'Πάτα το όταν έχεις γράψει ό,τι έφαγες. Έτσι ο υπολογισμός της κατανάλωσης αγνοεί τις μισές μέρες.'}</span></span></button>` : '');
 }
 
 /* ----- Άσκηση ----- */
@@ -1652,15 +1734,15 @@ function allSessions() {
   });
 }
 function exHistory(exId, uptoDate) {
-  return allSessions().filter(s => s.ex.exId === exId && s.date <= uptoDate).map(s => ({ date: s.date, dayIdx: Dates.idx(s.date), stats: Calc.sessionStats(s.ex), ex: s.ex })).filter(x => x.stats);
+  return allSessions().filter(s => s.ex.exId === exId && s.date <= uptoDate).map(s => ({ date: s.date, dayIdx: Dates.idx(s.date), stats: Calc.sessionStats(s.ex, s.ex.type === 'bw' ? weightTrendOn(s.date) : null), ex: s.ex })).filter(x => x.stats);
 }
 function setsSummary(ex) {
   const s = (ex.sets || []).filter(x => +x.r > 0 || +x.min > 0);
   if (ex.type === 'c') return s.map(x => `${fmt(x.min)}′${+x.km ? ` / ${fmt(x.km, 2)} km` : ''}`).join(', ');
-  return s.map(x => (+x.w ? `${fmt(x.w, 2)}×${x.r}` : `${x.r} επαν.`) + (x.rir !== '' && x.rir !== undefined && x.rir !== null ? ` @${x.rir}` : '')).join(', ');
+  return s.filter(x => !x.wu).map(x => (+x.w ? `${fmt(x.w, 2)}×${x.r}` : `${x.r} επαν.`) + (x.rir !== '' && x.rir !== undefined && x.rir !== null ? ` @${x.rir}` : '')).join(', ');
 }
 function feedbackFor(ex, date) {
-  const h = exHistory(ex.exId, date).filter(x => x.date !== date), cur = Calc.sessionStats(ex);
+  const h = exHistory(ex.exId, date).filter(x => x.date !== date), cur = Calc.sessionStats(ex, ex.type === 'bw' ? weightTrendOn(date) : null);
   if (cur) h.push({ date, stats: cur });
   return Calc.progression(h, ex.type, settings().stallN, profile().goal);
 }
@@ -1671,11 +1753,11 @@ function exCardHTML(ex, date) {
   const fields = cardio ? ['min', 'km'] : ['w', 'r', 'rir'];
   const muscles = def && def.prim && def.prim.length ? def.prim.map(m => MUSCLES[m] ? MUSCLES[m].n : m).join(', ') : (def ? def.group : '');
   return `<div class="exc" data-ex="${ex.id}">
-    <div class="hd"><button class="linkish" data-act="exHistory" data-exid="${ex.exId}">${esc(ex.name)}</button><button class="x" data-act="exRemove" data-id="${ex.id}" aria-label="Αφαίρεση άσκησης">✕</button></div>
+    <div class="hd"><button class="linkish" data-act="exHistory" data-exid="${ex.exId}">${esc(ex.name)}</button><span class="row" style="gap:0">${cardio ? '' : `<button class="x" data-act="swapEx" data-exid="${ex.exId}" data-id="${ex.id}" aria-label="Εναλλακτική άσκηση" title="Εναλλακτική">⇄</button>`}<button class="x" data-act="exRemove" data-id="${ex.id}" aria-label="Αφαίρεση άσκησης">✕</button></span></div>
     <div class="small muted">${esc(muscles)}${prev ? `. Προηγούμενη (${Dates.short(prev.date)}): ${esc(setsSummary(prev.ex))}` : ''}</div>
-    ${ex.plan ? `<div class="small plan">Στόχος ${ex.plan.sets} × ${ex.plan.lo}–${ex.plan.hi}${ex.sug ? `. ${esc(ex.sug)}` : ''}</div>` : ''}
+    ${ex.plan ? `<div class="small plan">Στόχος ${ex.plan.sets} × ${ex.plan.lo}–${ex.plan.hi}${numIn(ex.plan.rirLo) !== null ? ` @ RIR ${ex.plan.rirLo}–${ex.plan.rirHi}` : ''}${ex.sug ? `. ${esc(ex.sug)}` : ''}</div>` : ''}
     <table class="sets"><thead><tr><th>#</th>${cols.map(c => `<th>${c}</th>`).join('')}<th></th></tr></thead><tbody>
-    ${(ex.sets || []).map((s, i) => `<tr><td>${i + 1}</td>${fields.map((f, j) => `<td class="${f === 'rir' ? 'rir' : ''}"><input type="text" inputmode="${f === 'r' || f === 'rir' ? 'numeric' : 'decimal'}" data-set="${i}" data-f="${f}" value="${s[f] ?? ''}" aria-label="${cols[j]} σετ ${i + 1}" ${f === 'rir' ? 'placeholder="0–5"' : f === 'r' && ex.plan ? `placeholder="${ex.plan.lo}–${ex.plan.hi}"` : ''}></td>`).join('')}
+    ${(ex.sets || []).map((s, i) => `<tr class="${s.wu ? 'wu' : ''}"><td>${cardio ? i + 1 : `<button class="setno" data-act="setWu" data-i="${i}" aria-label="Σετ ${i + 1}: ${s.wu ? 'ζέσταμα' : 'κανονικό'}. Πάτα για αλλαγή">${s.wu ? 'Ζ' : i + 1}</button>`}</td>${fields.map((f, j) => `<td class="${f === 'rir' ? 'rir' : ''}"><input type="text" inputmode="${f === 'r' || f === 'rir' ? 'numeric' : 'decimal'}" data-set="${i}" data-f="${f}" value="${s[f] ?? ''}" aria-label="${cols[j]} σετ ${i + 1}" ${f === 'rir' ? 'placeholder="0–5"' : f === 'r' && ex.plan ? `placeholder="${ex.plan.lo}–${ex.plan.hi}"` : ''}></td>`).join('')}
       <td><button class="x" data-act="setRemove" data-i="${i}" aria-label="Διαγραφή σετ">✕</button></td></tr>`).join('')}
     </tbody></table>
     <div class="row" style="margin-top:6px"><button class="btn sm" data-act="setAdd">+ Σετ</button>${cardio ? '' : `<button class="btn sm" data-act="timer" data-sec="${(ex.plan && ex.plan.rest) || settings().defaultRest}">⏱ ${Math.floor(((ex.plan && ex.plan.rest) || settings().defaultRest) / 60)}:${String(((ex.plan && ex.plan.rest) || settings().defaultRest) % 60).padStart(2, '0')}</button>`}</div>
@@ -1684,23 +1766,19 @@ function exCardHTML(ex, date) {
 function exHTML(d) {
   return `${programStarterHTML(d)}${d.ex.length ? d.ex.map(ex => exCardHTML(ex, d.date)).join('') : '<p class="empty">Καμία άσκηση για αυτή την ημέρα.</p>'}
     <button class="addbtn" data-act="exAdd">+ Προσθήκη άσκησης</button>
-    <p class="note">RIR: πόσες επαναλήψεις σου έμεναν ακόμα πριν την αποτυχία (0 = αποτυχία). Για υπερτροφία, τα περισσότερα σετ καλό είναι να είναι στο 0–3. Σετ με RIR 5 και πάνω δεν μετρούν στον όγκο. Το 1RM εκτιμάται με Epley, προσθέτοντας το RIR στις επαναλήψεις.</p>`;
+    <p class="note"><b>RIR</b>: πόσες επαναλήψεις σου έμεναν πριν την αποτυχία (0 = αποτυχία). Σετ με RIR 0–3 μετρούν πλήρως στον όγκο, 4–5 κατά το ήμισυ, 6+ καθόλου. Πάτα τον <b>αριθμό του σετ</b> για να το σημειώσεις ως <b>ζέσταμα (Ζ)</b>: τα ζεστάματα δεν μετρούν σε όγκο, πρόοδο και 1RM. Το <b>⇄</b> δείχνει εναλλακτικές ασκήσεις για τους ίδιους μύες.</p>`;
 }
 
 /* ----- Βήματα & βάρος ----- */
 function stepsHTML(d, snap) {
   const s = settings(), w = d.watch || {}, adj = Calc.watchAdjusted(numIn(w.kcal), s.watchCorrection);
   const wt = weights().find(x => x.d === d.date), exp = Calc.dayExpenditure(snap, w, s);
-  const useWatch = s.energyMode === 'watch';
   return `<section class="sec"><h2>Ύπνος και βήματα</h2>
     <div class="grid2">
       <label class="f"><span>Ύπνος (ώρες, π.χ. 7,5 ή 7:30)</span><input type="text" inputmode="decimal" data-watch="sleep" value="${w.sleep ? fmt(w.sleep, 2) : ''}" placeholder="το πρωί"></label>
       <label class="f"><span>Βήματα</span><input type="text" inputmode="numeric" data-watch="steps" value="${w.steps ?? ''}" placeholder="το βράδυ"></label>
     </div>
-    ${useWatch ? `<label class="f"><span>Θερμίδες δραστηριότητας (kcal)</span><input type="text" inputmode="numeric" data-watch="kcal" value="${w.kcal ?? ''}" placeholder="από την εφαρμογή του ρολογιού"></label>` : ''}
-    ${useWatch ? `<div id="watchAdj">${watchAdjHTML(w, adj, s)}</div>
-    <label class="f"><span>Χειροκίνητη διορθωμένη τιμή (προαιρετικά)</span><input type="text" inputmode="numeric" data-watch="kcalOverride" value="${w.kcalOverride ?? ''}" placeholder="${adj !== null ? Math.round(adj) : 'αυτόματα'}"></label>` : '<div id="watchAdj" hidden></div>'}
-    <p class="note">${useWatch ? 'Χρησιμοποίησε τις ενεργές θερμίδες (δακτύλιος δραστηριότητας) και όχι το σύνολο με τον βασικό μεταβολισμό, αν η εφαρμογή του ρολογιού δείχνει και τα δύο. Τα βήματα είναι μέτρηση του ρολογιού. Οι θερμίδες είναι εκτίμηση του ρολογιού, γι\' αυτό μειώνονται κατά ${fmt(s.watchCorrection, 1)}%.' : 'Οι θερμίδες του ρολογιού δεν χρειάζονται. Η εφαρμογή υπολογίζει πόσο καις από το φαγητό και την τάση του βάρους σου, που είναι ακριβέστερο και περιλαμβάνει γυμναστήριο, χορό και κάθε άλλη κίνηση. Βήματα και ύπνος χρησιμοποιούνται για τις προτάσεις.'}</p>
+    <p class="note">Ύπνος και βήματα χρησιμοποιούνται στις προτάσεις. Οι θερμίδες του ρολογιού δεν χρειάζονται: η εφαρμογή υπολογίζει πόσο καις από το φαγητό και την τάση του βάρους σου.</p>
   </section>
   <section class="sec"><h2>Ζύγιση</h2>
     <label class="f"><span>Βάρος ${d.date === Dates.today() ? 'σήμερα' : 'στις ' + Dates.short(d.date)} (kg)</span><input type="text" inputmode="decimal" data-act-input="weighDay" value="${wt ? wt.kg : ''}" placeholder="${(weightOn(d.date) || {}).kg ?? 'π.χ. 82,4'}"></label>
@@ -1940,16 +2018,6 @@ function viewProfile() {
     <button class="btn sm" data-act="weightAdd">Καταχώρηση βάρους</button>
     <div id="weightList" style="margin-top:10px">${weightListHTML()}</div>
   </section>
-  <section class="sec"><h2>Ρολόι & κατανάλωση</h2>
-    <label class="f"><span>Μείωση θερμίδων ρολογιού (%)</span><input type="text" inputmode="decimal" data-set="watchCorrection" value="${s.watchCorrection}"></label>
-    <p class="small muted" style="margin:0 0 6px">Ημερήσια κατανάλωση:</p>
-    <div class="radios" style="flex-direction:column;align-items:stretch">
-      <label><input type="radio" name="em" data-set="energyMode" value="static" ${s.energyMode === 'static' ? 'checked' : ''}>TDEE (προσαρμοστικό ή από τύπο) (προτείνεται)</label>
-      <label><input type="radio" name="em" data-set="energyMode" value="watch" ${s.energyMode === 'watch' ? 'checked' : ''}>BMR × βάση + θερμίδες ρολογιού</label>
-    </div>
-    <label class="f" style="margin-top:10px"><span>Συντελεστής βάσης για τη μέθοδο ρολογιού</span><input type="text" inputmode="decimal" data-set="baseFactor" value="${s.baseFactor}"></label>
-    <p class="note">Όταν υπάρχουν αρκετά δεδομένα, το προσαρμοστικό TDEE είναι ακριβέστερο από το ρολόι, γιατί υπολογίζεται από το πραγματικό σου βάρος.</p>
-  </section>
   <section class="sec"><h2>Πρόγραμμα προπόνησης</h2>
     ${programs().list.length ? `<label class="f"><span>Ενεργό πρόγραμμα</span><select id="progActive"><option value="">Κανένα</option>${programs().list.map(x => `<option value="${x.id}" ${x.id === programs().active ? 'selected' : ''}>${esc(x.name)} (${x.days.length} ημέρες)</option>`).join('')}</select></label>` : '<p class="small muted">Πέρασε εδώ το πρόγραμμα του γυμναστή σου.</p>'}
     <div class="row" style="flex-wrap:wrap">${activeProgram() ? `<button class="btn sm" data-act="progEdit" data-id="${activeProgram().id}">Επεξεργασία</button>` : ''}<button class="btn sm" data-act="progNew">+ Νέο πρόγραμμα</button><button class="btn sm" data-act="exManage">Οι δικές μου ασκήσεις</button></div>
@@ -1985,7 +2053,8 @@ function viewProfile() {
     <div class="row" style="flex-wrap:wrap"><button class="btn pri sm" data-act="export">Export σε JSON</button>
       <label class="btn sm" style="display:inline-block">Import από JSON<input type="file" accept="application/json,.json" id="importFile" hidden></label></div>
     ${photoKeys().length ? `<div class="radios" style="margin-top:8px"><label><input type="checkbox" id="exPhotos">Με τις φωτογραφίες προόδου (${photoKeys().length}, μεγαλύτερο αρχείο)</label></div>` : ''}
-    <p class="note">Το import αντικαθιστά όλα τα τρέχοντα δεδομένα. Κράτα το αρχείο export εκτός συσκευής, π.χ. στο cloud.</p>
+    ${Store.get('_preImport') && Date.now() - Store.get('_preImport').at < 30 * 864e5 ? `<button class="btn sm" data-act="undoImport" style="margin-top:8px">Αναίρεση import (${new Date(Store.get('_preImport').at).toLocaleDateString('el-GR')})</button>` : ''}
+    <p class="note">Το import αντικαθιστά όλα τα τρέχοντα δεδομένα, αφού πρώτα ελέγξει ότι το αρχείο είναι ακέραιο και κρατήσει αντίγραφο των τωρινών. Κράτα το αρχείο export εκτός συσκευής, π.χ. στο cloud.</p>
   </section>
   <section class="sec"><h2>Κατάσταση</h2>
     <p class="small">Αποθήκευση: <b>${info.mode === 'idb' ? 'IndexedDB' : 'localStorage (εφεδρεία)'}</b>. Μόνιμη αποθήκευση: <b>${info.persisted ? 'ναι' : 'όχι'}</b>. Offline: <b>${navigator.serviceWorker && navigator.serviceWorker.controller ? 'ενεργό' : location.protocol.startsWith('http') ? 'ενεργοποιείται μετά την επόμενη φόρτωση' : 'μη διαθέσιμο (άνοιξε την εφαρμογή από http/https)'}</b>.</p>
@@ -2013,9 +2082,10 @@ function profResultsHTML() {
   if (!t) return '<p class="muted">Συμπλήρωσε ηλικία, ύψος και βάρος.</p>';
   const pc = v => t.kcal ? Math.round(v / t.kcal * 100) : 0, ad = adaptiveOn(Dates.today());
   const tdeeLbl = { formula: `BMR × ${fmt(t.actF, 3)}`, manual: 'χειροκίνητο', adaptive: 'προσαρμοστικό', blend: `συνδυασμός τύπου και δεδομένων (${fmt(ad.confidence * 100)}% δεδομένα)` }[t.tdeeSrc];
-  const bfLbl = t.bf === null ? '' : t.bfSrc === 'bmi' ? `≈${fmt(t.bf, 1)}% (χονδρική εκτίμηση από BMI, δεν χρησιμοποιείται)` : `≈${fmt(t.bf, 1)}% (${{ manual: 'χειροκίνητο', tape: 'από μετρήσεις', scale: 'από ζυγαριά' }[t.bfSrc]})`;
+  const bfo = bfOn(Dates.today()), bfRange = bfo && bfo.parts && bfo.parts.length > 1 ? `≈${fmt(Math.min(...bfo.parts.map(x => x.v)), 0)}–${fmt(Math.max(...bfo.parts.map(x => x.v)), 0)}%` : `≈${fmt(t.bf, 1)}%`;
+  const bfLbl = t.bf === null || t.bfSrc === 'bmi' ? '' : `${bfRange} (${{ manual: 'χειροκίνητο', tape: 'από μετρήσεις', scale: 'από ζυγαριά' }[t.bfSrc]})`;
   return `<table class="tbl"><tbody>
-    ${t.bf !== null ? `<tr><td>Λίπος σώματος</td><td>${bfLbl}</td></tr>` : ''}
+    ${bfLbl ? `<tr><td>Λίπος σώματος</td><td>${bfLbl}</td></tr>` : ''}
     ${t.ffm ? `<tr><td>Άλιπη μάζα</td><td>${E(t.ffm, true, 1)} kg</td></tr>` : ''}
     <tr><td>BMR (${t.bmrMethod})</td><td>${E(t.bmr, true)} kcal</td></tr>
     <tr><td>TDEE (${tdeeLbl})</td><td>${M(E(t.tdee, !t.tdeeManual), t.tdeeManual)} kcal</td></tr>
@@ -2024,6 +2094,10 @@ function profResultsHTML() {
     <tr><td>Υδατάνθρακες</td><td>${M(E(t.c, !t.cManual), t.cManual)} g <span class="muted small">${pc(t.c * 4)}%</span></td></tr>
     <tr><td>Λίπος</td><td>${M(E(t.f, !t.fManual), t.fManual)} g <span class="muted small">${pc(t.f * 9)}%</span></td></tr>
   </tbody></table>
+  ${t.safety.includes('minor') ? '<p class="note safety">Είσαι κάτω από 18 ετών. Η εφαρμογή δεν προτείνει έλλειμμα θερμίδων σε ανηλίκους, γιατί ο οργανισμός αναπτύσσεται ακόμα. Για αλλαγές στο βάρος, μίλησε με γιατρό ή διαιτολόγο.</p>' : ''}
+  ${t.safety.includes('lowBmi') ? `<p class="note safety">Ο δείκτης μάζας σώματος (BMI ${fmt(t.bmi, 1)}) είναι κάτω από 18,5. Η εφαρμογή δεν προτείνει έλλειμμα θερμίδων. Αν θέλεις να χάσεις βάρος, συζήτησέ το πρώτα με γιατρό ή διαιτολόγο.</p>` : ''}
+  ${t.safety.includes('lean') ? `<p class="note safety">Με BMI ${fmt(t.bmi, 1)} το έλλειμμα περιορίζεται στο 10% και ο στόχος απώλειας στο 0,25–0,5% την εβδομάδα, για προστασία της μυϊκής μάζας.</p>` : ''}
+  ${t.safety.includes('floor') ? `<p class="note safety">Ο στόχος θερμίδων ανέβηκε στο κατώτατο ασφαλές όριο (${fmt(t.floor)} kcal). Κάτω από αυτό, η δίαιτα γίνεται μόνο με ιατρική παρακολούθηση.</p>` : ''}
   ${t.carbWarning ? '<p class="note" style="border-color:var(--over)">Πρωτεΐνη και λίπος ξεπερνούν τον στόχο θερμίδων, οπότε οι υδατάνθρακες μηδενίστηκαν.</p>' : ''}
   ${Math.abs(t.macroKcal - t.kcal) > 50 ? `<p class="note" style="border-color:var(--warn)">Τα μακροθρεπτικά αθροίζουν ${fmt(t.macroKcal)} kcal, όχι ${fmt(t.kcal)}. Έλεγξε τις χειροκίνητες τιμές.</p>` : ''}
   ${t.kcal < (numIn(settings().minKcal) || 0) ? `<p class="note" style="border-color:var(--warn)">Ο στόχος είναι κάτω από τις ${fmt(settings().minKcal)} kcal που όρισες ως ελάχιστο. Σκέψου μικρότερο έλλειμμα ή περισσότερα βήματα.</p>` : ''}
@@ -2184,7 +2258,7 @@ function openEditEntry(id) {
     const recalc = () => { const r = qtyRead(qw, fx), m = macrosFor(e.per100, r.g); $('#ek', body).value = Math.round(m.kcal); $('#ep', body).value = Math.round(m.p * 10) / 10; $('#ec', body).value = Math.round(m.c * 10) / 10; $('#ef', body).value = Math.round(m.f * 10) / 10; };
     if (qw) { qw.addEventListener('input', recalc); qw.addEventListener('change', recalc); }
     const sp = $('#esplit', body); if (sp) sp.addEventListener('click', () => { const i = d.meals.findIndex(x => x.id === id); d.meals.splice(i, 1, ...splitEntry(e)); saveDay(d); closeDlg(); render(); toast('Το πιάτο χωρίστηκε σε τρόφιμα.'); });
-    $('#edel', body).addEventListener('click', () => { d.meals = d.meals.filter(x => x.id !== id); saveDay(d); closeDlg(); render(); toast('Διαγράφηκε.'); });
+    $('#edel', body).addEventListener('click', () => { const i = d.meals.findIndex(x => x.id === id), gone = d.meals[i]; d.meals.splice(i, 1); saveDay(d); closeDlg(); render(); undoToast(`Διαγράφηκε: ${gone.name}`, () => { const dd = getDay(d.date); dd.meals.splice(Math.min(i, dd.meals.length), 0, gone); saveDay(dd); render(); }); });
     $('#esave', body).addEventListener('click', () => {
       const vals = { kcal: numIn($('#ek', body).value), p: numIn($('#ep', body).value), c: numIn($('#ec', body).value), f: numIn($('#ef', body).value) };
       if (vals.kcal === null) { toast('Οι θερμίδες χρειάζονται τιμή.'); return; }
@@ -2315,29 +2389,108 @@ function openFoodEdit(id) {
 
 /* ----- Μετρήσεις σώματος ----- */
 /* ----- Backup ----- */
-async function doExport() {
+/* ----- Κρυπτογράφηση αντιγράφου (AES-GCM 256, κλειδί από κωδικό με PBKDF2-SHA256) ----- */
+const b64e = u8 => { let s = ''; for (let i = 0; i < u8.length; i += 0x8000) s += String.fromCharCode.apply(null, u8.subarray(i, i + 0x8000)); return btoa(s); };
+const b64d = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+async function deriveKey(pass, salt, iter) {
+  const km = await crypto.subtle.importKey('raw', new TextEncoder().encode(pass), 'PBKDF2', false, ['deriveKey']);
+  return crypto.subtle.deriveKey({ name: 'PBKDF2', salt, iterations: iter, hash: 'SHA-256' }, km, { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']);
+}
+async function encryptPayload(obj, pass) {
+  const salt = crypto.getRandomValues(new Uint8Array(16)), iv = crypto.getRandomValues(new Uint8Array(12)), iter = 310000;
+  const ct = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, await deriveKey(pass, salt, iter), new TextEncoder().encode(JSON.stringify(obj)));
+  return { app: 'isozygio', enc: 'AES-GCM-256/PBKDF2-SHA256', iter, salt: b64e(salt), iv: b64e(iv), ct: b64e(new Uint8Array(ct)), exportedAt: obj.exportedAt };
+}
+async function decryptPayload(o, pass) {
+  const pt = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64d(o.iv) }, await deriveKey(pass, b64d(o.salt), o.iter || 310000), b64d(o.ct));
+  return JSON.parse(new TextDecoder().decode(pt));
+}
+function openExport() {
+  const s = settings(), nPh = photoKeys().length;
+  openDlg('Αντίγραφο ασφαλείας', `<p class="small">Αποθηκεύει όλα σου τα δεδομένα σε ένα αρχείο. Κράτα το εκτός κινητού, π.χ. στο Google Drive.</p>
+    ${nPh ? `<div class="radios"><label><input type="checkbox" id="xPh">Με τις φωτογραφίες προόδου (${nPh}, μεγαλύτερο αρχείο)</label></div>` : ''}
+    <div class="radios" style="margin-top:8px"><label><input type="checkbox" id="xEnc" ${s.encBackup ? 'checked' : ''}>Κρυπτογράφηση με κωδικό (προτείνεται αν το αρχείο πάει στο cloud)</label></div>
+    <div id="xPw" ${s.encBackup ? '' : 'hidden'}><div class="grid2"><label class="f"><span>Κωδικός</span><input type="password" id="xP1" autocomplete="new-password"></label><label class="f"><span>Ξανά τον κωδικό</span><input type="password" id="xP2" autocomplete="new-password"></label></div>
+      <p class="note safety">Αν ξεχάσεις τον κωδικό, το αρχείο <b>δεν ανοίγει με κανέναν τρόπο</b>. Γράψ' τον κάπου ασφαλές, π.χ. σε διαχειριστή κωδικών.</p></div>
+    <div class="dlg-f"><button class="btn pri" id="xGo">Export</button></div>`, body => {
+    $('#xEnc', body).addEventListener('change', e => { $('#xPw', body).hidden = !e.target.checked; });
+    $('#xGo', body).addEventListener('click', async () => {
+      const enc = $('#xEnc', body).checked, p1 = enc ? $('#xP1', body).value : '', p2 = enc ? $('#xP2', body).value : '';
+      if (enc && p1.length < 8) { toast('Ο κωδικός θέλει τουλάχιστον 8 χαρακτήρες.'); return; }
+      if (enc && p1 !== p2) { toast('Οι δύο κωδικοί δεν ταιριάζουν.'); return; }
+      const st = settings(); st.encBackup = enc; Store.set('settings', st);
+      const ph = $('#xPh', body) && $('#xPh', body).checked; closeDlg();
+      await doExport({ photos: ph, pass: enc ? p1 : null });
+    });
+  });
+}
+async function doExport(opts = {}) {
   await Store.flush();
   const s = settings(); s.lastBackup = Date.now(); Store.set('settings', s); await Store.flush();
-  const withPh = $('#exPhotos') && $('#exPhotos').checked, data = Store.dump();
-  if (!withPh) for (const k of Object.keys(data)) if (k.startsWith('photo:')) delete data[k];
-  const payload = { app: 'isozygio', version: 3, exportedAt: new Date().toISOString(), data };
-  const blob = new Blob([JSON.stringify(payload, null, 1)], { type: 'application/json' }), name = `weightmeup-backup-${Dates.today()}.json`;
+  const data = Store.dump();
+  for (const k of Object.keys(data)) if ((!opts.photos && k.startsWith('photo:')) || k.startsWith('_')) delete data[k];
+  let payload = { app: 'isozygio', version: 4, exportedAt: new Date().toISOString(), data };
+  if (opts.pass) { try { payload = await encryptPayload(payload, opts.pass); } catch { toast('Η κρυπτογράφηση απέτυχε. Δεν δημιουργήθηκε αρχείο.', 4000); return; } }
+  const blob = new Blob([JSON.stringify(payload, null, opts.pass ? 0 : 1)], { type: 'application/json' }), name = `weightmeup-backup-${Dates.today()}${opts.pass ? '-encrypted' : ''}.json`;
   const file = new File([blob], name, { type: 'application/json' });
   if (navigator.canShare && navigator.canShare({ files: [file] }) && /Android|iPhone|iPad/i.test(navigator.userAgent)) {
     try { await navigator.share({ files: [file], title: name }); toast('Το αντίγραφο δημιουργήθηκε.'); render(); return; } catch (e) { if (e.name === 'AbortError') return; }
   }
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click();
   setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
-  toast('Το αντίγραφο κατέβηκε.'); render();
+  toast(opts.pass ? 'Το κρυπτογραφημένο αντίγραφο κατέβηκε.' : 'Το αντίγραφο κατέβηκε.'); render();
+}
+
+function askPassword() {
+  return new Promise(res => {
+    let done = false;
+    openDlg('Κρυπτογραφημένο αντίγραφο', `<label class="f"><span>Κωδικός του αντιγράφου</span><input type="password" id="ipw" autocomplete="current-password"></label><div class="dlg-f"><button class="btn pri" id="ipgo">Άνοιγμα</button></div>`, body => {
+      const go = () => { done = true; const v = $('#ipw', body).value; closeDlg(); res(v); };
+      $('#ipgo', body).addEventListener('click', go); $('#ipw', body).addEventListener('keydown', e => { if (e.key === 'Enter') go(); });
+      dlg.addEventListener('close', () => { if (!done) res(null); }, { once: true }); setTimeout(() => $('#ipw', body).focus(), 50);
+    });
+  });
+}
+function validateBackup(data) {
+  const errs = []; const isNum = x => typeof x === 'number' && isFinite(x);
+  if (!data || typeof data !== 'object' || Array.isArray(data)) return ['Δεν υπάρχουν δεδομένα.'];
+  for (const [k, v] of Object.entries(data)) {
+    if (k.startsWith('day:')) {
+      if (!v || typeof v !== 'object' || !/^\d{4}-\d{2}-\d{2}$/.test(v.date || '') || !Array.isArray(v.meals) || !Array.isArray(v.ex)) { errs.push(k); continue; }
+      if (v.meals.some(e => !e || !isNum(+e.kcal))) errs.push(k);
+    } else if (['weights', 'measures', 'foods', 'favmeals', 'exercises', 'scalebf'].includes(k)) {
+      if (!Array.isArray(v)) errs.push(k);
+    } else if (['profile', 'settings', 'programs', 'checkins'].includes(k) && (!v || typeof v !== 'object' || Array.isArray(v))) errs.push(k);
+  }
+  if (Array.isArray(data.weights) && data.weights.some(w => !w || !/^\d{4}-\d{2}-\d{2}$/.test(w.d || '') || !isNum(w.kg))) errs.push('weights');
+  return errs;
 }
 async function doImport(file) {
-  let obj; try { obj = JSON.parse(await file.text()); } catch { toast('Το αρχείο δεν είναι έγκυρο JSON.', 4000); return; }
-  if (!obj || obj.app !== 'isozygio' || typeof obj.data !== 'object') { toast('Το αρχείο δεν είναι αντίγραφο αυτής της εφαρμογής.', 4000); return; }
+  let obj; try { obj = JSON.parse(await file.text()); } catch { toast('Το αρχείο δεν είναι έγκυρο JSON ή είναι κατεστραμμένο.', 4500); return; }
+  if (obj && obj.app === 'isozygio' && obj.enc) {
+    const pass = await askPassword(); if (pass === null) return;
+    try { obj = await decryptPayload(obj, pass); } catch { toast('Λάθος κωδικός ή κατεστραμμένο αρχείο. Δεν έγινε καμία αλλαγή.', 4500); return; }
+  }
+  if (!obj || obj.app !== 'isozygio' || typeof obj.data !== 'object') { toast('Το αρχείο δεν είναι αντίγραφο αυτής της εφαρμογής.', 4500); return; }
+  const errs = validateBackup(obj.data);
+  if (errs.length) { toast(`Το αρχείο έχει ${errs.length} κατεστραμμένα στοιχεία. Δεν έγινε καμία αλλαγή.`, 5000); return; }
   const n = Object.keys(obj.data).filter(k => k.startsWith('day:')).length;
-  if (!confirm(`Import αντιγράφου από ${new Date(obj.exportedAt).toLocaleString('el-GR')} με ${n} ημέρες. Όλα τα τρέχοντα δεδομένα θα αντικατασταθούν. Συνέχεια;`)) return;
+  if (!confirm(`Import αντιγράφου από ${new Date(obj.exportedAt).toLocaleString('el-GR')} με ${n} ημέρες. Τα τωρινά δεδομένα αντικαθίστανται, αλλά κρατιέται αυτόματα αντίγραφό τους και μπορείς να κάνεις «Αναίρεση import». Συνέχεια;`)) return;
+  await Store.flush();
+  const cur = Store.dump(), snap = {}; for (const [k, v] of Object.entries(cur)) if (!k.startsWith('photo:') && !k.startsWith('_')) snap[k] = v;
   const keepPh = !Object.keys(obj.data).some(k => k.startsWith('photo:')) ? Object.fromEntries(photoKeys().map(k => [k, Store.get(k)])) : {};
-  await Store.replaceAll(Object.assign({}, obj.data, keepPh)); foodCache = null; applyTheme(); toast('Τα δεδομένα επανήλθαν.'); render();
+  const incoming = Object.fromEntries(Object.entries(obj.data).filter(([k]) => !k.startsWith('_')));
+  await Store.replaceAll(Object.assign({}, incoming, keepPh, { _preImport: { at: Date.now(), data: snap } }));
+  foodCache = null; applyTheme(); toast('Τα δεδομένα επανήλθαν. Αν κάτι δεν είναι σωστό: Προφίλ → «Αναίρεση import».', 5000); render();
 }
+async function undoImport() {
+  const pi = Store.get('_preImport'); if (!pi) return;
+  if (!confirm(`Επαναφορά των δεδομένων όπως ήταν πριν το import (${new Date(pi.at).toLocaleString('el-GR')});`)) return;
+  const keepPh = Object.fromEntries(photoKeys().map(k => [k, Store.get(k)]));
+  await Store.replaceAll(Object.assign({}, pi.data, keepPh));
+  foodCache = null; applyTheme(); toast('Έγινε αναίρεση του import.'); render();
+}
+
 function applyTheme() { const t = settings().theme; if (t) document.documentElement.dataset.theme = t; else delete document.documentElement.dataset.theme; }
 
 /* ===== ΑΝΑΛΥΣΗ ΠΡΟΠΟΝΗΣΗΣ ===== */
@@ -2349,10 +2502,14 @@ function trainingAnalysis(days) {
     const workoutDays = new Set(sess.filter(s => Calc.sessionStats(s.ex)).map(s => s.date)).size;
     // Τάσεις ασκήσεων (τελευταίες 8 εβδομάδες)
     const from8 = Dates.add(end, -55), byEx = new Map();
-    for (const s of allSessions()) { if (s.date < from8 || s.ex.type === 'c') continue; const st = Calc.sessionStats(s.ex); if (!st) continue; if (!byEx.has(s.ex.exId)) byEx.set(s.ex.exId, []); byEx.get(s.ex.exId).push({ date: s.date, dayIdx: Dates.idx(s.date), stats: st }); }
+    for (const s of allSessions()) { if (s.date < from8 || s.ex.type === 'c') continue; const st = Calc.sessionStats(s.ex, s.ex.type === 'bw' ? weightTrendOn(s.date) : null); if (!st) continue; if (!byEx.has(s.ex.exId)) byEx.set(s.ex.exId, []); byEx.get(s.ex.exId).push({ date: s.date, dayIdx: Dates.idx(s.date), stats: st }); }
     const trends = [...byEx.entries()].map(([id, h]) => { h.sort((a, b) => a.date < b.date ? -1 : 1); const def = exById(id); return { id, name: def ? def.name : id, type: def ? def.type : 'w', n: h.length, tr: Calc.trend(h, def ? def.type : 'w'), last: h[h.length - 1] }; })
       .filter(x => x.n >= 2).sort((a, b) => b.n - a.n);
-    return { vol, workoutDays, trends, days, sessions: sess.length };
+    // Ολοκλήρωση: προγραμματισμένα σετ έναντι ολοκληρωμένων (μόνο ασκήσεις που ξεκίνησαν από πρόγραμμα)
+    let planned = 0, done = 0; const progDays = new Set();
+    for (const s of sess) if (s.ex.plan && s.ex.type !== 'c') { progDays.add(s.date); planned += +s.ex.plan.sets || 0; done += Math.min(+s.ex.plan.sets || 0, (s.ex.sets || []).filter(x => !x.wu && +x.r > 0).length); }
+    const adh = { sessions: progDays.size, planned, done, pct: planned ? done / planned : null };
+    return { vol, workoutDays, trends, days, sessions: sess.length, adh };
   });
 }
 function suggestExercisesFor(m, n = 2) {
@@ -2360,12 +2517,54 @@ function suggestExercisesFor(m, n = 2) {
   return exercises().filter(e => (e.prim || []).includes(m)).sort((a, b) => (used.has(b.id) ? 1 : 0) - (used.has(a.id) ? 1 : 0)).slice(0, n).map(e => e.name);
 }
 
+/* Εναλλακτικές ασκήσεις: ίδιοι κύριοι μύες, ίδιος τύπος */
+function substitutesFor(exId) {
+  const def = exById(exId); if (!def || def.type === 'c') return [];
+  const P = def.prim || [], S = def.sec || [], used = new Set(allSessions().map(s => s.ex.exId));
+  return exercises().filter(e => e.id !== exId && e.type === def.type && (e.prim || []).some(m => P.includes(m)))
+    .map(e => ({ e, sc: (e.prim || []).filter(m => P.includes(m)).length * 3 - (e.prim || []).filter(m => !P.includes(m)).length * 2 + (e.sec || []).filter(m => S.includes(m)).length + (used.has(e.id) ? 0.5 : 0) }))
+    .sort((a, b) => b.sc - a.sc).slice(0, 6).map(x => x.e);
+}
+/* Ιεράρχηση (1 ασφάλεια/ανάκαμψη, 2 δεδομένα/συνέπεια, 3 ενέργεια & σώμα, 4 απόδοση, 5 όγκος/ισορροπία) και επίπεδο τεκμηρίωσης */
+const REC_CLASS = [
+  [/Χωρίς έλλειμμα/, 1, 'high'], [/Λίγος ύπνος|Ύπνος λίγο κάτω|Επαρκής ύπνος/, 1, 'moderate'], [/Διάλειμμα από τη δίαιτα|Πείνα και κούραση/, 1, 'moderate'], [/Υψηλό στρες|Καλή εβδομάδα/, 1, 'heuristic'],
+  [/Καταγραφή|λίγη καταγραφή|Πρόσθεσε RIR|Πρόσθεσε μετρήσεις|Διάλειμμα από την προπόνηση|ολοκληρωμένες μέρες|Ολοκλήρωση προπονήσεων|Ολοκληρώνεις/, 2, null],
+  [/απώλεια|παίρνεις βάρος|Τρως λιγότερο|Τρως περισσότερο|βάρος ανεβαίνει|Ρυθμός εντός|πραγματική σου κατανάλωση/, 3, 'high'], [/πρωτεΐνη/, 3, 'high'],
+  [/ΣΚ/, 3, 'heuristic'], [/άνετο όριο/, 3, 'heuristic'], [/βήματα|κίνηση/, 3, 'moderate'], [/γλυκά|Γλυκά/, 3, 'heuristic'], [/μείωση λίπους/, 3, 'moderate'],
+  [/μέσης\/ύψους/, 3, 'high'], [/Αναδόμηση|μέση αυξάνεται/, 3, 'moderate'],
+  [/αποτυχία|Καλή ένταση/, 4, 'moderate'], [/Στασιμότητα|Ώρα για εναλλαγή|Διατηρείς|Πτώση δύναμης|^Πρόοδος/, 4, 'moderate'],
+  [/Λίγος όγκος|Υψηλός όγκος|σε μία μέρα/, 5, 'moderate'], [/ώθηση|οπίσθιοι/, 5, 'heuristic'],
+];
+function classifyRecs(recs) {
+  for (const r of recs) { const c = REC_CLASS.find(([re]) => re.test(r.title)); r.prio = c ? c[1] : 3; r.ev = c ? c[2] : 'moderate'; }
+  // Αν υπάρχει θέμα ανάκαμψης, ασφάλειας ή συνέπειας, δεν προτείνεται αύξηση όγκου
+  const blocker = recs.find(r => r.prio <= 2 && (r.lvl === 'act' || r.lvl === 'watch'));
+  if (blocker) recs.filter(r => r.prio === 5 && r.lvl === 'act').forEach(r => { r.suppressed = true; r.note = `Σε αναμονή: πρώτα «${blocker.title.toLowerCase()}».`; });
+}
+const EV_LBL = { high: 'ισχυρή τεκμηρίωση', moderate: 'μέτρια τεκμηρίωση', heuristic: 'πρακτικός κανόνας' };
+function coachSummary(recs, ad) {
+  const today = Dates.today(), st = [];
+  if (ad.ready) st.push(`Βάρος ${sfmt(ad.ratePctWk, 2)}%/εβδ.`);
+  const ms = measures().filter(m => numIn(m.waist) !== null), mL = ms[ms.length - 1], m0 = mL ? ms.filter(m => m.d <= Dates.add(mL.d, -14)).pop() : null;
+  if (mL && m0) st.push(`μέση ${sfmt(mL.waist - m0.waist, 1)} cm σε ${Math.round((Dates.idx(mL.d) - Dates.idx(m0.d)) / 7)} εβδ.`);
+  const tr = trainingAnalysis(28).trends.filter(x => x.tr && x.tr.n >= 3);
+  if (tr.length) { const up = tr.filter(x => x.tr.pctWk >= 0.25).length, dn = tr.filter(x => x.tr.pctWk <= -1).length; st.push(`δύναμη: ${up} ↑, ${tr.length - up - dn} σταθερές, ${dn} ↓`); }
+  if (ad.loggedN) st.push(`πλήρεις μέρες ${ad.completeN}/${ad.loggedN}`);
+  const act = recs.filter(r => r.lvl === 'act' && !r.suppressed), watch = recs.filter(r => r.lvl === 'watch' || (r.lvl === 'info' && r.prio <= 2)), good = recs.filter(r => r.lvl === 'good');
+  const keep = good.slice(0, 3).map(r => ({ title: r.title, text: r.text }));
+  if (!act.some(r => r.prio === 3)) keep.unshift({ title: 'Θερμίδες χωρίς αλλαγή', text: 'Δεν χρειάζεται αλλαγή στον στόχο θερμίδων αυτή την εβδομάδα.' });
+  if (!act.some(r => r.prio >= 4)) keep.push({ title: 'Πρόγραμμα χωρίς αλλαγή', text: 'Συνέχισε το πρόγραμμα όπως είναι.' });
+  return { status: st.join(' · '), keep: keep.slice(0, 3), change: act.slice(0, 2), watch: watch.slice(0, 2) };
+}
+
 /* ===== ΜΗΧΑΝΗ ΠΡΟΤΑΣΕΩΝ =====
    Διαφανείς κανόνες βασισμένοι στα δεδομένα σου. lvl: 'act' (πρόταση αλλαγής), 'watch' (προσοχή), 'good' (πάει καλά), 'info' */
 function buildRecs() {
   return cached('recs' + Dates.today(), () => {
-    const recs = [], today = Dates.today(), p = profile(), s = settings(), goal = p.goal, G = Calc.GOALS[goal] || Calc.GOALS.maintain;
+    const recs = [], today = Dates.today(), p = profile(), s = settings(), goal = p.goal;
     const t = baseTargets(today); if (!t) return { recs, learning: null };
+    const G0 = Calc.GOALS[goal] || Calc.GOALS.maintain;
+    const G = (t.minor || t.lowBmi) && (goal === 'cut' || goal === 'recomp') ? Object.assign({}, G0, { rate: [-0.1, 0.25] }) : t.lean && goal === 'cut' ? Object.assign({}, G0, { rate: [-0.5, -0.25] }) : G0;
     const add = (lvl, area, title, text, src) => recs.push({ lvl, area, title, text, src });
     // Δεδομένα 14/28 ημερών
     const last = n => { const out = []; for (let i = 1; i <= n; i++) { const dd = Dates.add(today, -i), d = Store.get('day:' + dd); if (d) out.push(d); } return out; };
@@ -2398,8 +2597,9 @@ function buildRecs() {
       const hit = d14.filter(d => dayTotals(d).p >= 0.9 * (d.snap ? d.snap.p : t.p)).length, share = hit / d14.length;
       if (share < 0.6) {
         const per = MEALS.slice(0, 3).map(m => { const v = d14.map(d => d.meals.filter(e => e.meal === m.id)).filter(a => a.length).map(a => a.reduce((x, e) => x + e.p, 0)); return { m, avg: v.length ? v.reduce((a, b) => a + b, 0) / v.length : null }; }).filter(x => x.avg !== null).sort((a, b) => a.avg - b.avg);
-        const weak = per[0];
-        add('act', 'Διατροφή', 'Λίγη πρωτεΐνη', `Έπιασες τον στόχο πρωτεΐνης ${hit} στις ${d14.length} μέρες.${weak ? ` Το ${weak.m.label.toLowerCase()} έχει κατά μέσο όρο ${fmt(weak.avg)} g. Ανέβασέ το κοντά στα ${fmt(0.4 * kg)} g, π.χ. με γιαούρτι στραγγιστό (200 g ≈ 20 g), αυγά, τόνο ή κοτόπουλο.` : ''}`, 'Morton 2018· Schoenfeld & Aragon 2018: ~0,4 g/kg ανά γεύμα');
+        const perMeal = 0.4 * kg, weak = per.find(x => x.avg < perMeal * 0.85);
+        const avgP = d14.reduce((a, d) => a + dayTotals(d).p, 0) / d14.length, tgtP = t.p;
+        add('act', 'Διατροφή', 'Λίγη πρωτεΐνη', `Έπιασες τον στόχο πρωτεΐνης (${fmt(tgtP)} g) ${hit} στις ${d14.length} μέρες, με μέσο όρο ${fmt(avgP)} g.${weak ? ` Το ${weak.m.label.toLowerCase()} έχει κατά μέσο όρο ${fmt(weak.avg)} g: ανέβασέ το κοντά στα ${fmt(perMeal)} g, π.χ. με γιαούρτι στραγγιστό (200 g ≈ 20 g), αυγά, τόνο ή κοτόπουλο.` : ` Λείπουν περίπου ${fmt(tgtP - avgP)} g την ημέρα: πρόσθεσε ένα σνακ με πρωτεΐνη (π.χ. γιαούρτι στραγγιστό ή cottage) ή λίγο μεγαλύτερες μερίδες κρέατος και ψαριού.`}`, 'Morton 2018· Schoenfeld & Aragon 2018: ~0,4 g/kg ανά γεύμα');
       } else if (share >= 0.8) add('good', 'Διατροφή', 'Σταθερή πρωτεΐνη', `Έπιασες τον στόχο πρωτεΐνης ${hit} στις ${d14.length} μέρες.`, 'Morton 2018');
     }
     /* 4. Μοτίβο Σαββατοκύριακου */
@@ -2422,7 +2622,7 @@ function buildRecs() {
     /* 8. Γλυκά */
     if (d14.length >= 7) {
       const tot = d14.reduce((a, d) => a + dayTotals(d).kcal, 0), sw = d14.reduce((a, d) => a + dayTotals(d).sweet, 0), share = tot ? sw / tot : 0;
-      if (share > 0.2 && goal === 'cut') add('watch', 'Διατροφή', 'Πολλές θερμίδες από γλυκά', `Το ${fmt(share * 100)}% των θερμίδων σου είναι από γλυκά. Δεν χρειάζεται να τα κόψεις. Προτίμησε μικρότερες μερίδες, ή γλυκά με πρωτεΐνη (πουτίγκα πρωτεΐνης, γιαούρτι με μέλι), για να μένει χώρος για την πρωτεΐνη.`, 'WHO 2015: ελεύθερα σάκχαρα <10% ενέργειας');
+      if (share > 0.2 && goal === 'cut') add('watch', 'Διατροφή', 'Πολλές θερμίδες από γλυκά', `Το ${fmt(share * 100)}% των θερμίδων σου είναι από γλυκά. Δεν χρειάζεται να τα κόψεις. Προτίμησε μικρότερες μερίδες, ή γλυκά με πρωτεΐνη (πουτίγκα πρωτεΐνης, γιαούρτι με μέλι), για να μένει χώρος για την πρωτεΐνη.`, 'Πρακτικός κανόνας (οι θερμίδες από γλυκά δεν ισοδυναμούν με τα «ελεύθερα σάκχαρα» του WHO)');
       else if (sw > 0 && share <= 0.15) add('good', 'Διατροφή', 'Γλυκά σε ισορροπία', `Τα γλυκά είναι το ${fmt(share * 100)}% των θερμίδων σου και χωράνε στον στόχο σου.`, 'Ευέλικτη δίαιτα');
     }
     /* Προπόνηση (28 ημέρες) */
@@ -2430,11 +2630,11 @@ function buildRecs() {
     if (ta.workoutDays >= 4) {
       const vol = ta.vol.muscles, majors = Object.keys(MUSCLES).filter(m => MUSCLES[m].major);
       const low = majors.filter(m => (vol[m] ? vol[m].perWeek : 0) < G.minSets).sort((a, b) => (vol[a] ? vol[a].perWeek : 0) - (vol[b] ? vol[b].perWeek : 0));
-      if (low.length) add('act', 'Προπόνηση', 'Λίγος όγκος σε μύες', low.slice(0, 4).map(m => `${MUSCLES[m].n}: ${fmt(vol[m] ? vol[m].perWeek : 0, 1)} σκληρά σετ/εβδ.${vol[m] && vol[m].soft ? ` (και ${fmt(vol[m].soft / 4, 1)} σετ με RIR 5+, που δεν μετρούν)` : ''}, π.χ. ${suggestExercisesFor(m).join(' ή ')}`).join('. ') + (low.length > 4 ? `. Επίσης: ${low.slice(4).map(m => MUSCLES[m].n).join(', ')}` : '') + `. Για ${G.label.toLowerCase()} στόχευσε σε τουλάχιστον ${G.minSets} σκληρά σετ την εβδομάδα ανά μυ.`, 'Schoenfeld 2017· Pelland 2024 (δόση-απόκριση)');
+      if (low.length) add('act', 'Προπόνηση', 'Λίγος όγκος σε μύες', low.slice(0, 4).map(m => `${MUSCLES[m].n}: ${fmt(vol[m] ? vol[m].perWeek : 0, 1)} σκληρά σετ/εβδ.${vol[m] && vol[m].soft ? ` (και ${fmt(vol[m].soft / 4, 1)} σετ με RIR 6+, που δεν μετρούν)` : ''}, π.χ. ${suggestExercisesFor(m).join(' ή ')}`).join('. ') + (low.length > 4 ? `. Επίσης: ${low.slice(4).map(m => MUSCLES[m].n).join(', ')}` : '') + `. Ως σημείο αναφοράς για ${G.label.toLowerCase()}: περίπου ${G.minSets}+ σετ την εβδομάδα ανά μυ. Δεν είναι αυστηρό ελάχιστο, και η απόκριση διαφέρει από άτομο σε άτομο.`, 'Schoenfeld 2017· Pelland 2026 (δόση-απόκριση)');
       const high = majors.filter(m => vol[m] && vol[m].perWeek > 22);
-      if (high.length) add('watch', 'Προπόνηση', 'Πολύ υψηλός όγκος', `${high.map(m => `${MUSCLES[m].n} (${fmt(vol[m].perWeek, 1)})`).join(', ')} σετ/εβδ. Πάνω από περίπου 20 σετ το όφελος μειώνεται και η κόπωση αυξάνεται. Αν δεν βελτιώνεσαι, μετέφερε σετ σε μύες με λιγότερο όγκο.`, 'Pelland 2024: φθίνουσα απόδοση');
+      if (high.length) add('info', 'Προπόνηση', 'Υψηλός όγκος', `${high.map(m => `${MUSCLES[m].n} (${fmt(vol[m].perWeek, 1)})`).join(', ')} σετ/εβδ. Ο επιπλέον όγκος δίνει όλο και μικρότερο όφελος, αλλά δεν υπάρχει ίδιο όριο για όλους. Κοίτα αν η δύναμη ανεβαίνει και αν ανακάμπτεις. Αν όχι, λίγα σετ λιγότερα εδώ μπορεί να βοηθήσουν.`, 'Pelland 2026: φθίνουσα απόδοση');
       const lowFreq = majors.filter(m => vol[m] && vol[m].perWeek >= 8 && vol[m].freq < 1.4);
-      if (lowFreq.length) add('info', 'Προπόνηση', 'Όλος ο όγκος σε μία μέρα', `${lowFreq.map(m => MUSCLES[m].n).join(', ')}: γυμνάζονται περίπου 1 φορά την εβδομάδα με πολλά σετ. Αν τα μοιράσεις σε 2 μέρες, τα σετ της ίδιας συνεδρίας θα γίνονται με λιγότερη κόπωση.`, 'Schoenfeld 2016· Pelland 2024 (μικρό όφελος συχνότητας)');
+      if (lowFreq.length) add('info', 'Προπόνηση', 'Όλος ο όγκος σε μία μέρα', `${lowFreq.map(m => MUSCLES[m].n).join(', ')}: γυμνάζονται περίπου 1 φορά την εβδομάδα με πολλά σετ. Αν τα μοιράσεις σε 2 μέρες, τα σετ της ίδιας συνεδρίας θα γίνονται με λιγότερη κόπωση.`, 'Schoenfeld 2016· Pelland 2026 (μικρό όφελος συχνότητας)');
       const V = m => vol[m] ? vol[m].perWeek : 0;
       const push = V('chest') + V('fdelt') + V('triceps'), pull = V('lats') + V('upperback') + V('rdelt') + V('biceps');
       if (pull > 0 && push / pull > 1.5) add('watch', 'Προπόνηση', 'Πιο πολλή ώθηση από έλξη', `Ώθηση ${fmt(push, 1)} σετ, έλξη ${fmt(pull, 1)} σετ την εβδομάδα. Πρόσθεσε κωπηλατικές ή face pulls για ισορροπία στους ώμους.`, 'Πρακτική σύσταση (περιορισμένα στοιχεία)');
@@ -2443,14 +2643,23 @@ function buildRecs() {
       if (v.rirN >= 15) {
         const all = allSessions().filter(s => s.date >= Dates.add(today, -27)).flatMap(s => (s.ex.sets || []).filter(x => x.rir !== '' && x.rir !== undefined && x.rir !== null && +x.r > 0).map(x => +x.rir));
         const far = all.filter(r => r >= 4).length / all.length, fail = all.filter(r => r === 0).length / all.length;
-        if (far > 0.4) add('act', 'Προπόνηση', 'Σετ μακριά από την αποτυχία', `Το ${fmt(far * 100)}% των σετ σου έχει RIR 4 ή περισσότερο. Για υπερτροφία, τα περισσότερα σετ πρέπει να είναι στο 0–3 RIR. Ανέβασε βάρος ή επαναλήψεις.`, 'Refalo 2023· Robinson 2024');
+        if (far > 0.4) add('act', 'Προπόνηση', 'Σετ μακριά από την αποτυχία', `Το ${fmt(far * 100)}% των σετ σου έχει RIR 4 ή περισσότερο. Τα σετ με RIR 4–5 μετράνε μισά στον όγκο και τα 6+ καθόλου. Για υπερτροφία, τα περισσότερα working sets καλό είναι να είναι στο 0–3. Ανέβασε βάρος ή επαναλήψεις.`, 'Refalo 2023· Robinson 2024');
         else if (fail > 0.5) add('watch', 'Προπόνηση', 'Πολλά σετ μέχρι αποτυχία', `Το ${fmt(fail * 100)}% των σετ φτάνει σε αποτυχία. Το επιπλέον όφελος είναι μικρό και η κόπωση μεγαλύτερη, ειδικά στις σύνθετες ασκήσεις. Κράτα 1–2 RIR στις βαριές ασκήσεις.`, 'Refalo 2023· Robinson 2024');
         else add('good', 'Προπόνηση', 'Καλή ένταση', `Μέσο RIR ${fmt(v.avgRir, 1)}. Τα σετ σου είναι κοντά στην αποτυχία χωρίς υπερβολές.`, 'Refalo 2023');
       } else if (v.unknown > 20) add('info', 'Προπόνηση', 'Πρόσθεσε RIR', 'Γράφε στα σετ πόσες επαναλήψεις σου έμεναν (RIR). Έτσι ο όγκος μετράει μόνο τα σετ που προκαλούν προσαρμογή, και μπορώ να σου πω αν πιέζεσαι αρκετά.', 'Refalo 2023');
       // Στασιμότητα / πτώση
       const plateau = ta.trends.filter(x => x.tr && x.tr.n >= 4 && x.tr.spanDays >= 21 && Math.abs(x.tr.pctWk) < 0.25);
       const drop = ta.trends.filter(x => x.tr && x.tr.n >= 3 && x.tr.pctWk < -1.5);
-      if (plateau.length && goal !== 'cut') add('act', 'Προπόνηση', 'Στασιμότητα', `${plateau.slice(0, 3).map(x => x.name).join(', ')}: χωρίς πρόοδο για περίπου ${fmt(plateau[0].tr.spanDays / 7)} εβδομάδες. Δοκίμασε διαφορετικό εύρος επαναλήψεων (π.χ. 6–8 αντί για 10–12), +1 σετ, ή μια εβδομάδα με μειωμένο όγκο.`, 'Αρχή προοδευτικής υπερφόρτωσης');
+      if (plateau.length && goal !== 'cut') {
+        const firstDate = id => allSessions().filter(x => x.ex.exId === id).map(x => x.date).sort()[0];
+        plateau.slice(0, 2).forEach(x => {
+          const weeksUsed = Math.floor((Dates.idx(today) - Dates.idx(firstDate(x.id))) / 7), subs = substitutesFor(x.id).slice(0, 2).map(s => s.name);
+          const long = weeksUsed >= 12;
+          recs.push({ lvl: 'act', area: 'Προπόνηση', title: long ? `Ώρα για εναλλαγή: ${x.name}` : `Στασιμότητα: ${x.name}`,
+            text: `Χωρίς πρόοδο για περίπου ${fmt(x.tr.spanDays / 7)} εβδομάδες${long ? `, και την κάνεις ${weeksUsed} εβδομάδες` : ''}. ${long ? 'Μια εναλλακτική για τους ίδιους μύες για 4–8 εβδομάδες μπορεί να δώσει νέο ερέθισμα.' : 'Δοκίμασε πρώτα άλλο εύρος επαναλήψεων (π.χ. 6–8 αντί για 10–12) ή +1 σετ. Αν δεν αλλάξει κάτι σε 2–3 εβδομάδες, δοκίμασε εναλλακτική άσκηση.'}${subs.length ? ` Εναλλακτικές: ${subs.join(', ')}.` : ''} Συζήτησέ το και με τον γυμναστή σου.`,
+            src: 'Προοδευτική υπερφόρτωση· Kassiano 2022 (η εναλλαγή ασκήσεων μπορεί να βοηθήσει, η υπερβολική όχι)', action: { label: 'Εναλλακτικές ασκήσεις', act: 'swapEx', exid: x.id } });
+        });
+      }
       if (plateau.length && goal === 'cut') add('good', 'Προπόνηση', 'Διατηρείς τη δύναμη', `${plateau.slice(0, 3).map(x => x.name).join(', ')}: σταθερή δύναμη ενώ είσαι σε έλλειμμα. Είναι καλό σημάδι ότι κρατάς μυϊκή μάζα.`, 'Helms 2014');
       if (drop.length) add('watch', 'Προπόνηση', 'Πτώση δύναμης', `${drop.slice(0, 3).map(x => `${x.name} (${sfmt(x.tr.pctWk, 1)}%/εβδ.)`).join(', ')}. ${goal === 'cut' ? 'Μπορεί το έλλειμμα να είναι μεγάλο. Έλεγξε τον ρυθμό απώλειας και την πρωτεΐνη.' : 'Έλεγξε ύπνο, διατροφή και συνολικό όγκο.'}`, 'Helms 2014');
       const up = ta.trends.filter(x => x.tr && x.tr.n >= 3 && x.tr.pctWk >= 0.5);
@@ -2459,6 +2668,18 @@ function buildRecs() {
       const lastW = allSessions().map(s => s.date).sort().pop();
       if (Dates.idx(today) - Dates.idx(lastW) > 10) add('info', 'Προπόνηση', 'Διάλειμμα από την προπόνηση', `Τελευταία καταγραφή στις ${Dates.short(lastW)}.`, '');
     }
+    /* Ολοκλήρωση προπονήσεων */
+    const adh = trainingAnalysis(28).adh;
+    if (adh && adh.sessions >= 3 && adh.pct !== null) {
+      if (adh.pct < 0.8) add('watch', 'Προπόνηση', 'Ολοκλήρωση προπονήσεων', `Τις τελευταίες 4 εβδομάδες ολοκλήρωσες περίπου το ${fmt(adh.pct * 100)}% των προγραμματισμένων σετ (${adh.done} από ${adh.planned}). Πριν προστεθεί όγκος, αξίζει να ολοκληρώνεται το πρόγραμμα που ήδη υπάρχει. Αν ο χρόνος δεν φτάνει, συζήτησε με τον γυμναστή ένα πιο σύντομο πρόγραμμα.`, 'Συνέπεια πριν από την αύξηση όγκου');
+      else if (adh.pct >= 0.95) add('good', 'Προπόνηση', 'Ολοκληρώνεις το πρόγραμμα', `${fmt(adh.pct * 100)}% των προγραμματισμένων σετ σε ${adh.sessions} προπονήσεις.`, 'Συνέπεια');
+    }
+    /* Ποιότητα καταγραφής φαγητού */
+    if (d14.length >= 5) { const comp = d14.filter(d => d.complete).length; if (comp / d14.length < 0.5) add('info', 'Δεδομένα', 'Σημείωνε τις ολοκληρωμένες μέρες', `Μόνο ${comp} από τις ${d14.length} μέρες με φαγητό είναι σημειωμένες ως «ολοκληρωμένες». Πάτα το κουμπί στο τέλος των γευμάτων όταν γράψεις ό,τι έφαγες. Έτσι ο υπολογισμός της κατανάλωσης αγνοεί τις μισές μέρες.`, 'Ποιότητα δεδομένων'); }
+    /* Προστασία */
+    if (t.safety && (t.safety.includes('minor') || t.safety.includes('lowBmi'))) add('watch', 'Υγεία', 'Χωρίς έλλειμμα θερμίδων', t.minor ? 'Κάτω από 18 ετών η εφαρμογή δεν προτείνει έλλειμμα. Εστίασε σε επαρκή πρωτεΐνη, προπόνηση και ύπνο. Για αλλαγές στο βάρος, μίλησε με γιατρό ή διαιτολόγο.' : `Με BMI ${fmt(t.bmi, 1)} η εφαρμογή δεν προτείνει έλλειμμα. Αν θέλεις να χάσεις βάρος, συζήτησέ το πρώτα με γιατρό ή διαιτολόγο.`, 'WHO: BMI < 18,5 = λιποβαρής');
+    /* Μακρά περίοδος σε έλλειμμα */
+    if (goal === 'cut' && p.goalSince && Dates.idx(today) - Dates.idx(p.goalSince) >= 84) add('info', 'Διατροφή', `${Math.floor((Dates.idx(today) - Dates.idx(p.goalSince)) / 7)} εβδομάδες σε μείωση λίπους`, 'Μετά από περίπου 12 εβδομάδες σε έλλειμμα, σκέψου 1–2 εβδομάδες σε θερμίδες διατήρησης. Βοηθά στην πείνα, στην ενέργεια και στη συνέπεια μακροπρόθεσμα. Τα στοιχεία για το αν βελτιώνει και το τελικό αποτέλεσμα είναι μικτά.', 'Byrne 2018 (MATADOR)· Peos 2021 (ICECAP): μικτά αποτελέσματα');
     /* Ύπνος */
     const sl7 = sleepStats(Dates.add(today, -1), 7);
     if (sl7 && sl7.n >= 4) {
@@ -2489,8 +2710,9 @@ function buildRecs() {
         if (goal === 'bulk' && dW > 2.5 && dKg !== null && dKg < 2) add('watch', 'Σώμα', 'Η μέση αυξάνεται γρήγορα', `+${fmt(dW, 1)} cm μέση με ${sfmt(dKg, 1)} kg. Ίσως το πλεόνασμα είναι μεγάλο.`, 'Iraki 2019');
       }
     } else if (!ms.length) add('info', 'Σώμα', 'Πρόσθεσε μετρήσεις', 'Με μέση, λαιμό και γλουτούς υπολογίζεται το ποσοστό λίπους και η άλιπη μάζα. Έτσι η πρωτεΐνη και ο BMR γίνονται ακριβέστεροι, και φαίνεται η αναδόμηση ακόμα κι όταν το βάρος δεν αλλάζει.', 'Woolcott 2018 (RFM)· US Navy');
+    classifyRecs(recs);
     const order = { act: 0, watch: 1, info: 2, good: 3 };
-    recs.sort((a, b) => order[a.lvl] - order[b.lvl]);
+    recs.sort((a, b) => a.prio - b.prio || order[a.lvl] - order[b.lvl]);
     return { recs, learning };
   });
 }
@@ -2504,16 +2726,24 @@ function viewProgress() {
   const cws = Dates.weekStart(today), hasCi = !!checkins()[cws];
   let h = `<div class="row" style="gap:8px;margin-top:12px;flex-wrap:wrap"><button class="btn pri" data-act="aiOpen">Ρώτα το AI</button><button class="btn" data-act="checkin">${hasCi ? '✓ ' : ''}Check-in εβδομάδας</button></div>`;
   if (!hasCi && [6, 0, 1].includes(Dates.dowNum(today))) h += `<div class="banner"><span>Πώς πήγε η εβδομάδα; Ύπνος, πείνα, ενέργεια, στρες και απόδοση επηρεάζουν τις προτάσεις.</span><button class="btn sm pri" data-act="checkin">Check-in</button></div>`;
-  h += `<section class="sec"><h2>Προτάσεις</h2>`;
+  h += `<section class="sec coach"><h2>Η εβδομάδα σου</h2>`;
   if (learning && learning.logged14 < 10) h += `<p class="small">Μαθαίνω τη ρουτίνα σου: <b>${learning.logged14}/10</b> καταγεγραμμένες μέρες και <b>${Math.min(learning.weigh14, 6)}/6</b> ζυγίσεις στις τελευταίες 2 εβδομάδες.</p><div class="bar thin"><i style="width:${Math.min(100, learning.logged14 * 10)}%"></i></div>`;
-  h += recs.length ? `<ul class="recs">${recs.map(r => `<li class="rec ${r.lvl}"><div class="small muted">${lvlLbl[r.lvl]}, ${r.area.toLowerCase()}</div><b>${esc(r.title)}</b><p>${esc(r.text)}</p>${r.src ? `<p class="small muted src">Βάση: ${esc(r.src)}</p>` : ''}</li>`).join('')}</ul>`
-    : '<p class="empty">Δεν υπάρχουν ακόμα αρκετά δεδομένα για προτάσεις.</p>';
+  const recLi = r => `<li class="rec ${r.lvl}${r.suppressed ? ' sup' : ''}"><div class="small muted">${lvlLbl[r.lvl]}, ${r.area.toLowerCase()}${r.ev ? ` · <span class="ev ev-${r.ev}">${EV_LBL[r.ev]}</span>` : ''}</div><b>${esc(r.title)}</b><p>${esc(r.text)}</p>${r.note ? `<p class="small" style="color:var(--warn)">${esc(r.note)}</p>` : ''}${r.src ? `<p class="small muted src">Βάση: ${esc(r.src)}</p>` : ''}${r.action ? `<button class="btn sm" data-act="${r.action.act}" data-exid="${r.action.exid || ''}">${esc(r.action.label)}</button>` : ''}</li>`;
+  if (recs.length) {
+    const c = coachSummary(recs, ad);
+    const item = x => `<li><b>${esc(x.title)}</b><span class="small">${esc(x.text)}</span>${x.action ? `<button class="btn sm" data-act="${x.action.act}" data-exid="${x.action.exid || ''}">${esc(x.action.label)}</button>` : ''}</li>`;
+    h += `${c.status ? `<p class="coach-status">${esc(c.status)}</p>` : ''}
+      <div class="cb cb-keep"><div class="cb-h">Κράτα</div><ul>${c.keep.map(item).join('')}</ul></div>
+      <div class="cb cb-change"><div class="cb-h">Άλλαξε</div>${c.change.length ? `<ul>${c.change.map(item).join('')}</ul>` : '<p class="small muted">Τίποτα αυτή την εβδομάδα. Η σταθερότητα είναι μέρος του σχεδίου.</p>'}</div>
+      ${c.watch.length ? `<div class="cb cb-watch"><div class="cb-h">Πρόσεξε</div><ul>${c.watch.map(item).join('')}</ul></div>` : ''}
+      <details class="allrecs"><summary>Όλες οι παρατηρήσεις (${recs.length})</summary><ul class="recs">${recs.map(recLi).join('')}</ul></details>`;
+  } else h += '<p class="empty">Δεν υπάρχουν ακόμα αρκετά δεδομένα για προτάσεις.</p>';
   h += `<p class="note" style="margin-top:12px">Οι προτάσεις βασίζονται σε κανόνες από τη βιβλιογραφία και στα δεδομένα σου. Είναι γενικές πληροφορίες, όχι ιατρική συμβουλή. Αν έχεις θέμα υγείας, συμβουλέψου γιατρό ή διαιτολόγο.</p></section>`;
   // Ενέργεια
   h += `<section class="sec"><h2>Κατανάλωση ενέργειας</h2>`;
   if (ad.ready) {
     h += `<div class="remain"><span class="big2 est">${fmt(ad.tdee)}</span> <span class="muted">kcal/ημέρα (±${fmt(ad.ci)})</span></div>
-      <p class="small">Προσαρμοστικό TDEE από ${ad.nI} καταγεγραμμένες μέρες και ${ad.nW} ζυγίσεις (τελευταίες ${ADAPT_WINDOW} ημέρες). Ο τύπος έδινε ${fmt(t.formulaTdee)} kcal.</p>
+      <p class="small">Προσαρμοστικό TDEE από ${ad.nI} ${ad.usedComplete ? 'ολοκληρωμένες' : 'καταγεγραμμένες'} μέρες και ${ad.nW} ζυγίσεις (τελευταίες ${ADAPT_WINDOW} ημέρες). Ο τύπος έδινε ${fmt(t.formulaTdee)} kcal.</p>
       <div class="small muted">Αξιοπιστία εκτίμησης</div><div class="bar thin"><i style="width:${ad.confidence * 100}%"></i></div>
       <div class="stats"><div class="stat"><div class="k">Μέση πρόσληψη</div><div class="v">${fmt(ad.avgIntake)} kcal</div></div>
       <div class="stat"><div class="k">Τάση βάρους</div><div class="v">${sfmt(ad.slopeKgWk, 2)} kg/εβδ. <span class="small muted">(${sfmt(ad.ratePctWk, 2)}%)</span></div></div>
@@ -2527,7 +2757,9 @@ function viewProgress() {
   h += `<section class="sec"><h2>Ύπνος (28 ημέρες)</h2><canvas class="chart" id="chSleep" style="height:160px" role="img" aria-label="Ώρες ύπνου"></canvas>${sleepStats(today, 7) ? `<p class="small muted">Μέσος όρος 7 ημερών: ${fmtSleep(sleepStats(today, 7).avg)}. Καταχώριση στην Ημέρα, καρτέλα «Βήματα».</p>` : '<p class="small muted">Γράψε τις ώρες ύπνου από το ρολόι σου στην Ημέρα, καρτέλα «Βήματα».</p>'}</section>`;
   // Σώμα
   const ms = measures(), mL = ms[ms.length - 1], mPrev = mL ? ms.filter(m => m.d <= Dates.add(mL.d, -21)).pop() || (ms.length > 1 ? ms[ms.length - 2] : null) : null, bf = bfOn(today);
-  const rowM = (k, l) => mL && numIn(mL[k]) !== null ? `<tr><td>${l}</td><td>${fmt(mL[k], 1)} cm</td><td class="${mPrev && numIn(mPrev[k]) !== null ? (mL[k] - mPrev[k] < 0 ? 'neg' : mL[k] - mPrev[k] > 0 ? 'pos' : '') : ''}">${mPrev && numIn(mPrev[k]) !== null ? sfmt(mL[k] - mPrev[k], 1) : '–'}</td></tr>` : '';
+  const goalNow = profile().goal;
+  const mCls = (k, dv) => k !== 'waist' || !dv ? '' : dv < 0 ? (goalNow === 'bulk' ? '' : 'neg') : (goalNow === 'bulk' ? '' : 'pos');
+  const rowM = (k, l) => { if (!mL || numIn(mL[k]) === null) return ''; const has = mPrev && numIn(mPrev[k]) !== null, dv = has ? mL[k] - mPrev[k] : 0; return `<tr><td>${l}</td><td>${fmt(mL[k], 1)} cm</td><td class="${mCls(k, dv)}">${has ? `${dv > 0 ? '▲' : dv < 0 ? '▼' : ''} ${sfmt(dv, 1)}` : '–'}</td></tr>`; };
   h += `<section class="sec"><h2>Ιστορικό βάρους</h2><div class="chips">${[[90, '3 μήνες'], [365, '1 χρόνος'], [0, 'Όλο']].map(([k, l]) => `<button class="chip" data-act="wRange" data-r="${k}" aria-pressed="${UI.wRange === k}">${l}</button>`).join('')}</div>
     <canvas class="chart" id="chWLong" role="img" aria-label="Ιστορικό βάρους"></canvas>
     ${scaleBf().length ? `<p class="small" style="margin:10px 0 0"><b>Λίπος από ζυγαριά</b> <span class="muted">(BIA, μ.ο. 14 ημερών: ${scaleBfAvg(today) !== null ? fmt(scaleBfAvg(today), 1) + '%' : '–'})</span></p><canvas class="chart" id="chSBf" style="height:130px" role="img" aria-label="Λίπος από ζυγαριά"></canvas>
@@ -2537,7 +2769,7 @@ function viewProgress() {
     h += `<p class="small muted">Τελευταία: ${Dates.label(mL.d)}${mPrev ? `, σύγκριση με ${Dates.short(mPrev.d)}` : ''}.</p>
       <table class="tbl"><thead><tr><th>Περιφέρεια</th><th>Τώρα</th><th>Μεταβολή</th></tr></thead><tbody>
       ${rowM('waist', 'Μέση')}${rowM('neck', 'Λαιμός')}${rowM('hip', 'Γλουτοί')}${rowM('chest', 'Στήθος')}${rowM('arm', 'Μπράτσο')}${rowM('thigh', 'Μηρός')}</tbody></table>
-      ${bf && bf.src !== 'bmi' ? `<p class="small" style="margin-top:10px">Λίπος σώματος: <b class="est">${fmt(bf.bf, 1)}%</b> ${bf.parts.length ? `(${bf.parts.map(x => `${x.k} ${fmt(x.v, 1)}%`).join(', ')}${bf.scale ? `, ζυγαριά ${fmt(bf.scale, 1)}%` : ''})` : ''}. Άλιπη μάζα <b class="est">${fmt(t.weight * (1 - bf.bf / 100), 1)}</b> kg.</p>` : ''}
+      ${bf && bf.src !== 'bmi' ? `<p class="small" style="margin-top:10px">Λίπος σώματος (εκτίμηση): <b class="est">${bf.parts.length > 1 ? `${fmt(Math.min(...bf.parts.map(x => x.v)), 0)}–${fmt(Math.max(...bf.parts.map(x => x.v)), 0)}%` : `${fmt(bf.bf, 1)}%`}</b> ${bf.parts.length ? `(${bf.parts.map(x => `${x.k} ${fmt(x.v, 1)}%`).join(', ')}${bf.scale ? `, ζυγαριά ${fmt(bf.scale, 1)}%` : ''})` : ''}. Ο κύριος δείκτης είναι η <b>τάση της μέσης</b>: το ποσοστό λίπους είναι δευτερεύουσα εκτίμηση.</p>` : ''}
       ${numIn(profile().height) ? `<p class="small">Λόγος μέσης/ύψους: <b>${fmt(mL.waist / profile().height, 2)}</b> (υγιές όριο κάτω από 0,5).</p>` : ''}
       <canvas class="chart" id="chWaist" style="height:150px" role="img" aria-label="Περιφέρεια μέσης στον χρόνο"></canvas>
       <p class="note">Οι μέθοδοι με μεζούρα έχουν σφάλμα ±3–4% σε απόλυτη τιμή, αλλά είναι αξιόπιστες για την τάση. Κοίτα τη μεταβολή, όχι τον ακριβή αριθμό. <button class="linkish" data-act="measureList">Όλες οι μετρήσεις</button></p>`;
@@ -2553,14 +2785,13 @@ function viewProgress() {
       <p class="small muted">Σκληρά σετ/εβδομάδα (κύριος μυς 1, δευτερεύων 0,5) και συχνότητα (×/εβδ.). Η σκιασμένη ζώνη είναι ${band[0]}–${band[1]} σετ.</p>
       <div class="stats"><div class="stat"><div class="k">Προπονήσεις</div><div class="v">${ta.workoutDays} σε ${ta.days} ημ.</div></div>
       <div class="stat"><div class="k">Μέσο RIR</div><div class="v">${ta.vol.avgRir !== null ? fmt(ta.vol.avgRir, 1) : '–'}</div></div>
-      <div class="stat"><div class="k">Σκληρά σετ</div><div class="v">${fmt(ta.vol.hard)}</div></div>
-      <div class="stat"><div class="k">Μακριά από αποτυχία</div><div class="v">${fmt(ta.vol.soft)}</div></div></div>`;
+      <div class="stat"><div class="k">Σετ RIR 0–3 / 4–5</div><div class="v">${fmt(ta.vol.hard)} / ${fmt(ta.vol.moderate)}</div></div><div class="stat"><div class="k">RIR 6+ / ζεστάματα</div><div class="v">${fmt(ta.vol.soft)} / ${fmt(ta.vol.warm)}</div></div></div>`;
   } else h += '<p class="empty">Δεν υπάρχουν προπονήσεις σε αυτό το διάστημα.</p>';
   h += `</section>`;
   const tr8 = trainingAnalysis(28).trends.filter(x => x.tr);
   if (tr8.length) h += `<section class="sec"><h2>Τάση δύναμης (8 εβδομάδες)</h2><table class="tbl"><thead><tr><th>Άσκηση</th><th>Τελευταίο ≈1RM</th><th>%/εβδ.</th></tr></thead><tbody>
-    ${tr8.slice(0, 12).map(x => `<tr data-act="exHistory" data-exid="${x.id}"><td>${esc(x.name)}</td><td>${x.type === 'bw' && x.last.stats.top.w === 0 ? x.last.stats.maxReps + ' επαν.' : E(x.last.stats.e1rm, true, 1) + ' kg'}</td><td class="${x.tr.pctWk >= 0.25 ? 'neg' : x.tr.pctWk <= -1 ? 'pos' : ''}">${sfmt(x.tr.pctWk, 1)}</td></tr>`).join('')}</tbody></table>
-    <p class="note">Η τάση υπολογίζεται με γραμμική παλινδρόμηση σε όλες τις συνεδρίες, όχι με σύγκριση μόνο των δύο τελευταίων, οπότε μια κακή μέρα δεν την αλλοιώνει. Για αρχάριους είναι φυσιολογικό +1–2%/εβδ., για προχωρημένους πολύ λιγότερο.</p></section>`;
+    ${tr8.slice(0, 12).map(x => `<tr data-act="exHistory" data-exid="${x.id}"><td>${esc(x.name)}</td><td>${x.type === 'bw' && x.last.stats.top.w === 0 ? x.last.stats.maxReps + ' επαν.' : E(x.last.stats.e1rm, true, 1) + ' kg' + (x.last.stats.sys ? ' <span class="small muted">σώμα+φορτίο</span>' : '')}${x.tr.conf === 'low' ? ' <span class="ev ev-heuristic" title="Λίγα σετ με γνωστό RIR">χαμηλή αξιοπιστία</span>' : ''}</td><td class="${x.tr.pctWk >= 0.25 ? 'neg' : x.tr.pctWk <= -1 ? 'pos' : ''}">${sfmt(x.tr.pctWk, 1)}</td></tr>`).join('')}</tbody></table>
+    <p class="note">Η τάση υπολογίζεται με γραμμική παλινδρόμηση σε όλες τις συνεδρίες, οπότε μια κακή μέρα δεν την αλλοιώνει. Σετ με γνωστό RIR δίνουν πιο αξιόπιστο 1RM. Χωρίς RIR η εκτίμηση σημειώνεται ως χαμηλής αξιοπιστίας. Για ασκήσεις σωματικού βάρους με πρόσθετο φορτίο, το 1RM αφορά σώμα + φορτίο. Για αρχάριους είναι φυσιολογικό +1–2%/εβδ., για προχωρημένους πολύ λιγότερο.</p></section>`;
   h += photosHTML();
   return h;
 }
@@ -2588,14 +2819,14 @@ document.addEventListener('click', e => {
     case 'sweetAdd': { const f = foods().byId.get(a.dataset.fid), qty = +a.dataset.qty, unit = a.dataset.unit; addEntries([makeEntry(f, { qty, unit, g: qty * Parser.unitGrams(f, unit).g }, 'db', true)], 's'); break; }
     case 'exAdd': openExPicker(); break;
     case 'exHistory': closeDlg(); openExHistory(a.dataset.exid); break;
-    case 'exRemove': { const x = d(), ex = x.ex.find(y => y.id === a.dataset.id); if (ex && ex.sets.some(s => s.r || s.min) && !confirm(`Αφαίρεση «${ex.name}» από αυτή την ημέρα;`)) break; x.ex = x.ex.filter(y => y.id !== a.dataset.id); saveDay(x); render(); break; }
+    case 'exRemove': { const x = d(), i = x.ex.findIndex(y => y.id === a.dataset.id), ex = x.ex[i]; if (!ex) break; undoToast(`Αφαιρέθηκε: ${ex.name}`, () => { const dd = getDay(x.date); dd.ex.splice(Math.min(i, dd.ex.length), 0, ex); saveDay(dd); render(); }); x.ex = x.ex.filter(y => y.id !== a.dataset.id); saveDay(x); render(); break; }
     case 'setAdd': { const x = d(), card = a.closest('[data-ex]'), ex = x.ex.find(y => y.id === card.dataset.ex), last = ex.sets[ex.sets.length - 1] || {}; ex.sets.push(ex.type === 'c' ? { min: '', km: '' } : { w: last.w ?? '', r: '', rir: '' }); saveDay(x); render(); const ins = $$(`[data-ex="${ex.id}"] input[data-f="${ex.type === 'c' ? 'min' : 'r'}"]`); if (ins.length) ins[ins.length - 1].focus(); break; }
-    case 'setRemove': { const x = d(), card = a.closest('[data-ex]'), ex = x.ex.find(y => y.id === card.dataset.ex); ex.sets.splice(+a.dataset.i, 1); saveDay(x); render(); break; }
+    case 'setRemove': { const x = d(), card = a.closest('[data-ex]'), ex = x.ex.find(y => y.id === card.dataset.ex), i = +a.dataset.i, gone = ex.sets.splice(i, 1)[0]; saveDay(x); render(); undoToast('Το σετ διαγράφηκε.', () => { const dd = getDay(x.date), e2 = dd.ex.find(y => y.id === ex.id); if (e2) { e2.sets.splice(Math.min(i, e2.sets.length), 0, gone); saveDay(dd); render(); } }); break; }
     case 'weekPrev': UI.week = Dates.add(UI.week, -7); render(); break;
     case 'weekNext': UI.week = Dates.add(UI.week, 7); render(); break;
     case 'gotoDay': UI.date = a.dataset.date; UI.view = 'day'; render(); window.scrollTo(0, 0); break;
     case 'weightAdd': { const kg = numIn($('#wKg').value), dt = $('#wDate').value; if (!kg || kg < 25 || kg > 350 || !dt) { toast('Δώσε έγκυρο βάρος και ημερομηνία.'); break; } setWeight(dt, kg); $('#wKg').value = ''; $('#weightList').innerHTML = weightListHTML(); $('#profResults').innerHTML = profResultsHTML(); toast('Καταχωρήθηκε.'); break; }
-    case 'weightDel': if (confirm('Διαγραφή ζύγισης;')) { setWeight(a.dataset.d, null); $('#weightList').innerHTML = weightListHTML(); $('#profResults').innerHTML = profResultsHTML(); } break;
+    case 'weightDel': { const dd = a.dataset.d, old = weights().find(w => w.d === dd); setWeight(dd, null); $('#weightList').innerHTML = weightListHTML(); $('#profResults').innerHTML = profResultsHTML(); if (old) undoToast('Η ζύγιση διαγράφηκε.', () => { Store.set('weights', weights().concat([old]).sort((x, y) => x.d < y.d ? -1 : 1)); refreshTodaySnap(); render(); }); break; }
     case 'foodManage': openFoodManage(); break;
     case 'foodNew': openFoodEdit(null); break;
     case 'foodEdit': openFoodEdit(a.dataset.id); break;
@@ -2605,12 +2836,20 @@ document.addEventListener('click', e => {
     case 'measureList': openMeasureList(); break;
     case 'measureEdit': openMeasure(a.dataset.d); break;
     case 'volPeriod': UI.volPeriod = +a.dataset.p; render(); break;
-    case 'export': doExport(); break;
+    case 'export': openExport(); break;
     case 'closeDay': openCloseDay(); break;
+    case 'dayComplete': { const x = d(); x.complete = !x.complete; saveDay(x); render(); toast(x.complete ? 'Η μέρα σημειώθηκε ως ολοκληρωμένη.' : 'Η μέρα δεν είναι πλέον ολοκληρωμένη.'); break; }
+    case 'setWu': { const x = d(), card = a.closest('[data-ex]'), ex = x.ex.find(y => y.id === card.dataset.ex), st = ex.sets[+a.dataset.i]; st.wu = !st.wu; saveDay(x); render(); break; }
+    case 'swapEx': openSwap(a.dataset.exid, a.dataset.id || null); break;
+    case 'swapToday': swapToday(a.dataset.id, a.dataset.to); break;
+    case 'swapProg': swapInProgram(a.dataset.from, a.dataset.to); break;
     case 'mealToggle': UI.mealOpen = UI.mealOpen || {}; UI.mealOpen[a.dataset.meal] = !UI.mealOpen[a.dataset.meal]; render(); break;
     case 'sweetToggle': UI.sweetOpen = !UI.sweetOpen; render(); break;
     case 'installApp': doInstall(); break;
     case 'installHelp': openInstallHelp(); break;
+    case 'backupDismiss': UI.backupDismissed = true; render(); break;
+    case 'undoImport': undoImport(); break;
+    case 'undo': { const fn = window._undoFn; window._undoFn = null; $('#undo').classList.remove('show'); if (fn) fn(); break; }
     case 'copyUrl': { const u = location.href.split('#')[0].split('?')[0]; (navigator.clipboard ? navigator.clipboard.writeText(u) : Promise.reject()).then(() => toast('Η διεύθυνση αντιγράφηκε.'), () => toast(u, 5000)); break; }
     case 'installDismiss': UI.installDismissed = true; render(); break;
     case 'myFoodPick': { const f = foods().byId.get(a.dataset.id), det = $('#myDet'); if (f && det) { foodDetail(det, f, null, null); det.scrollIntoView({ behavior: 'smooth' }); } break; }
@@ -2631,7 +2870,7 @@ document.addEventListener('click', e => {
     case 'closeAdd': { const c = (window._closeCombos || [])[+a.dataset.i]; if (c) { const meal = $('#mealSel').value; addEntries(c.items.map(x => makeEntry(x.f, { qty: x.qty, unit: x.unit, g: x.g }, 'db', true)), meal); closeDlg(); } break; }
     case 'favSave': openSaveFav(a.dataset.meal); break;
     case 'favAdd': { const fv = favMeals().find(x => x.id === a.dataset.id); if (fv) { addEntries(favToEntries(fv)); closeDlg(); } break; }
-    case 'favDel': if (confirm('Διαγραφή αγαπημένου;')) { Store.set('favmeals', favMeals().filter(x => x.id !== a.dataset.id)); paneFav($('#addPane')); } break;
+    case 'favDel': { const old = favMeals().find(x => x.id === a.dataset.id); Store.set('favmeals', favMeals().filter(x => x.id !== a.dataset.id)); paneFav($('#addPane')); if (old) undoToast('Το αγαπημένο διαγράφηκε.', () => { Store.set('favmeals', favMeals().concat([old])); const pn = $('#addPane'); if (pn) paneFav(pn); }); break; }
     case 'progStart': startProgramDay($('#progDaySel').value); break;
     case 'progNew': openProgramEditor(null); break;
     case 'progEdit': openProgramEditor(a.dataset.id); break;
@@ -2673,9 +2912,9 @@ document.addEventListener('input', e => {
     if (t.dataset.watch === 'sleep') { const m = t.value.trim().match(/^(\d{1,2})[:.,](\d{2})$/); if (m && t.value.includes(':')) v = +m[1] + +m[2] / 60; if (v !== null && (v < 0 || v > 16)) v = null; }
     x.watch[t.dataset.watch] = v === null ? '' : v; saveDay(x);
     const s = settings(), adj = Calc.watchAdjusted(numIn(x.watch.kcal), s.watchCorrection);
-    $('#watchAdj').innerHTML = watchAdjHTML(x.watch, adj, s);
+    const wa = $('#watchAdj'); if (wa) wa.innerHTML = watchAdjHTML(x.watch, adj, s);
     const ov = $('[data-watch="kcalOverride"]'); if (ov) ov.placeholder = adj !== null ? Math.round(adj) : 'αυτόματα';
-    const snap = daySnap(x); $('#expLine').innerHTML = expLineHTML(Calc.dayExpenditure(snap, x.watch, s), snap, s);
+    const el = $('#expLine'); if (el) { const snap = daySnap(x); el.innerHTML = expLineHTML(Calc.dayExpenditure(snap, x.watch, s), snap, s); }
   }
 });
 document.addEventListener('change', e => {
@@ -2697,7 +2936,7 @@ document.addEventListener('change', e => {
     else p[k] = t.value;
     if (k !== 'weight') saveProfile(p);
     $('#profResults').innerHTML = profResultsHTML(); $('#splitPreview').innerHTML = splitPreviewHTML();
-    if (k === 'goal') { $('[data-prof="goalPct"]').placeholder = Calc.GOALS[p.goal].pct; $('#goalNote').textContent = goalNote(p.goal); }
+    if (k === 'goal') { const pp = profile(); pp.goalSince = Dates.today(); Store.set('profile', pp); $('[data-prof="goalPct"]').placeholder = Calc.GOALS[p.goal].pct; $('#goalNote').textContent = goalNote(p.goal); }
     return;
   }
   if (t.dataset.ovr) { const p = profile(), v = numIn(t.value); p.overrides[t.dataset.ovr] = v === null ? '' : v; saveProfile(p); $('#profResults').innerHTML = profResultsHTML(); $('#splitPreview').innerHTML = splitPreviewHTML(); return; }
@@ -2726,6 +2965,33 @@ if (window.matchMedia) matchMedia('(prefers-color-scheme: dark)').addEventListen
   render();
   if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(err => console.warn('SW', err));
 })();
+
+/* ===== Εναλλακτικές ασκήσεις ===== */
+function openSwap(exId, dayExId) {
+  const def = exById(exId), subs = substitutesFor(exId), prog = activeProgram();
+  const inProg = prog && prog.days.some(d => d.items.some(it => it.exId === exId));
+  const hist = id => { const h = exHistory(id, Dates.today()); return h.length ? `τελευταία ${Dates.short(h[h.length - 1].date)}` : 'δεν την έχεις κάνει'; };
+  openDlg('Εναλλακτικές ασκήσεις', `<p class="small">Για <b>${esc(def ? def.name : exId)}</b> (${esc((def && def.prim || []).map(m => MUSCLES[m] ? MUSCLES[m].n : m).join(', '))}). Ασκήσεις για τους ίδιους κύριους μύες:</p>
+    ${subs.length ? `<ul class="plain">${subs.map(e => `<li class="row sweet-opt"><span class="grow"><b>${esc(e.name)}</b><br><span class="small muted">${esc((e.prim || []).map(m => MUSCLES[m] ? MUSCLES[m].n : m).join(', '))} · ${hist(e.id)}</span></span>
+      <span class="swapbtns">${dayExId ? `<button class="btn sm" data-act="swapToday" data-id="${dayExId}" data-to="${e.id}">Μόνο σήμερα</button>` : ''}${inProg ? `<button class="btn sm pri" data-act="swapProg" data-from="${exId}" data-to="${e.id}">Στο πρόγραμμα</button>` : ''}</span></li>`).join('')}</ul>` : '<p class="empty">Δεν βρέθηκαν εναλλακτικές στον κατάλογο.</p>'}
+    <p class="note"><b>Μόνο σήμερα</b>: π.χ. όταν το μηχάνημα είναι πιασμένο. Το πρόγραμμα δεν αλλάζει. <b>Στο πρόγραμμα</b>: μόνιμη αλλαγή, με σετ, επαναλήψεις και RIR ίδια. Αναιρείται. Η εναλλαγή ασκήσεων κάθε 4–8 εβδομάδες όταν υπάρχει στασιμότητα μπορεί να βοηθήσει, όχι όμως η συνεχής αλλαγή. Καλό είναι να το συζητάς με τον γυμναστή σου.</p>`);
+}
+function swapToday(dayExId, toId) {
+  const x = getDay(UI.date), ex = x.ex.find(y => y.id === dayExId), to = exById(toId); if (!ex || !to) return;
+  const old = JSON.parse(JSON.stringify(ex));
+  const hist = exHistory(to.id, UI.date).filter(h => h.date < UI.date), sug = ex.plan ? Calc.nextWeight(hist, ex.plan, to) : null;
+  Object.assign(ex, { exId: to.id, name: to.name, type: to.type, sug: sug ? sug.text : '', swappedFrom: old.exId, sets: ex.sets.map(s => ({ w: sug && sug.w !== null ? sug.w : '', r: '', rir: '', wu: s.wu })) });
+  saveDay(x); closeDlg(); render();
+  undoToast(`Σήμερα: ${to.name} αντί για ${old.name}.`, () => { const y = getDay(x.date), i = y.ex.findIndex(e => e.id === dayExId); if (i >= 0) { y.ex[i] = old; saveDay(y); render(); } });
+}
+function swapInProgram(fromId, toId) {
+  const all = programs(), prog = all.list.find(p => p.id === all.active), to = exById(toId), from = exById(fromId); if (!prog || !to) return;
+  if (!confirm(`Μόνιμη αλλαγή στο πρόγραμμα: ${from ? from.name : fromId} → ${to.name}; Σετ, επαναλήψεις και RIR μένουν ίδια.`)) return;
+  const before = JSON.parse(JSON.stringify(all));
+  prog.days.forEach(d => d.items.forEach(it => { if (it.exId === fromId) { it.prevExId = fromId; it.exId = toId; it.inc = null; } }));
+  Store.set('programs', all); closeDlg(); render();
+  undoToast(`Στο πρόγραμμα: ${to.name}.`, () => { Store.set('programs', before); render(); });
+}
 
 /* ===================== ΕΚΔΟΣΗ 3 ===================== */
 
@@ -2812,7 +3078,7 @@ function startProgramDay(did) {
   const d = getDay(UI.date);
   for (const it of day.items) {
     const def = exById(it.exId); if (!def) continue;
-    const plan = { sets: it.sets, lo: it.lo, hi: it.hi, rest: it.rest };
+    const plan = { sets: it.sets, lo: it.lo, hi: it.hi, rest: it.rest, rirLo: it.rirLo ?? null, rirHi: it.rirHi ?? null, inc: it.inc ?? null };
     const hist = exHistory(def.id, UI.date).filter(x => x.date < UI.date);
     const sug = Calc.nextWeight(hist, plan, def);
     const sets = Array.from({ length: it.sets }, () => def.type === 'c' ? { min: '', km: '' } : { w: sug && sug.w !== null ? sug.w : '', r: '', rir: '' });
@@ -2824,30 +3090,33 @@ let progDraft = null;
 function openProgramEditor(id) {
   if (id !== undefined) { const p = programs().list.find(x => x.id === id); progDraft = p ? JSON.parse(JSON.stringify(p)) : { id: 'p_' + uid(), name: 'Πρόγραμμα γυμναστή', days: [{ id: 'd_' + uid(), name: 'Ημέρα Α', items: [] }] }; }
   const P = progDraft, isSaved = programs().list.some(x => x.id === P.id);
+  const inp = (k, v, ph, cls = '') => `<input type="text" inputmode="decimal" data-pg="${k}" value="${v ?? ''}" placeholder="${ph || ''}" class="${cls}">`;
   openDlg('Πρόγραμμα προπόνησης', `<label class="f"><span>Όνομα προγράμματος</span><input type="text" id="pgName" value="${esc(P.name)}"></label>
     ${P.days.map((day, di) => `<div class="parsed" data-di="${di}"><div class="row"><input type="text" data-pg="dayName" value="${esc(day.name)}" class="grow" aria-label="Όνομα ημέρας"><button class="x" data-act="pgDayDel" data-di="${di}" aria-label="Διαγραφή ημέρας">✕</button></div>
-      ${day.items.length ? `<table class="sets pg"><thead><tr><th>Άσκηση</th><th>Σετ</th><th>Επαν.</th><th>Διάλ. (″)</th><th></th></tr></thead><tbody>${day.items.map((it, ii) => { const e = exById(it.exId); return `<tr data-ii="${ii}"><td class="pgname">${esc(e ? e.name : it.exId)}</td>
-        <td><input type="text" inputmode="numeric" data-pg="sets" value="${it.sets}"></td><td class="rng"><input type="text" inputmode="numeric" data-pg="lo" value="${it.lo}">–<input type="text" inputmode="numeric" data-pg="hi" value="${it.hi}"></td>
-        <td><input type="text" inputmode="numeric" data-pg="rest" value="${it.rest}"></td><td><button class="x" data-act="pgUp" data-di="${di}" data-ii="${ii}" aria-label="Πάνω">↑</button><button class="x" data-act="pgItemDel" data-di="${di}" data-ii="${ii}" aria-label="Διαγραφή">✕</button></td></tr>`; }).join('')}</tbody></table>` : '<p class="small muted">Καμία άσκηση ακόμα.</p>'}
+      ${day.items.length ? day.items.map((it, ii) => { const e = exById(it.exId); return `<div class="pgi" data-ii="${ii}"><div class="row between"><b class="small">${esc(e ? e.name : it.exId)}</b><span><button class="x" data-act="pgUp" data-di="${di}" data-ii="${ii}" aria-label="Πάνω">↑</button><button class="x" data-act="pgItemDel" data-di="${di}" data-ii="${ii}" aria-label="Διαγραφή">✕</button></span></div>
+        <div class="pgg"><label><span>Σετ</span>${inp('sets', it.sets)}</label><label><span>Επαν.</span><span class="rng">${inp('lo', it.lo)}–${inp('hi', it.hi)}</span></label><label><span>RIR</span><span class="rng">${inp('rirLo', it.rirLo, '1')}–${inp('rirHi', it.rirHi, '2')}</span></label><label><span>Διάλ. ″</span>${inp('rest', it.rest)}</label><label><span>Βήμα kg</span>${inp('inc', it.inc, 'αυτ.')}</label></div></div>`; }).join('') : '<p class="small muted">Καμία άσκηση ακόμα.</p>'}
       <button class="btn sm" data-act="pgAddEx" data-di="${di}">+ Άσκηση</button></div>`).join('')}
     <button class="btn sm" data-act="pgDayAdd">+ Ημέρα</button>
-    <p class="note">Γράψε το πρόγραμμα όπως σου το έδωσε ο γυμναστής: σετ, εύρος επαναλήψεων (π.χ. 8–12) και διάλειμμα. Όταν πιάσεις το πάνω όριο σε όλα τα σετ, η εφαρμογή προτείνει αύξηση βάρους την επόμενη φορά. Η δομή του προγράμματος δεν αλλάζει ποτέ αυτόματα.</p>
+    <p class="note">Γράψε το πρόγραμμα όπως σου το έδωσε ο γυμναστής. <b>RIR στόχος</b>: πόσες επαναλήψεις θέλει να σου μένουν (π.χ. 1–2). <b>Βήμα kg</b>: η μικρότερη αύξηση που μπορείς να κάνεις σε αυτή την άσκηση (π.χ. 1 για αλτήρες ανά χέρι, 2,5 για μπάρα, ή το βήμα του μηχανήματος). Όταν πιάσεις το πάνω όριο επαναλήψεων με το RIR του στόχου, η εφαρμογή προτείνει αύξηση κατά ένα βήμα. Η δομή του προγράμματος δεν αλλάζει ποτέ αυτόματα.</p>
     <div class="dlg-f">${isSaved ? '<button class="btn danger" data-act="pgDelete">Διαγραφή</button><span class="grow"></span>' : ''}<button class="btn pri" data-act="pgSave">Αποθήκευση</button></div>`, body => {
     body.addEventListener('input', e => {
       const t = e.target; if (t.id === 'pgName') { P.name = t.value; return; }
       const k = t.dataset.pg; if (!k) return; const di = +t.closest('[data-di]').dataset.di;
       if (k === 'dayName') { P.days[di].name = t.value; return; }
-      const ii = +t.closest('[data-ii]').dataset.ii, v = numIn(t.value); if (v !== null) P.days[di].items[ii][k] = Math.max(0, Math.round(v));
+      const ii = +t.closest('[data-ii]').dataset.ii, v = numIn(t.value), it = P.days[di].items[ii];
+      if (['inc', 'rirLo', 'rirHi'].includes(k)) { it[k] = v === null ? null : Math.max(0, k === 'inc' ? v : Math.round(v)); return; }
+      if (v !== null) it[k] = Math.max(0, Math.round(v));
     });
   });
 }
+
 function pgAction(act, a) {
   const P = progDraft; if (!P) return;
   if (act === 'pgDayAdd') { P.days.push({ id: 'd_' + uid(), name: 'Ημέρα ' + 'ΑΒΓΔΕΖΗΘ'[P.days.length % 8], items: [] }); openProgramEditor(); }
   if (act === 'pgDayDel') { if (P.days.length > 1 && confirm('Διαγραφή ημέρας;')) { P.days.splice(+a.dataset.di, 1); openProgramEditor(); } }
   if (act === 'pgItemDel') { P.days[+a.dataset.di].items.splice(+a.dataset.ii, 1); openProgramEditor(); }
   if (act === 'pgUp') { const it = P.days[+a.dataset.di].items, i = +a.dataset.ii; if (i > 0) { [it[i - 1], it[i]] = [it[i], it[i - 1]]; openProgramEditor(); } }
-  if (act === 'pgAddEx') { const di = +a.dataset.di; openExPicker(def => { const comp = (def.prim || []).length > 1; P.days[di].items.push({ exId: def.id, sets: 3, lo: comp ? 6 : 8, hi: comp ? 10 : 12, rest: comp ? 150 : 90 }); openProgramEditor(); }); }
+  if (act === 'pgAddEx') { const di = +a.dataset.di; openExPicker(def => { const comp = (def.prim || []).length > 1; P.days[di].items.push({ exId: def.id, sets: 3, lo: comp ? 6 : 8, hi: comp ? 10 : 12, rest: comp ? 150 : 90, rirLo: comp ? 1 : 0, rirHi: comp ? 3 : 2, inc: null }); openProgramEditor(); }); }
   if (act === 'pgSave') { const all = programs(); all.list = all.list.filter(x => x.id !== P.id).concat([P]); if (!all.active) all.active = P.id; Store.set('programs', all); closeDlg(); render(); toast('Το πρόγραμμα αποθηκεύτηκε.'); }
   if (act === 'pgDelete') { if (!confirm('Διαγραφή προγράμματος; Οι καταγεγραμμένες προπονήσεις μένουν.')) return; const all = programs(); all.list = all.list.filter(x => x.id !== P.id); if (all.active === P.id) all.active = all.list[0] ? all.list[0].id : null; Store.set('programs', all); closeDlg(); render(); }
 }
@@ -2993,6 +3262,7 @@ function aiReport(opts = {}) {
     if (s.highMode !== 'none') { const sp = splitFor(t); L.push(`Κατανομή: +${f0(sp.boost)} kcal ${s.highMode === 'long' ? 'Παρ–Κυρ' : 'Σάβ–Κυρ'}, −${f0(sp.cut)} τις υπόλοιπες μέρες.`); }
   }
   const ad = adaptiveOn(today);
+  if (ad.loggedN) L.push(`Ποιότητα καταγραφής (28 ημ.): ${ad.completeN} από ${ad.loggedN} μέρες σημειωμένες ως πλήρεις.`);
   if (ad.ready) L.push(`Προσαρμοστικό TDEE: ${f0(ad.tdee)} ±${f0(ad.ci)} kcal (${ad.nI} μέρες καταγραφής, ${ad.nW} ζυγίσεις, αξιοπιστία ${f0(ad.confidence * 100)}%). Τάση βάρους ${sfmt(ad.slopeKgWk, 2)} kg/εβδ. (${sfmt(ad.ratePctWk, 2)}%/εβδ.). Εύρος στόχου ${sfmt(G.rate[0], 2)} έως ${sfmt(G.rate[1], 2)}%/εβδ.`);
   L.push('');
   L.push('## Διατροφή');
@@ -3020,7 +3290,8 @@ function aiReport(opts = {}) {
   L.push('## Προπόνηση (τελευταίες 4 εβδομάδες)');
   const prog = activeProgram(); if (prog) L.push(`Πρόγραμμα γυμναστή «${prog.name}»: ${prog.days.map(d => `${d.name}: ${d.items.map(it => { const e = exById(it.exId); return `${e ? e.name : it.exId} ${it.sets}×${it.lo}–${it.hi}`; }).join(', ')}`).join(' | ')}.`);
   const ta = trainingAnalysis(28);
-  L.push(`${ta.workoutDays} προπονήσεις. Μέσο RIR: ${ta.vol.avgRir !== null ? f1(ta.vol.avgRir) : 'δεν καταγράφεται'}. Σκληρά σετ ${ta.vol.hard}, σετ με RIR ≥5: ${ta.vol.soft}.`);
+  if (ta.adh && ta.adh.planned) L.push(`Ολοκλήρωση προγράμματος: ${f0(ta.adh.pct * 100)}% των προγραμματισμένων σετ (${ta.adh.done}/${ta.adh.planned}).`);
+  L.push(`${ta.workoutDays} προπονήσεις. Μέσο RIR: ${ta.vol.avgRir !== null ? f1(ta.vol.avgRir) : 'δεν καταγράφεται'}. Σετ RIR 0–3: ${ta.vol.hard}, RIR 4–5: ${ta.vol.moderate}, RIR 6+: ${ta.vol.soft}, ζεστάματα: ${ta.vol.warm}.`);
   const vm = Object.entries(MUSCLES).map(([k, m]) => { const v = ta.vol.muscles[k]; return v ? `${m.n} ${f1(v.perWeek)} (${f1(v.freq)}×)` : `${m.n} 0`; });
   L.push(`Σκληρά σετ/εβδ. ανά μυ (κλασματικά, συχνότητα): ${vm.join(', ')}.`);
   const tr = ta.trends.filter(x => x.tr).slice(0, 10); if (tr.length) L.push(`Τάση δύναμης: ${tr.map(x => `${x.name} ${x.type === 'bw' && x.last.stats.top.w === 0 ? `${x.last.stats.maxReps} επαν.` : `e1RM ≈${f1(x.last.stats.e1rm)} kg`} (${sfmt(x.tr.pctWk, 1)}%/εβδ., ${x.tr.n} συνεδρίες)`).join('; ')}.`);
@@ -3052,7 +3323,9 @@ function openAI() {
 const OFF = (() => {
   const BASE = 'https://world.openfoodfacts.org';
   const FIELDS = 'code,product_name,product_name_el,product_name_en,generic_name,brands,quantity,serving_size,serving_quantity,product_quantity,product_quantity_unit,nutriments,categories_tags,image_front_small_url,nutriscore_grade,countries_tags';
-  const stamps = [];
+  const stamps = [], rstamps = [];
+  // Όρια OFF: 15 αναγνώσεις προϊόντος και 10 αναζητήσεις το λεπτό. Κρατάμε περιθώριο.
+  function allowRead() { const now = Date.now(); while (rstamps.length && now - rstamps[0] > 60000) rstamps.shift(); if (rstamps.length >= 12) return false; rstamps.push(now); return true; }
   function allowSearch() { const now = Date.now(); while (stamps.length && now - stamps[0] > 60000) stamps.shift(); if (stamps.length >= 8) return false; stamps.push(now); return true; }
   async function get(url, tries = 2) {
     let last;
@@ -3061,6 +3334,7 @@ const OFF = (() => {
         const ctrl = new AbortController(), to = setTimeout(() => ctrl.abort(), 12000);
         const r = await fetch(url, { signal: ctrl.signal }); clearTimeout(to);
         if (r.status === 503 || r.status === 429) { last = new Error('busy'); await new Promise(res => setTimeout(res, 1500 * (i + 1))); continue; }
+        if (r.status === 404) { try { return await r.json(); } catch { return { status: 'failure' }; } }
         if (!r.ok) throw new Error('http ' + r.status);
         return await r.json();
       } catch (e) { last = e; if (i < tries - 1) await new Promise(res => setTimeout(res, 1200)); }
@@ -3120,13 +3394,22 @@ const OFF = (() => {
     if (single) food.piece = pq; else if (sq && sq >= 5 && sq <= 300) food.piece = sq;
     return { food, issues, ok: food.kcal !== null && pr !== null && c !== null && f !== null };
   }
+  const APP = 'app_name=WeightMeUp&app_version=12';
   async function byBarcode(code) {
-    const j = await get(`${BASE}/api/v2/product/${encodeURIComponent(code)}.json?fields=${FIELDS}`);
-    return j && j.status === 1 && j.product ? toFood(Object.assign({ code }, j.product)) : null;
+    if (!allowRead()) { const e = new Error('rate'); e.rate = true; throw e; }
+    const c = encodeURIComponent(code);
+    // API v3 (τρέχουσα)· αν αποτύχει, εφεδρεία στη v2
+    try {
+      const j = await get(`${BASE}/api/v3/product/${c}.json?fields=${FIELDS}&${APP}`, 1);
+      if (j && j.product && /^success/.test(String(j.status))) return toFood(Object.assign({ code }, j.product));
+      if (j && (j.status === 'failure' || j.status === 0)) return null;
+    } catch {}
+    const j = await get(`${BASE}/api/v2/product/${c}.json?fields=${FIELDS}&${APP}`);
+    return j && (j.status === 1 || /^success/.test(String(j.status))) && j.product ? toFood(Object.assign({ code }, j.product)) : null;
   }
   async function search(q, greeceOnly) {
     if (!allowSearch()) { const e = new Error('rate'); e.rate = true; throw e; }
-    const params = new URLSearchParams({ search_terms: q, search_simple: '1', action: 'process', json: '1', page_size: '24', fields: FIELDS });
+    const params = new URLSearchParams({ search_terms: q, search_simple: '1', action: 'process', json: '1', page_size: '24', fields: FIELDS, app_name: 'WeightMeUp', app_version: '12' });
     if (greeceOnly) { params.set('tagtype_0', 'countries'); params.set('tag_contains_0', 'contains'); params.set('tag_0', 'greece'); }
     const j = await get(`${BASE}/cgi/search.pl?${params}`, 2);
     return (j.products || []).filter(p => p.code).map(p => toFood(p)).filter(x => x.food.kcal !== null || x.food.p !== null);
@@ -3200,7 +3483,7 @@ function paneProducts(pane) {
       const r = await OFF.byBarcode(code);
       if (!r) det.innerHTML = `<div class="parsed miss"><p class="small">Το barcode ${esc(code)} δεν υπάρχει στο Open Food Facts.</p><button class="btn sm pri" data-act="labelNew" data-code="${code}">Καταχώρηση από την ετικέτα</button></div>`;
       else productDetail(det, r.food, r.issues, true);
-    } catch { det.innerHTML = `<p class="note" style="border-color:var(--warn)">Το Open Food Facts δεν απάντησε. Δοκίμασε ξανά ή <button class="linkish" data-act="labelNew" data-code="${code}">καταχώρησέ το από την ετικέτα</button>.</p>`; }
+    } catch (e) { det.innerHTML = e && e.rate ? '<p class="note" style="border-color:var(--warn)">Πολλές αναζητήσεις σε λίγο χρόνο (όριο Open Food Facts). Περίμενε ένα λεπτό.</p>' : `<p class="note" style="border-color:var(--warn)">Το Open Food Facts δεν απάντησε. Δοκίμασε ξανά ή <button class="linkish" data-act="labelNew" data-code="${code}">καταχώρησέ το από την ετικέτα</button>.</p>`; }
   };
   $('#pdCodeGo', pane).addEventListener('click', () => byCode($('#pdCode', pane).value));
   $('#pdScan', pane).addEventListener('click', () => Scanner.open($('#pdScanBox') || det, code => { $('#pdCode', pane).value = code; byCode(code); }));
@@ -3446,7 +3729,7 @@ function routineItems(date) {
   const slots = new Set(d.meals.map(e => e.meal));
   // Κάθε μέρα
   items.push({ k: 'weigh', freq: 'Κάθε μέρα', t: 'Ζύγιση', w: 'Πρωί, μετά την τουαλέτα, πριν φας ή πιεις', done: weights().some(x => x.d === date), act: 'goSteps' });
-  items.push({ k: 'meals', freq: 'Κάθε μέρα', t: 'Φαγητό', w: d.meals.length ? `${d.meals.length} καταγραφές σε ${slots.size} γεύματα` : 'Κάθε γεύμα, όσο πιο κοντά στην ώρα του', done: slots.size >= 2, act: 'goMeals' });
+  items.push({ k: 'meals', freq: 'Κάθε μέρα', t: 'Φαγητό', w: d.complete ? 'Ολοκληρώθηκε' : d.meals.length ? `${d.meals.length} καταγραφές. Στο τέλος πάτα «Ολοκλήρωσα την καταγραφή»` : 'Κάθε γεύμα, και στο τέλος «Ολοκλήρωσα την καταγραφή»', done: !!d.complete, act: 'goMeals' });
   const hasSteps = numIn((d.watch || {}).steps) !== null, hasSleep = numIn((d.watch || {}).sleep) !== null;
   items.push({ k: 'watch', freq: 'Κάθε μέρα', t: 'Ύπνος και βήματα', w: `Ύπνος το πρωί, βήματα το βράδυ, από το ρολόι${hasSleep && !hasSteps ? '. Λείπουν τα βήματα' : !hasSleep && hasSteps ? '. Λείπει ο ύπνος' : ''}`, done: hasSteps && hasSleep, act: 'goSteps' });
   const trains = activeProgram() || allSessions().some(x => daysSince(x.date) <= 14);
@@ -3528,7 +3811,7 @@ function openBulkTotals() {
         if (k < 300 || k > 8000) { bad++; return; }
         const d = getDay(r.dataset.d);
         d.meals.push({ id: uid(), meal: 'd', name: 'Σύνολο ημέρας (από άλλη εφαρμογή)', foodId: null, g: null, per100: null, kcal: k, p: v('p') || 0, c: v('c') || 0, f: v('f') || 0, src: 'manual', est: false, total: true });
-        saveDay(d); n++;
+        d.complete = true; saveDay(d); n++;
       });
       if (bad) { toast(`${bad} μέρες έχουν μη ρεαλιστικές θερμίδες (κάτω από 300 ή πάνω από 8.000) και δεν αποθηκεύτηκαν.`, 4000); if (!n) return; }
       bulkDays = 14; closeDlg(); render(); toast(n ? `Αποθηκεύτηκαν ${n} μέρες.` : 'Δεν συμπληρώθηκε καμία μέρα.');
@@ -3561,7 +3844,7 @@ function openMeasure(date) {
       if (rec.waist < 40 || rec.waist > 250) { toast('Μη έγκυρη τιμή μέσης.'); return; }
       Store.set('measures', measures().filter(x => x.d !== d && x.d !== m.d).concat([rec])); refreshTodaySnap(); closeDlg(); render(); toast('Η μέτρηση αποθηκεύτηκε.');
     });
-    const del = $('#ms_del', body); if (del) del.addEventListener('click', () => { if (confirm('Διαγραφή μέτρησης;')) { Store.set('measures', measures().filter(x => x.d !== m.d)); refreshTodaySnap(); closeDlg(); render(); } });
+    const del = $('#ms_del', body); if (del) del.addEventListener('click', () => { const gone = m; Store.set('measures', measures().filter(x => x.d !== m.d)); refreshTodaySnap(); closeDlg(); render(); undoToast('Η μέτρηση διαγράφηκε.', () => { Store.set('measures', measures().concat([gone])); refreshTodaySnap(); render(); }); });
   });
 }
 /* Για το ποσοστό λίπους: η τελευταία μέση, και λαιμός/γλουτοί από την πιο πρόσφατη μέτρηση που τους έχει (έως 120 ημέρες πίσω) */
@@ -3682,6 +3965,14 @@ function openAIFood(prefill) {
 /* ----- «Δικά μου» ----- */
 const myFoods = () => foods().list.filter(f => f.custom || f.modified || ['off', 'label', 'recipe', 'ai'].includes(f.src)).sort((a, b) => a.name.localeCompare(b.name, 'el'));
 const srcLabel = f => f.src === 'recipe' ? 'συνταγή' : f.src === 'off' ? 'προϊόν' : f.src === 'label' ? 'από ετικέτα' : f.src === 'ai' ? 'εκτίμηση AI' : f.modified ? 'τροποποιημένο' : 'δικό μου';
+
+/* ----- Αναίρεση (αντί για «Είσαι σίγουρος;») ----- */
+let undoT;
+function undoToast(msg, fn) {
+  const u = $('#undo'); if (!u) { toast(msg); return; }
+  window._undoFn = fn; $('#undoMsg').textContent = msg; u.classList.add('show');
+  clearTimeout(undoT); undoT = setTimeout(() => { u.classList.remove('show'); window._undoFn = null; }, 6000);
+}
 
 </script>
 </body>

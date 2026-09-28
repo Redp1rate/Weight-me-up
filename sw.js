@@ -1,6 +1,6 @@
 /* Service worker: λειτουργία offline και ανθεκτικότητα.
    Αύξησε το VERSION όταν ανεβάζεις νέα έκδοση. */
-const VERSION = 'isozygio-v10-2';
+const VERSION = 'wmu-6624419ecf';
 const ASSETS = ['./', './index.html', './manifest.webmanifest', './logo-mask.png', './icon-192.png', './icon-512.png', './zxing.min.js'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(VERSION).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
