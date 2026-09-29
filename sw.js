@@ -1,28 +1,12 @@
-/* Service worker: λειτουργία offline και ανθεκτικότητα.
-   Αύξησε το VERSION όταν ανεβάζεις νέα έκδοση. */
-const VERSION = 'wmu-6624419ecf';
-const ASSETS = ['./', './index.html', './manifest.webmanifest', './logo-mask.png', './icon-192.png', './icon-512.png', './zxing.min.js'];
-self.addEventListener('install', e => {
-  e.waitUntil(caches.open(VERSION).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
-});
-self.addEventListener('activate', e => {
-  // Οι παλιές εκδόσεις σβήνονται μόνο αφού η νέα έχει αποθηκευτεί πλήρως
-  e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== VERSION).map(k => caches.delete(k)))).then(() => self.clients.claim()));
-});
-self.addEventListener('fetch', e => {
-  const req = e.request;
-  if (req.method !== 'GET' || new URL(req.url).origin !== location.origin) return;
-  if (req.mode === 'navigate') {
-    // Δίκτυο πρώτα, αλλά ΜΟΝΟ έγκυρη απάντηση (200) αντικαθιστά την αποθηκευμένη σελίδα.
-    // Σε σφάλμα (404, 5xx) ή χωρίς σύνδεση, ανοίγει η τελευταία καλή έκδοση.
-    e.respondWith(fetch(req).then(r => {
-      if (r && r.ok && r.status === 200) { const cp = r.clone(); caches.open(VERSION).then(c => c.put('./index.html', cp)); return r; }
-      return caches.match('./index.html').then(hit => hit || r);
-    }).catch(() => caches.match('./index.html')));
-    return;
-  }
-  e.respondWith(caches.match(req).then(hit => hit || fetch(req).then(r => {
-    if (r && r.ok) { const cp = r.clone(); caches.open(VERSION).then(c => c.put(req, cp)); }
-    return r;
-  })));
+/* Versioned app shell; activate updates on next launch, never midway through editing. */
+const VERSION='wmu-v14-1-3-compact-f902529da2e2', PREFIX='wmu-';
+const ASSETS=['./','./index.html','./manifest.webmanifest','./logo-mask.png','./icon-192.png','./icon-512.png','./zxing.min.js'];
+// cache:'reload': η εγκατάσταση παίρνει τα αρχεία από τον διακομιστή, όχι από την HTTP cache του browser (αλλιώς η νέα έκδοση μπορεί να αποθηκεύσει το παλιό index.html).
+self.addEventListener('install',e=>e.waitUntil(caches.open(VERSION).then(c=>c.addAll(ASSETS.map(u=>new Request(u,{cache:'reload'}))))));
+self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith(PREFIX)&&k!==VERSION).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
+self.addEventListener('fetch',e=>{
+  const url=new URL(e.request.url),scope=new URL('./',self.location.href);
+  if(e.request.method!=='GET'||url.origin!==location.origin||!url.pathname.startsWith(scope.pathname))return;
+  const asset=e.request.mode==='navigate'?new URL('index.html',scope).href:e.request;
+  e.respondWith(caches.open(VERSION).then(async cache=>{const hit=await cache.match(asset);return hit||fetch(e.request);}));
 });
