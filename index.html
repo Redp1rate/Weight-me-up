@@ -2,7 +2,7 @@
 <html lang="el">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-iPQ3dHb7+INYDxt9AHdsSRssLAIfhAbLvXYUEA2YmOI=' 'sha256-vfhHHFTCdCwFYL369blAEbHcMXfF5awFiRCaAl2Xf9o=' 'sha256-nNB8jCISNbIv0vdMPH7zWIw8ZvS50X3gkIfNoe+c4xE=' 'sha256-b5NAKKx4vdRvObFa+X4QtxcAqMHDGGxu9K9W0Inu3Cg='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://images.openfoodfacts.org https://static.openfoodfacts.org https://world.openfoodfacts.org; connect-src 'self' https://world.openfoodfacts.org; worker-src 'self'; manifest-src 'self'; media-src 'self' blob: mediastream:; object-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-iPQ3dHb7+INYDxt9AHdsSRssLAIfhAbLvXYUEA2YmOI=' 'sha256-fC0h9z+7GbwEUsGNy89HhqxLxAJCg95vpPW5ttZGPwE=' 'sha256-nNB8jCISNbIv0vdMPH7zWIw8ZvS50X3gkIfNoe+c4xE=' 'sha256-SEYSPLgmSXT1p7xkO9rMpZUPjU1A4QowdFGyj6IbxQE='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://images.openfoodfacts.org https://static.openfoodfacts.org https://world.openfoodfacts.org; connect-src 'self' https://world.openfoodfacts.org; worker-src 'self'; manifest-src 'self'; media-src 'self' blob: mediastream:; object-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#F3F5F8" media="(prefers-color-scheme: light)">
@@ -34,7 +34,8 @@
   --accent:#8EB0E6; --accent-ink:#0A1220; --accent-soft:#1C2C4A; --over:#E57368; --warn:#E0A43A;
   --p:#8EB0E6; --c:#5677AE; --f:#5E6B82; --shadow:none;
 }
-*,*::before,*::after{box-sizing:inherit}
+/* Ρητά border-box: η κληρονόμηση (inherit) σπάει μέσα σε <details> στους νεότερους browsers (::details-content), και τα πεδία ξεχείλιζαν. */
+*,*::before,*::after{box-sizing:border-box}
 html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.45;
   font-variant-numeric:tabular-nums;-webkit-text-size-adjust:100%;padding-bottom:calc(72px + env(safe-area-inset-bottom,0px))}
@@ -399,6 +400,8 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 .results{border:0;background:var(--sunk)}
 .parsed{border:0;background:var(--sunk);border-radius:16px}
 .parsed.miss{background:transparent;border:1px dashed var(--line)}
+/* Πεδία πάνω σε γκρι κάρτα: φόντο επιφάνειας, αλλιώς δεν φαίνεται ότι η ποσότητα/το τρόφιμο αλλάζουν. */
+.parsed input[type=text],.parsed input[type=number],.parsed input[type=search],.parsed select,.parsed textarea{background:var(--surface)}
 dialog{border-radius:26px 26px 0 0}
 .dlg-h{padding:18px 18px 8px}
 .dlg-h::before{content:"";position:absolute;left:50%;top:8px;width:40px;height:4px;border-radius:2px;background:var(--line);transform:translateX(-50%)}
@@ -981,8 +984,8 @@ const Reliability = (() => {
     if(invalid||duplicate||nI<Math.ceil(window*(window===21?.9:.85))||nW<(window===14?6:8)||span<minimumSpan)return empty;
     const r=linreg(validW.map(x=>x.d),validW.map(x=>x.kg));if(!r)return empty;
     const ed=energyDensity(fmKg),avgIntake=validI.reduce((a,x)=>a+x.kcal,0)/nI,tdee=avgIntake-r.b*ed.v;
-    // t(0,975): ίση ή συντηρητικότερη από την ακριβή τιμή για κάθε df (df=5 → 2,571).
-    const df=nW-2,tcrit=df<=4?2.776:df<=5?2.571:df<=8?2.447:df<=18?2.306:2.101;
+    // t(0,975) στρογγυλεμένο προς τα πάνω: ίσο ή συντηρητικότερο από το ακριβές για κάθε df (π.χ. df=4: 2,7764 → 2,777).
+    const df=nW-2,tcrit=df<=4?2.777:df<=5?2.571:df<=8?2.447:df<=18?2.307:2.101;
     const ci=tcrit*r.se*ed.v,meanKg=validW.reduce((a,w)=>a+w.kg,0)/nW,ratePctWk=r.b*7/meanKg*100;
     const half=window/2,halves=[validI.filter(x=>x.d<half).length,validI.filter(x=>x.d>=half).length];
     const aligned=validI.every(x=>x.d>=validW[0].d-1&&x.d<=validW.at(-1).d);
@@ -1602,6 +1605,51 @@ const Parser = (() => {
     return { g: n * f.portion * mult, assumed: true, qty: n * mult, unit: 'portion' };
   }
 
+  /* Ακριβή ονόματα/συνώνυμα (ως λέξεις, όπως τα συγκρίνει η αναζήτηση) → τρόφιμο. Όνομα κοινό σε δύο τρόφιμα δεν επιβάλλεται. */
+  const exactCache = new WeakMap();
+  function exactMap(index) {
+    let m = exactCache.get(index);
+    if (!m) { m = new Map(); for (const e of index) for (const c of e.cands) { const k = c.join(' '); m.set(k, m.has(k) && m.get(k) !== e.f ? null : e.f); } exactCache.set(index, m); }
+    return m;
+  }
+  const isNumTok = x => /^x?\d+(?:\.\d+)?[^\d]*$/.test(x) && !/%$/.test(x) || NUMWORDS[x] !== undefined;
+  /* Ποσότητα, μονάδα και μέγεθος από λίστα λέξεων. */
+  function quantityOf(toks) {
+    let n = null, unit = null, mult = 1;
+    toks = toks.filter(x => { if (SIZE[x] !== undefined) { mult *= SIZE[x]; return false; } return true; });
+    for (let i = 0; i < toks.length; i++) {
+      if (/%$/.test(toks[i])) continue; // «2%» είναι μέρος του ονόματος (γιαούρτι 2%), όχι ποσότητα
+      const m = toks[i].replace(/^x(?=\d)/, '').match(/^(\d+(?:\.\d+)?)([^\d]*)$/), nw = NUMWORDS[toks[i]]; // «x2» = 2
+      if (m || nw !== undefined) {
+        n = m ? parseFloat(m[1]) : nw; toks.splice(i, 1);
+        const attached = m && m[2] ? unitOf(m[2]) : null;
+        if (attached) unit = attached;
+        else if (i < toks.length) {
+          const u = unitOf(toks[i]);
+          if (u && !(u === 'slice' && i === toks.length - 1)) { unit = u; toks.splice(i, 1); }
+        }
+        break;
+      }
+    }
+    // μονάδα χωρίς αριθμό: «μερίδα μακαρόνια», «κτσ μέλι»
+    if (!unit) {
+      const i = toks.findIndex((x, j) => { const u = unitOf(x); return u && !['g', 'ml'].includes(u) && !(u === 'slice' && j === toks.length - 1) && !(u === 'piece' && x === 'x'); });
+      if (i >= 0 && toks.length > 1) { unit = unitOf(toks[i]); toks.splice(i, 1); }
+    }
+    return { n, unit, mult, toks };
+  }
+  /* Αν η φράση (ολόκληρη ή μετά την αρχική ποσότητα/μονάδα) είναι ακριβές όνομα τροφίμου: {food, lead, rest}. */
+  function exactFood(toks, index) {
+    const m = exactMap(index), hit = a => a.length ? (m.get(words(a.join(' ')).join(' ')) || null) : null;
+    const leadable = x => isNumTok(x) || SIZE[x] !== undefined || x.startsWith('__') || !!unitOf(x);
+    // Πρώτα ολόκληρη η φράση, μετά χωρίς 1, 2, … αρχικές λέξεις ποσότητας/μονάδας/μεγέθους.
+    for (let i = 0; i < toks.length; i++) {
+      if (i && !leadable(toks[i - 1])) break;
+      const f = hit(toks.slice(i)); if (f) return { food: f, lead: toks.slice(0, i), rest: toks.slice(i) };
+    }
+    return null;
+  }
+
   function parse(text, index) {
     let t = norm(text)
       .replace(/(^|\s)κ\.\s?(τ\.\s?)?σ\.?(?=\s|$)/g, ' __tbsp ')
@@ -1610,33 +1658,31 @@ const Parser = (() => {
       .replace(/κουταλ(ακι|ακια|ι|ια|ιεσ) (του )?γλυκου/g, ' __tsp ')
       .replace(/(\d),(\d)/g, '$1.$2')
       .replace(/(^|[^\d.\/])(\d+)\/(\d+)(?![\d.\/])/g, (m, pre, a, b) => +b ? pre + String(Math.round(a / b * 1000) / 1000) : m);
-    const segs = t.split(/\n|,|;|\+|\s&\s|\sκαι\s|\sμε\s|\sμαζι\s/).map(s => s.trim()).filter(Boolean);
+    // Διαχωρισμός: «,» «;» «+» και νέα γραμμή πάντα· «με», «και», «&», «μαζί» μόνο αν δεν είναι μέρος ονόματος (π.χ. «σοκολάτα με φουντούκια», συνταγή «φασολάκια με πατάτες»).
+    const segs = [];
+    for (const chunk of t.split(/\n|,|;|\+/)) {
+      const parts = chunk.split(/(\s&\s|\sκαι\s|\sμε\s|\sμαζι\s)/);
+      for (let i = 0; i < parts.length; i += 2) {
+        let j = parts.length - 1;
+        for (; j > i; j -= 2) { const cand = parts.slice(i, j + 1).join('').trim().split(/\s+/); if (exactFood(cand, index)) break; }
+        segs.push(parts.slice(i, j + 1).join('').trim()); i = j;
+      }
+    }
     const out = [];
-    for (const seg of segs) {
-      let toks = seg.split(/\s+/).filter(Boolean);
-      let n = null, unit = null, mult = 1;
-      // μέγεθος
-      toks = toks.filter(x => { if (SIZE[x] !== undefined) { mult *= SIZE[x]; return false; } return true; });
-      for (let i = 0; i < toks.length; i++) {
-        if (/%$/.test(toks[i])) continue; // «2%» είναι μέρος του ονόματος (γιαούρτι 2%), όχι ποσότητα
-        const m = toks[i].replace(/^x(?=\d)/, '').match(/^(\d+(?:\.\d+)?)([^\d]*)$/), nw = NUMWORDS[toks[i]]; // «x2» = 2
-        if (m || nw !== undefined) {
-          n = m ? parseFloat(m[1]) : nw; toks.splice(i, 1);
-          const attached = m && m[2] ? unitOf(m[2]) : null;
-          if (attached) unit = attached;
-          else if (i < toks.length) {
-            const u = unitOf(toks[i]);
-            if (u && !(u === 'slice' && i === toks.length - 1)) { unit = u; toks.splice(i, 1); }
-          }
-          break;
-        }
+    for (const seg of segs.filter(Boolean)) {
+      const all = seg.split(/\s+/).filter(Boolean), ex = exactFood(all, index);
+      if (ex) {
+        // Ακριβές όνομα: ποσότητα μόνο από τις αρχικές λέξεις· αριθμοί μέσα στο όνομα (π.χ. «γιαούρτι 0», «7days») δεν είναι ποσότητα.
+        const qv = quantityOf(ex.lead.concat(['__food__'])); // το τρόφιμο ακολουθεί: «2 φέτες ψωμί» = 2 φέτες
+        if (!qv.unit && ex.rest.length > 1 && unitOf(ex.rest[0]) && !['g', 'ml'].includes(unitOf(ex.rest[0]))) qv.unit = unitOf(ex.rest[0]); // «1 σκουπ πρωτεΐνης»
+        const r = gramsFor(ex.food, qv.n, qv.unit, qv.mult), ranked = rank(words(ex.rest.join(' ')), index).map(x => x.f).filter(f => f !== ex.food);
+        out.push({ raw: seg, query: words(ex.rest.join(' ')).join(' '), food: ex.food, alts: [ex.food, ...ranked].slice(0, 6), n: qv.n, unit: qv.unit, mult: qv.mult,
+                   grams: Math.round(r.g * 10) / 10, qty: r.qty, qunit: r.unit, assumed: !!r.assumed || (qv.n === null && !qv.unit), note: r.note || '' });
+        continue;
       }
-      // μονάδα χωρίς αριθμό: «μερίδα μακαρόνια», «κτσ μέλι»
-      if (!unit) {
-        const i = toks.findIndex((x, j) => { const u = unitOf(x); return u && !['g', 'ml'].includes(u) && !(u === 'slice' && j === toks.length - 1) && !(u === 'piece' && x === 'x'); });
-        if (i >= 0 && toks.length > 1) { unit = unitOf(toks[i]); toks.splice(i, 1); }
-      }
-      toks = toks.filter(x => !x.startsWith('__')).flatMap(x => /^\d+(?:\.\d+)?%$/.test(x) ? x.slice(0, -1).split('.') : /^\d/.test(x) ? [] : [x]);
+      let { n, unit, mult, toks } = quantityOf(all);
+      // Ίδια επεξεργασία λέξεων με τα ονόματα της βάσης (στίξη όπως «/», «(», «-»).
+      toks = toks.filter(x => !x.startsWith('__')).flatMap(x => /^\d+(?:\.\d+)?%$/.test(x) ? x.slice(0, -1).split('.') : /^\d/.test(x) ? [] : x.replace(/[()%.,\/\-]/g, ' ').split(/\s+/).filter(Boolean));
       let q = toks.filter(x => !STOP.has(x)), first = true;
       // Μόνο αριθμοί (π.χ. το «2» από «2%») δεν αρκούν για να αναγνωριστεί νέο τρόφιμο.
       while (q.length && q.some(x => !/^\d+$/.test(x))) {
@@ -1731,6 +1777,8 @@ const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': 
 const fmt = (x, d = 0) => (x === null || x === undefined || isNaN(x)) ? '–' : Number(x).toLocaleString('el-GR', { maximumFractionDigits: d, minimumFractionDigits: 0 });
 const sfmt = (x, d = 0) => { if (x === null || x === undefined || isNaN(x)) return '–'; const r = Math.round(x * 10 ** d) / 10 ** d; return (r > 0 ? '+' : r < 0 ? '−' : '') + fmt(Math.abs(r), d); };
 const numIn = Reliability.num;
+/* Έκδοση εφαρμογής: εμφανίζεται στο Προφίλ (κεφαλίδα και «Κατάσταση»). */
+const APP_VERSION = '1.1.4';
 /* Πεδία βημάτων/θερμίδων: «10.000» με ελληνικό διαχωριστικό χιλιάδων σημαίνει 10000, όχι 10. */
 const intIn = v => { const s = String(v ?? '').trim(); return /^\d{1,3}(?:\.\d{3})+$/.test(s) ? Number(s.replace(/\./g, '')) : numIn(s); };
 const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
@@ -1816,7 +1864,10 @@ function baseTargets(date) {
     let state=Store.get('targetState');
     if(!state||state.signature!==signature){state={signature,value:t.formulaTdee,date,source:'formula'};if(date===Dates.today())Store.set('targetState',state);}
     if(date===Dates.today()&&recoveryGate(date,ad).calorieChange&&Dates.idx(date)-Dates.idx(state.date)>=7){
-      state={...state,value:Reliability.limitWeekly(state.value,t.tdee,Dates.idx(date)-Dates.idx(state.date),(ad.maxChange||75)/Math.max(1,1+t.pct/100)),date,source:'blend'};Store.set('targetState',state);
+      // Σε κάθε αξιολόγηση ο στόχος κινείται προς την εκτίμηση από τα δεδομένα κατά τον συντελεστή εμπιστοσύνης (έως 35%/80%),
+      // ξεκινώντας από τον τρέχοντα στόχο και όχι από τον τύπο: έτσι το λάθος του τύπου μειώνεται σε κάθε αξιολόγηση αντί να μένει μόνιμα.
+      const proposed=ad.confidence*ad.tdee+(1-ad.confidence)*state.value;
+      state={...state,value:Reliability.limitWeekly(state.value,proposed,Dates.idx(date)-Dates.idx(state.date),(ad.maxChange||75)/Math.max(1,1+t.pct/100)),date,source:'blend'};Store.set('targetState',state);
     }
     const historical=date<state.date?(getDay(date).snap?.tdee||t.formulaTdee):state.value;
     const q={...p,overrides:{...p.overrides,tdee:historical}};
@@ -1925,7 +1976,7 @@ function render() { storageStatus();if(recoveryScreen()){const fab=$('#fab');if(
 
   $$('.bottom button').forEach(b => { if (b.dataset.nav === UI.view) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current'); });
   $('#datenav').style.display = UI.view === 'day' ? '' : 'none';
-  $('#title').innerHTML = UI.view === 'day' ? '<span class="logo" aria-hidden="true"></span><span class="brandtxt">Weight me up</span>' : { week: 'Εβδομάδα', progress: 'Πρόοδος', profile: 'Προφίλ & στόχοι' }[UI.view];
+  $('#title').innerHTML = UI.view === 'day' ? '<span class="logo" aria-hidden="true"></span><span class="brandtxt">Weight me up</span>' : { week: 'Εβδομάδα', progress: 'Πρόοδος', profile: `Προφίλ & στόχοι <small>v${APP_VERSION}</small>` }[UI.view];
   const fab = $('#fab'); if (fab) fab.hidden = !(UI.view === 'day' && UI.tab === 'meals');
   const lbl = $('#dateLbl'); lbl.textContent = UI.date === Dates.today() ? 'Σήμερα' : UI.date === Dates.add(Dates.today(), -1) ? 'Χθες' : Dates.label(UI.date);
   lbl.classList.toggle('today', UI.date === Dates.today());
@@ -1944,7 +1995,7 @@ function backupBanner() {
 
 function viewDay() {
   const d = getDay(UI.date), snap = daySnap(d), tot = dayTotals(d);
-  let h = repairBannerHTML() + installBannerHTML() + backupBanner() + onboardingHTML();
+  let h = updateBannerHTML() + repairBannerHTML() + installBannerHTML() + backupBanner() + onboardingHTML();
   if (!snap) h += `<div class="banner"><span>${esc(noTargetsReason(d.date))}</span><button class="btn sm pri" data-nav="profile">Προφίλ</button></div>`;
   h += ledgerHTML(d, snap, tot);
   h += routineHTML(d);
@@ -2307,6 +2358,9 @@ function drawCharts() {
 
 /* ===== ΠΡΟΒΟΛΗ ΠΡΟΦΙΛ ===== */
 function viewProfile() {
+  return updateBannerHTML() + viewProfileBody();
+}
+function viewProfileBody() {
   const p = profile(), s = settings(), w = weightOn(Dates.today()), o = p.overrides, g = Calc.GOALS[p.goal] || Calc.GOALS.maintain, info = Store.info();
   const sel = (name, obj, cur) => `<select data-prof="${name}">${Object.entries(obj).map(([k, v]) => `<option value="${k}" ${k === cur ? 'selected' : ''}>${v.label}</option>`).join('')}</select>`;
   return `<section class="sec"><h2>Στοιχεία</h2>
@@ -2397,7 +2451,7 @@ function viewProfile() {
     <p class="small muted">${BUILTIN_FOODS.length} ενσωματωμένα τρόφιμα, ${myProducts().length} προϊόντα σουπερμαρκέτ, ${recipes().length} συνταγές και ${(Store.get('foods', []) || []).length - myProducts().length - recipes().length} δικά σου ή τροποποιημένα.</p>
     <div class="row" style="flex-wrap:wrap"><button class="btn sm" data-act="foodManage">Διαχείριση τροφίμων</button><button class="btn sm" data-act="labelNew">+ Προϊόν από ετικέτα</button></div>
   </section>
-  <p class="small muted">Έκδοση 14.1.3 · Έκδοση σχήματος αντιγράφων 6</p><section class="sec"><h2>Αντίγραφο ασφαλείας</h2>${Store.keys('_storageRecovery').length?'<p><button class="btn" data-act="archiveExport">Export αντιγράφου ανάκτησης</button></p>':''}
+  <section class="sec"><h2>Αντίγραφο ασφαλείας</h2>${Store.keys('_storageRecovery').length?'<p><button class="btn" data-act="archiveExport">Export αντιγράφου ανάκτησης</button></p>':''}
     <p class="small">Τελευταίο export: <b>${s.lastBackup ? new Date(s.lastBackup).toLocaleString('el-GR') : 'ποτέ'}</b></p>
     <div class="row" style="flex-wrap:wrap"><button class="btn pri sm" data-act="export">Export σε JSON</button>
       <label class="btn sm" style="display:inline-block">Import από JSON<input type="file" accept="application/json,.json" id="importFile" hidden></label></div>
@@ -2405,7 +2459,9 @@ function viewProfile() {
     ${Store.get('_preImport') && Date.now() - Store.get('_preImport').at < 30 * 864e5 ? `<button class="btn sm" data-act="undoImport" style="margin-top:8px">Αναίρεση import (${new Date(Store.get('_preImport').at).toLocaleDateString('el-GR')})</button>` : ''}
     <p class="note">Το import αντικαθιστά όλα τα τρέχοντα δεδομένα, αφού πρώτα ελέγξει ότι το αρχείο είναι ακέραιο και κρατήσει αντίγραφο των τωρινών. Κράτα το αρχείο export εκτός συσκευής, π.χ. στο cloud.</p>
   </section>
-  <section class="sec"><h2>Κατάσταση</h2>
+  <section class="sec" id="appStatus"><h2>Κατάσταση</h2>
+    <div class="row between" style="flex-wrap:wrap;gap:8px"><span>Έκδοση εφαρμογής: <b>${APP_VERSION}</b> <span class="small muted">(σχήμα αντιγράφων ${Reliability.SCHEMA})</span></span><button class="btn sm" data-act="checkUpdate">Έλεγχος για ενημέρωση</button></div>
+    <p class="small" id="updStatus">${esc(Updates.text())}</p>${Updates.ready() ? '<button class="btn sm pri" data-act="applyUpdate">Ενημέρωση τώρα</button>' : ''}
     <p class="small">Αποθήκευση: <b>${info.mode === 'idb' ? 'IndexedDB' : info.mode === 'ls' ? 'localStorage (εφεδρεία)' : 'μόνο προσωρινή μνήμη — απαιτείται Export'}</b>. Μόνιμη αποθήκευση: <b>${info.persisted ? 'ναι' : 'όχι'}</b>. Offline: <b>${navigator.serviceWorker && navigator.serviceWorker.controller ? 'ενεργό' : location.protocol.startsWith('http') ? 'ενεργοποιείται μετά την επόμενη φόρτωση' : 'μη διαθέσιμο (άνοιξε την εφαρμογή από http/https)'}</b>.</p>
     <p class="small">Λειτουργία: <b>${otherBrowser() ? 'συντόμευση του ' + otherBrowser() : isStandalone() ? 'εγκατεστημένη εφαρμογή' : 'μέσα στον browser'}</b>${isStandalone() && !otherBrowser() ? '' : ' <button class="linkish small" data-act="installHelp">Πώς την εγκαθιστώ σωστά;</button>'}</p>
     <p class="small">Σήμανση τιμών: <span class="est">1.234</span> εκτιμώμενη, ${M('1.234', true)} χειροκίνητη, και 1.234 χωρίς σήμανση για μέτρηση ή τιμή από τη βάση.</p>
@@ -2526,12 +2582,15 @@ function foodDetail(det, f, lastQty, lastUnit) {
   });
 }
 function makeEntry(f, r, src, est) {
-  const per100 = Object.fromEntries(['kcal','p','c','f','fiber','satfat','salt','sugars'].map(k=>[k,f[k]??null])), m = macrosFor(per100, r.g);
-  return { id: uid(), name: f.name, foodId: f.id, g: Math.round(r.g * 10) / 10, qty: r.qty, unit: r.unit, per100, kcal: m.kcal, p: m.p, c: m.c, f: m.f, ...nutrientsFor(per100,r.g), src, est, sweet: !!f.sweet };
+  // Οι θερμίδες υπολογίζονται από τα ίδια (στρογγυλεμένα) γραμμάρια που αποθηκεύονται.
+  const g = Math.round(r.g * 10) / 10, per100 = Object.fromEntries(['kcal','p','c','f','fiber','satfat','salt','sugars'].map(k=>[k,f[k]??null])), m = macrosFor(per100, g);
+  return { id: uid(), name: f.name, foodId: f.id, g, qty: r.qty, unit: r.unit, per100, kcal: m.kcal, p: m.p, c: m.c, f: m.f, ...nutrientsFor(per100,g), src, est, sweet: !!f.sweet };
 }
 function addEntries(entries, meal) {
   meal = meal || ($('#mealSel') ? $('#mealSel').value : 'b');
   const d = getDay(UI.date);
+  // Ποσότητα εκτός ορίων (π.χ. «150 κιλά» αντί για «150 γρ»): σαφές μήνυμα αντί για γενικό σφάλμα επικύρωσης.
+  if(entries.some(e=>(e.g!==null&&e.g!==undefined&&!Reliability.inRange(e.g,.001,100000))||(e.items||[]).some(i=>i.g!==null&&i.g!==undefined&&!Reliability.inRange(i.g,.001,100000)))){toast('Μη ρεαλιστική ποσότητα (πάνω από 100 κιλά). Έλεγξε τη μονάδα. Δεν προστέθηκε καταχώρηση.',6000);return;}
   if(entries.some(e=>['kcal','p','c','f'].some(k=>!Reliability.inRange(e[k],0,k==='kcal'?100000:20000)))){toast('Μη έγκυρα διατροφικά στοιχεία. Δεν προστέθηκε καταχώρηση.',5000);return;}
   entries.forEach(e => { e.meal = meal; d.meals.push(e); });
   UI.mealOpen = UI.mealOpen || {}; UI.mealOpen[meal] = true; UI.tab = 'meals';
@@ -2550,7 +2609,7 @@ function paneText(pane) {
   $('#tai', pane).addEventListener('click', () => openAIFood(ta.value.trim()));
   let parsed = [];
   const fOf = b => foods().byId.get($('[data-food]', b).value);
-  const upd = box => { const f = fOf(box), r = qtyRead(box, f), m = macrosFor(f, r.g); $('[data-pv]', box).innerHTML = `<span>${fmt(r.g)} g</span><span><b class="est">${fmt(m.kcal)}</b> kcal</span><span>Π ${fmt(m.p)}</span><span>Υ ${fmt(m.c)}</span><span>Λ ${fmt(m.f)}</span>`; updTotal(); };
+  const upd = box => { const f = fOf(box), r = qtyRead(box, f), m = macrosFor(f, r.g); $('[data-pv]', box).innerHTML = `${r.g > 3000 ? '<span class="pvwarn" style="color:var(--over);font-weight:650">⚠ Πολύ μεγάλη ποσότητα: έλεγξε τη μονάδα</span>' : ''}<span>${fmt(r.g)} g</span><span><b class="est">${fmt(m.kcal)}</b> kcal</span><span>Π ${fmt(m.p)}</span><span>Υ ${fmt(m.c)}</span><span>Λ ${fmt(m.f)}</span>`; updTotal(); };
   const collect = () => { const out = []; $$('.parsed[data-i]', res).forEach(b => { if (!$('[data-inc]', b).checked) return; const f = fOf(b), r = qtyRead(b, f); if (f && r.g > 0) out.push(makeEntry(f, r, 'text', true)); }); return out; };
   const updTotal = () => { const t = $('#ttot', res); if (!t) return; const es = collect(), s = k => es.reduce((a, e) => a + e[k], 0); t.innerHTML = es.length ? `Σύνολο: <b>${fmt(s('kcal'))}</b> kcal · Π ${fmt(s('p'))} · Υ ${fmt(s('c'))} · Λ ${fmt(s('f'))}` : ''; };
   const renderRes = () => {
@@ -2559,7 +2618,7 @@ function paneText(pane) {
     res.innerHTML = (found.length > 1 ? `<div class="parsed combo"><label class="f"><span>Τίτλος πιάτου</span><input type="text" id="ttitle" value="${esc(suggestTitle(found.map(r => r.food)))}"></label>
         <div class="radios"><label><input type="radio" name="tmode" value="one" checked>Ένα πιάτο με σύνολο</label><label><input type="radio" name="tmode" value="many">Ξεχωριστά τρόφιμα</label></div>
         <p class="small" id="ttot" style="margin:8px 0 0"></p></div>` : '')
-      + parsed.map((r, i) => r.food ? `<details class="parsed" data-i="${i}" ${found.length === 1 ? 'open' : ''}><summary class="row"><input type="checkbox" data-inc checked aria-label="Συμπερίληψη"><span class="grow"><b class="small">${esc(r.food.name)}</b> <span class="small muted">«${esc(r.raw)}»${r.assumed ? ' · υπόθεση ποσότητας' : ''}</span></span></summary>
+      + parsed.map((r, i) => r.food ? `<details class="parsed" data-i="${i}" ${found.length === 1 || r.grams > 3000 ? 'open' : ''}><summary class="row"><input type="checkbox" data-inc checked aria-label="Συμπερίληψη"><span class="grow"><b class="small">${esc(r.food.name)}</b> <span class="small muted">«${esc(r.raw)}»${r.assumed ? ' · υπόθεση ποσότητας' : ''}</span>${r.grams > 3000 ? ' <b class="small" style="color:var(--over)">⚠ πολύ μεγάλη ποσότητα</b>' : ''}</span></summary>
         <label class="f" style="margin:8px 0 6px"><span>Τρόφιμο</span><select data-food>${r.alts.map(f => `<option value="${f.id}" ${f.id === r.food.id ? 'selected' : ''}>${esc(f.name)}</option>`).join('')}</select></label>
         <div data-qwbox>${qtyWidgetHTML(r.food, Math.round(r.qty * 100) / 100, r.qunit === 'g' && r.food.liquid ? 'ml' : r.qunit)}</div><div class="preview" data-pv></div></details>`
         : `<div class="parsed miss"><span class="small">Δεν βρέθηκε: «${esc(r.query || r.raw)}».</span> <button class="linkish small" data-aiq="${esc(r.query || r.raw)}">Ρώτα το AI</button></div>`).join('')
@@ -3275,6 +3334,8 @@ document.addEventListener('click', e => {
     case 'rcpEdit': openRecipeEditor(a.dataset.id); break;
     case 'rcpAdd': { const f = foods().byId.get(a.dataset.id); if (f) { addEntries([makeEntry(f, { qty: 1, unit: 'portion', g: f.portion }, 'db', true)]); closeDlg(); } break; }
     case 'dlgClose': closeDlg(); break;
+    case 'checkUpdate': Updates.check(true); break;
+    case 'applyUpdate': Updates.apply(); break;
   }
 });
 $('#datePicker').addEventListener('change', e => { if (e.target.value) { UI.date = e.target.value; render(); } });
@@ -3377,7 +3438,7 @@ let booted = false; // true μόλις φορτωθούν τα δεδομένα�
   booted = true;
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && Dates.today() !== lastToday) { if (UI.date === lastToday) UI.date = Dates.today(); lastToday = Dates.today(); render(); } });
   render();
-  if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(err => console.warn('SW', err));
+  if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').then(r => Updates.watch(r)).catch(err => console.warn('SW', err));
 })();
 
 /* ===== Εναλλακτικές ασκήσεις ===== */
@@ -4304,7 +4365,7 @@ function measureForBf(date) {
 
 /* ----- Εγκατάσταση ως εφαρμογή (όχι συντόμευση) ----- */
 let installPrompt = null;
-window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); installPrompt = e; if (booted && (UI.view === 'day' || UI.view === 'profile')) render(); });
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); installPrompt = e; if (booted && (UI.view === 'day' || UI.view === 'profile')) renderSoon(); });
 window.addEventListener('appinstalled', () => { installPrompt = null; toast('Η εφαρμογή εγκαταστάθηκε. Άνοιξέ τη από το εικονίδιό της.', 4000); if (booted) render(); });
 const otherBrowser = () => (navigator.brave && 'Brave') || (/Firefox\//.test(navigator.userAgent) && 'Firefox') || (/SamsungBrowser/.test(navigator.userAgent) && 'Samsung Internet') || (/OPR\/|Opera/.test(navigator.userAgent) && 'Opera') || (/EdgA\//.test(navigator.userAgent) && 'Edge') || (/MiuiBrowser|XiaoMi/.test(navigator.userAgent) && 'Mi Browser') || null;
 const isStandalone = () => (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
@@ -4434,6 +4495,54 @@ function openAIFood(prefill) {
 /* ----- «Δικά μου» ----- */
 const myFoods = () => foods().list.filter(f => f.custom || f.modified || ['off', 'label', 'recipe', 'ai'].includes(f.src)).sort((a, b) => a.name.localeCompare(b.name, 'el'));
 const srcLabel = f => f.src === 'recipe' ? 'συνταγή' : f.src === 'off' ? 'προϊόν' : f.src === 'label' ? 'από ετικέτα' : f.src === 'ai' ? 'εκτίμηση AI' : f.modified ? 'τροποποιημένο' : 'δικό μου';
+
+/* Νέα απόδοση από γεγονός στο παρασκήνιο (νέα έκδοση, πρόταση εγκατάστασης): όχι ενώ γράφεις σε πεδίο της σελίδας,
+   γιατί τα πεδία αποθηκεύονται όταν ολοκληρωθεί η πληκτρολόγηση και θα χανόταν ό,τι γράφεται. */
+let renderDeferred = false;
+function renderSoon() {
+  const a = document.activeElement, main = $('#main');
+  if (!main || !a || !main.contains(a) || !a.matches('textarea,select,input:not([type=checkbox]):not([type=radio]):not([type=button]):not([type=submit])')) { renderDeferred = false; render(); return; }
+  if (renderDeferred) return; renderDeferred = true;
+  main.addEventListener('focusout', () => setTimeout(() => { renderDeferred = false; renderSoon(); }, 0), { once: true });
+}
+
+/* ----- Ενημερώσεις εφαρμογής ----- */
+/* Η νέα έκδοση εγκαθίσταται στο παρασκήνιο και ενεργοποιείται όταν ξανανοίξει η εφαρμογή, ή αμέσως με «Ενημέρωση τώρα»,
+   μόνο αφού επιβεβαιωθεί ότι αποθηκεύτηκαν όλα τα δεδομένα. */
+const Updates = (() => {
+  let reg = null, state = '';
+  const TEXT = { ready: 'Υπάρχει νέα έκδοση, έτοιμη για εγκατάσταση.', current: 'Έχεις την τελευταία έκδοση.', checking: 'Έλεγχος για νέα έκδοση…', downloading: 'Η νέα έκδοση κατεβαίνει. Θα εμφανιστεί «Ενημέρωση τώρα» μόλις ολοκληρωθεί.', offline: 'Δεν έγινε έλεγχος: δεν υπάρχει σύνδεση ή ο ιστότοπος δεν απάντησε.', unsupported: 'Ο έλεγχος ενημερώσεων λειτουργεί όταν η εφαρμογή ανοίγει από τη διεύθυνσή της (https).' };
+  const text = () => TEXT[state] || '';
+  function set(s) { const was = state; state = s; const el = document.getElementById('updStatus'); if (el) el.textContent = text(); if (s === 'ready' && was !== 'ready' && booted) renderSoon(); }
+  function watch(r) {
+    if (reg === r) return;
+    reg = r; if (r.waiting && navigator.serviceWorker.controller) set('ready');
+    r.addEventListener('updatefound', () => { const w = r.installing; if (w) w.addEventListener('statechange', () => { if (w.state === 'installed' && navigator.serviceWorker.controller) set('ready'); else if (w.state === 'redundant' && state === 'downloading') set('offline'); }); });
+  }
+  async function check(manual) {
+    // Αμέσως μετά το άνοιγμα η καταχώριση του service worker μπορεί να μην έχει ολοκληρωθεί ακόμη.
+    if (!reg && 'serviceWorker' in navigator && location.protocol.startsWith('http')) { try { const r = await navigator.serviceWorker.getRegistration(); if (r) watch(r); } catch {} }
+    if (!reg) { set('unsupported'); return; }
+    set('checking');
+    // Όριο χρόνου: σε δίκτυο που δεν απαντά, το μήνυμα δεν μένει για πάντα στο «Έλεγχος…».
+    try { await Promise.race([reg.update(), new Promise((_, no) => setTimeout(() => no(new Error('timeout')), 30000))]); } catch { set('offline'); return; }
+    const w = reg.installing;
+    if (w) await new Promise(res => { const t = setTimeout(res, 20000); w.addEventListener('statechange', () => { if (w.state !== 'installing') { clearTimeout(t); res(); } }); });
+    set(reg.waiting ? 'ready' : reg.installing ? 'downloading' : 'current'); if (manual && state === 'current') toast(TEXT.current);
+  }
+  async function apply() {
+    if (!reg || !reg.waiting) { check(true); return; }
+    try { await Store.flush(); } catch {}
+    const i = Store.info();
+    if (i.pending || i.lastError || i.mode === 'memory') { toast('Η αποθήκευση δεν επιβεβαιώθηκε. Κάνε Export πριν την ενημέρωση.', 6000); return; }
+    navigator.serviceWorker.addEventListener('controllerchange', () => location.reload(), { once: true });
+    reg.waiting.postMessage('skipWaiting');
+  }
+  return { watch, check, apply, text, ready: () => state === 'ready' };
+})();
+function updateBannerHTML() {
+  return Updates.ready() ? '<div class="banner"><span><b>Νέα έκδοση διαθέσιμη</b><br><span class="small muted">Τα δεδομένα σου δεν επηρεάζονται.</span></span><button class="btn sm pri" data-act="applyUpdate">Ενημέρωση τώρα</button></div>' : '';
+}
 
 /* ----- Αναίρεση (αντί για «Είσαι σίγουρος;») ----- */
 let undoT;
