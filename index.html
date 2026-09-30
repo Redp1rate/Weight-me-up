@@ -2,7 +2,7 @@
 <html lang="el">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-zMlUZs10VgfQD35Q/Eez4+GOvcKskuiK4BcxRvPoD7M=' 'sha256-HYkg+4uzTPdo34Tq80vhJbICYDzuI+m7vNuWcJz4a4U=' 'sha256-nNB8jCISNbIv0vdMPH7zWIw8ZvS50X3gkIfNoe+c4xE=' 'sha256-TllWTloB91MxkYModyWN33sRUKzUaja8wl7KXPCJhOo='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://images.openfoodfacts.org https://static.openfoodfacts.org https://world.openfoodfacts.org; connect-src 'self' https://world.openfoodfacts.org; worker-src 'self'; manifest-src 'self'; media-src 'self' blob: mediastream:; object-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-lW+rtHDP7vG5jt9l6xI6GGBwwCcW5JI7mybBLWRrl6I=' 'sha256-HYkg+4uzTPdo34Tq80vhJbICYDzuI+m7vNuWcJz4a4U=' 'sha256-RfPA1QR6c0Leq70jBh8GW6X0MimecEUlV20rfM0JRz4=' 'sha256-Lf/Il0Nxheetj6vmS00id+orqAygSbLW+XSVYNesNiM='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://images.openfoodfacts.org https://static.openfoodfacts.org https://world.openfoodfacts.org; connect-src 'self' https://world.openfoodfacts.org; worker-src 'self'; manifest-src 'self'; media-src 'self' blob: mediastream:; object-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#F3F5F8" media="(prefers-color-scheme: light)">
@@ -592,6 +592,239 @@ tr.wu input{opacity:.6}
  .hero-kv div{grid-template-columns:minmax(0,1fr);padding:8px}.hero-kv svg{display:none}.hero-kv b{font-size:.88rem}
  .datenav button{padding:7px 8px}
 }
+
+
+
+
+
+
+
+
+/* ================= v1.1.8 NORDIC START ================= */
+/* Σκανδιναβικό μινιμαλ: ένα σύστημα τόνων, λεπτές γραμμές αντί για σκιές, καθαρή ιεραρχία κειμένου.
+   Αντικαθιστά τις προηγούμενες στρώσεις χρωμάτων (v6–v12). Κύρια χρώματα: μπλε και λευκό/ασημί. */
+:root{
+  --bg:#F5F6F8; --surface:#FFFFFF; --sunk:#F0F2F5; --line:#E3E7EC; --line-2:#D3D9E1;
+  --ink:#0E1A33; --ink-2:#2B3648; --muted:#566175; --faint:#8C95A4; --ph:#A9B1BD;
+  --accent:#1D3A68; --accent-ink:#FFFFFF; --accent-soft:#EBF0F7; --accent-2:#5B7DB5;
+  --hero1:#15284C; --hero2:#15284C;
+  --p:#1D3A68; --c:#6F8FC2; --f:#AEB8C7;
+  --good:#2F7A5A; --warn:#9A6414; --over:#B03E37; --info:#4B5F82;
+  --mb:#1D3A68; --ml:#1D3A68; --md:#4B5F82; --ms:#1D3A68; --silver:#B7BFCB;
+  --r-lg:18px; --r-sm:12px; --shadow:none; --shadow-float:0 8px 28px rgba(14,26,51,.10);
+  --font:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans","Helvetica Neue",Arial,sans-serif;
+}
+:root[data-theme="dark"]{
+  --bg:#0B1322; --surface:#111B2E; --sunk:#16213A; --line:#223049; --line-2:#2E3E5B;
+  --ink:#EEF2F8; --ink-2:#D2DAE6; --muted:#A9B4C6; --faint:#7F8BA0; --ph:#66728A;
+  --accent:#A3BDE8; --accent-ink:#0B1322; --accent-soft:#1B2A46; --accent-2:#7F9CCF;
+  --hero1:#15284C; --hero2:#15284C; --p:#A3BDE8; --c:#6F8FC2; --f:#5F6D86;
+  --good:#5DBB8E; --warn:#D9A54A; --over:#E0776F; --info:#95A7C8;
+  --mb:#A3BDE8; --ml:#A3BDE8; --md:#95A7C8; --ms:#A3BDE8; --silver:#5F6D86; --shadow-float:0 8px 28px rgba(0,0,0,.35);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0B1322; --surface:#111B2E; --sunk:#16213A; --line:#223049; --line-2:#2E3E5B;
+  --ink:#EEF2F8; --ink-2:#D2DAE6; --muted:#A9B4C6; --faint:#7F8BA0; --ph:#66728A;
+  --accent:#A3BDE8; --accent-ink:#0B1322; --accent-soft:#1B2A46; --accent-2:#7F9CCF;
+  --hero1:#15284C; --hero2:#15284C; --p:#A3BDE8; --c:#6F8FC2; --f:#5F6D86;
+  --good:#5DBB8E; --warn:#D9A54A; --over:#E0776F; --info:#95A7C8;
+  --mb:#A3BDE8; --ml:#A3BDE8; --md:#95A7C8; --ms:#A3BDE8; --silver:#5F6D86; --shadow-float:0 8px 28px rgba(0,0,0,.35);
+}}
+
+/* Βάση και τυπογραφία */
+html,body{background:var(--bg)!important;color:var(--ink)}
+body{font-family:var(--font);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;letter-spacing:-.003em}
+b,strong{font-weight:650;color:var(--ink)}
+h2{font-size:1.02rem;font-weight:650;letter-spacing:-.01em;color:var(--ink);margin:0 0 12px}
+h3{font-weight:650;color:var(--ink)}
+.small{font-size:.86rem;line-height:1.45}
+.muted,.small.muted,.sub,.k{color:var(--muted)!important}
+.note{color:var(--ink-2);background:var(--sunk);border:0;border-radius:14px;padding:12px 14px;font-size:.86rem;line-height:1.5}
+.note.safety{background:color-mix(in srgb,var(--warn) 8%,var(--surface));border-left:3px solid var(--warn);border-radius:0 12px 12px 0}
+.v,.big,.hero-num,.kc,.pill,td,.stat .v{font-variant-numeric:tabular-nums}
+
+/* Επιφάνειες: λευκό, λεπτή γραμμή, χωρίς σκιές */
+.sec,.mealcard,.exc,.list,.sweet-c,.rtcard,.onb,.banner,.cb,.rec,.parsed,.results,.addbtn,.daydone,.quick button{box-shadow:none!important}
+.sec{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:18px 18px 16px;margin:14px 0}
+.banner{background:var(--surface)!important;border:1px solid var(--line);border-radius:16px;color:var(--ink)}
+.banner.backup,.banner.install,.banner.repair{border-left:3px solid var(--accent)}
+
+/* Κεφαλίδα & πλοήγηση */
+.top{background:color-mix(in srgb,var(--bg) 86%,transparent)!important;border-bottom:1px solid transparent}
+.brand{color:var(--ink)!important;font-weight:700;letter-spacing:-.02em}
+.logo{background:var(--accent)!important}
+.datenav{background:var(--surface)!important;border:1px solid var(--line);box-shadow:none!important}
+.datenav .lbl{color:var(--ink);font-weight:600}
+.bottom{background:color-mix(in srgb,var(--surface) 94%,transparent)!important;border:1px solid var(--line)!important;box-shadow:var(--shadow-float)!important;border-radius:22px!important}
+.bottom button{color:var(--muted);font-weight:550}
+.bottom button[aria-current="page"]{background:var(--accent-soft)!important;color:var(--accent)!important}
+.bottom button[aria-current="page"] svg{color:var(--accent)!important}
+#fab{background:var(--accent)!important;color:var(--accent-ink)!important;border-radius:18px;box-shadow:var(--shadow-float)!important}
+
+/* Κάρτα ημέρας: επίπεδο σκούρο μπλε, λεπτοί δακτύλιοι */
+.hero{background:var(--hero1)!important;box-shadow:none!important;border-radius:22px}
+.hero::after{display:none!important}
+.hero .eyebrow,.hero-sub,.hero-kv span,.mring small{color:rgba(255,255,255,.72)!important;opacity:1!important}
+.hero-num{font-weight:700;letter-spacing:-.04em}
+.hero-kv div{background:rgba(255,255,255,.07)!important;border-radius:14px}
+.hero-kv svg,.hero-link svg{color:rgba(255,255,255,.75)!important}
+.hero-ring .hr-bg,.mr-bg{stroke:rgba(255,255,255,.14)!important}
+.hero-ring .hr-fg{stroke:#FFFFFF!important}
+.mring[data-m="p"] .mr-fg{stroke:#FFFFFF!important}.mring[data-m="c"] .mr-fg{stroke:#A9C0E6!important}.mring[data-m="f"] .mr-fg{stroke:#C9D2DF!important}
+.hero-link{background:rgba(255,255,255,.08)!important;color:#fff!important}
+.mrings{border-top-color:rgba(255,255,255,.12)!important}
+
+/* Κουμπιά */
+.btn{background:var(--surface)!important;color:var(--ink)!important;border:1px solid var(--line-2)!important;font-weight:550;border-radius:12px}
+.btn:hover{border-color:var(--accent-2)!important}
+.btn.pri{background:var(--accent)!important;color:var(--accent-ink)!important;border-color:var(--accent)!important}
+.btn.danger{color:var(--over)!important;border-color:color-mix(in srgb,var(--over) 35%,var(--line))!important}
+.linkish{color:var(--accent)!important;font-weight:550}
+.x{color:var(--muted)}
+.chip{background:var(--surface)!important;border:1px solid var(--line-2)!important;color:var(--ink-2)!important}
+.chip[aria-pressed="true"]{background:var(--accent)!important;border-color:var(--accent)!important;color:var(--accent-ink)!important}
+.seg{background:var(--sunk)!important;border-radius:14px;padding:4px}
+.seg button{color:var(--muted);font-weight:550}
+.seg button[aria-selected="true"]{background:var(--surface)!important;color:var(--ink)!important;box-shadow:0 1px 2px rgba(14,26,51,.08)!important}
+
+/* Πεδία: οι τιμές σκούρες και έντονες, τα παραδείγματα αχνά και πλάγια */
+input[type=text],input[type=number],input[type=date],input[type=search],input[type=password],select,textarea{
+  background:var(--surface)!important;border:1px solid var(--line-2)!important;border-radius:12px;color:var(--ink)!important;
+  font-weight:550;font-size:16px;-webkit-text-fill-color:var(--ink)}
+input::placeholder,textarea::placeholder{color:var(--ph)!important;-webkit-text-fill-color:var(--ph);font-weight:400;font-style:italic;opacity:1}
+input:focus,select:focus,textarea:focus{border-color:var(--accent)!important;box-shadow:0 0 0 3px var(--accent-soft)!important;outline:none}
+input:disabled{color:var(--muted)!important;-webkit-text-fill-color:var(--muted)}
+.f > span{color:var(--ink-2)!important;font-weight:550;font-size:.84rem}
+label{color:var(--ink-2)}
+.radios label{color:var(--ink)}
+
+/* Πίνακες */
+.tbl th,.sets th{color:var(--muted)!important;font-weight:600;font-size:.76rem;letter-spacing:.01em}
+.tbl td{color:var(--ink);border-color:var(--line)!important}
+.tbl tr,.tbl td,.tbl th{border-color:var(--line)!important}
+
+/* Γεύματα: μονόχρωμα εικονίδια */
+.mealcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg)}
+.mc-ic{background:var(--accent-soft)!important;color:var(--accent)!important}
+.mealcard.open .mc-h{background:none!important}
+.mc-h h3{font-size:1rem}
+.pill{background:var(--sunk)!important;color:var(--ink)!important;font-weight:650}
+.iconbtn{background:var(--accent)!important;color:var(--accent-ink)!important}
+.list.inner,.mc-f{border-color:var(--line)!important}
+.item .nm{color:var(--ink);font-weight:600}
+.item .sub{color:var(--muted)}
+.item .kc{color:var(--ink);font-weight:650}
+.sweet-c{background:var(--surface)!important;border:1px solid var(--line);box-shadow:none!important}
+.sweet-c.open{box-shadow:none!important}
+.sw-ic{background:var(--accent-soft)!important;color:var(--accent)!important}
+.daydone{background:var(--surface)!important;border:1px dashed var(--line-2)!important}
+.daydone.on{border:1px solid color-mix(in srgb,var(--good) 45%,var(--line))!important;background:color-mix(in srgb,var(--good) 6%,var(--surface))!important}
+
+/* Εβδομάδα και πρόοδος: ουδέτερα πλακίδια */
+.stat{background:var(--sunk)!important;border-radius:14px}
+.stat::before{display:none!important}
+.stat .k{font-size:.78rem;font-weight:550}
+.stat .v{color:var(--ink);font-weight:650}
+.weekbal .big{color:var(--ink)}
+.weekbal .big.neg,.tbl .neg{color:var(--good)!important}.weekbal .big.pos,.tbl .pos{color:var(--over)!important}
+
+/* Προτάσεις και κάρτα «Η εβδομάδα σου» */
+.coach-status{color:var(--ink-2)!important}
+.cb{background:var(--sunk)!important;border-radius:14px}
+.cb-keep,.cb-change,.cb-watch{background:var(--sunk)!important}
+.cb-h{font-size:.74rem;letter-spacing:.06em}
+.cb-keep .cb-h{color:var(--good)!important}.cb-change .cb-h{color:var(--accent)!important}.cb-watch .cb-h{color:var(--warn)!important}
+.cb li b{color:var(--ink)}.cb li .small{color:var(--ink-2)}
+.rec{background:var(--surface)!important;border:1px solid var(--line)!important;border-left:3px solid var(--line-2)!important;border-radius:0 14px 14px 0!important}
+.rec.act{border-left-color:var(--accent)!important}.rec.watch{border-left-color:var(--warn)!important}.rec.good{border-left-color:var(--good)!important}.rec.info{border-left-color:var(--info)!important}
+.rec p{color:var(--ink-2)}
+.rec .small.muted:first-child{color:var(--muted)!important;font-weight:600}
+.ev{background:var(--sunk)!important;color:var(--muted)!important;font-weight:550}
+.allrecs > summary{color:var(--accent)}
+
+/* Ρουτίνα, οδηγοί, «Ξεκίνα εδώ» */
+.rt li button:not(.skip){background:var(--sunk)!important;color:var(--ink)!important}
+.rt li.done button{background:transparent!important}
+.rt .freq{color:var(--muted)!important;font-weight:600}
+.rt .ck{border-color:var(--line-2)!important}
+.rt li.done .ck{background:var(--good)!important;border-color:var(--good)!important}
+.mr-fg2{stroke:var(--accent)!important}.mr-bg2{stroke:var(--line)!important}
+.howto{background:var(--sunk)!important;border-left:0!important;color:var(--ink-2)}
+.guide li{background:var(--sunk)!important;color:var(--ink-2)}
+.gh{color:var(--ink)!important}
+.parsed{background:var(--sunk)!important;border-radius:14px}
+.parsed.combo{background:var(--accent-soft)!important}
+.results{background:var(--surface)!important;border:1px solid var(--line)!important}
+.bar{background:var(--line)!important}
+.bar > i{background:var(--accent)}
+
+/* Προπόνηση: κάρτες που κλείνουν */
+.exc{background:var(--surface);border:1px solid var(--line)!important;border-radius:var(--r-lg);padding:14px 14px 12px;margin:12px 0}
+.exc .hd{display:flex;align-items:flex-start;gap:8px}
+.exc-t{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;background:none;border:0;padding:2px 0;color:var(--ink);cursor:pointer}
+.exc-n{font-size:1rem;font-weight:650;line-height:1.3}
+.exc-s{font-size:.82rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.exc-a{display:flex;align-items:center;gap:0;flex:none}
+.exc-a .chev,.pgi-a .chev{color:var(--faint);font-size:.95rem;padding:0 4px 0 2px}
+.exc-ok{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--good);color:#fff;font-size:.72rem;margin-right:8px;vertical-align:1px}
+.exc.closed{padding:12px 14px}
+.exc.done{background:color-mix(in srgb,var(--good) 4%,var(--surface))}
+.exc.closed .exc-s{color:var(--ink-2)}
+.exc-f{display:flex;justify-content:flex-end;margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
+.exc .plan{color:var(--ink-2)!important}
+.sets input{font-weight:650!important;text-align:center}
+.setno{background:var(--sunk)!important;border:0!important;color:var(--ink-2)!important}
+tr.wu .setno{background:var(--accent-soft)!important;color:var(--accent)!important}
+.fb{border-radius:12px;color:var(--ink-2)}
+.fb.up{background:color-mix(in srgb,var(--good) 8%,var(--surface))!important}.fb.stall{background:color-mix(in srgb,var(--warn) 9%,var(--surface))!important}.fb.down{background:color-mix(in srgb,var(--over) 7%,var(--surface))!important}
+
+/* Επεξεργαστής προγράμματος */
+.pgday{background:var(--sunk)!important;border-radius:16px}
+.pgday-h{gap:6px;align-items:center}
+.pgday-h input{font-weight:650}
+.pgcount{white-space:nowrap}
+.pgday.closed{padding-bottom:10px}
+.pgi{border-top:1px solid var(--line)!important;padding:10px 0}
+.pgi-t{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:1px;text-align:left;background:none;border:0;padding:2px 0;color:var(--ink);cursor:pointer}
+.pgi-t b{font-size:.95rem;font-weight:650}
+.pgi-s{font-size:.8rem;color:var(--muted)}
+.pgi-a{display:flex;align-items:center;flex:none}
+.pgg input{background:var(--surface)!important}
+
+/* Παράθυρα */
+dialog{background:var(--surface)!important;color:var(--ink)}
+.dlg-h{border-bottom:1px solid var(--line)}
+#dlgTitle{font-weight:650;letter-spacing:-.01em}
+#toast,#undo{background:var(--ink)!important;color:var(--bg)!important}
+
+/* Εστίαση για πληκτρολόγιο */
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* Κάρτα ημέρας: όλα τα κείμενα λευκά (εξαίρεση από τον γενικό κανόνα έντονων κειμένων) */
+.hero b,.hero strong,.hero .hero-num,.hero-kv b,.mring b,.hero .hr-pct{color:#FFFFFF!important;fill:#FFFFFF}
+.mring b span{color:rgba(255,255,255,.66)!important}
+.hero-num.over{color:#FFC9C4!important}
+
+/* Πεδία χωρίς ρητό type (π.χ. προπονήσεις ανά εβδομάδα) με το ίδιο στυλ */
+input:not([type]){background:var(--surface)!important;border:1px solid var(--line-2)!important;border-radius:12px;color:var(--ink)!important;-webkit-text-fill-color:var(--ink);font-weight:550;font-size:16px;min-height:44px;padding:8px 12px;width:100%;box-sizing:border-box}
+/* Πεδία προγράμματος: 3 στήλες ώστε να χωρούν οι τιμές σε κινητό */
+.pgg{display:grid!important;grid-template-columns:.8fr 1.6fr 1.6fr!important;gap:8px 10px!important}
+.pgg .rng{display:flex;align-items:center;gap:4px}
+.pgg .rng input{min-width:0;padding:6px 4px;text-align:center}
+.pgg input{text-align:center;padding:6px 4px;min-height:40px}
+/* Καρτέλες: μία γραμμή */
+.seg button{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.seg5 button{font-size:.8rem!important;padding:9px 2px!important}
+/* Κουμπί κλεισίματος παραθύρου: ήπια εστίαση */
+dialog [data-act="dlgClose"]:focus-visible,#dlgClose:focus-visible{outline:none;background:var(--sunk);border-radius:10px}
+
+/* Καρτέλες ημέρας: να χωρά ολόκληρο το «Κίνηση / Ύπνος» σε κινητό */
+.seg:not(.seg5) button{font-size:.86rem!important;padding:9px 4px!important;letter-spacing:-.01em}
+/* Τρεις καρτέλες: λίγος επιπλέον χώρος στην τρίτη (μακρύτερη ετικέτα) */
+.seg:not(.seg5):has(> button:nth-child(3):last-child){grid-template-columns:1fr 1fr 1.3fr!important}
+
+/* v1.1.8 NORDIC END */
 </style>
 </head>
 <body>
@@ -744,7 +977,7 @@ const Reliability = (() => {
         const ids=new Set();
         for(const e of v.meals){nut(e,k+'.meals');if(!e||!id(e.id)||ids.has(e.id)||typeof e.name!=='string'||!['b','l','d','s'].includes(e.meal)){err(k+'.meal');continue;}ids.add(e.id);for(const f of typeErr(e,MEAL_SPEC))err(k+'.meals.'+f);for(const it of Array.isArray(e.items)?e.items:[])if(obj(it))for(const f of typeErr(it,MEAL_SPEC))err(k+'.items.'+f);if(e.items!==undefined){if(!Array.isArray(e.items))err(k+'.items');else e.items.forEach(i=>nut(i,k+'.items'));}}
         const eids=new Set();
-        for(const e of v.ex){if(!obj(e)||!id(e.id)||eids.has(e.id)||!id(e.exId)||typeof e.name!=='string'||!['w','bw','c'].includes(e.type)||!Array.isArray(e.sets)||e.sets.length>200){err(k+'.ex');continue;}eids.add(e.id);if(e.name.length>300||(e.sug!==undefined&&(typeof e.sug!=='string'||e.sug.length>1000)))err(k+'.ex.name');e.sets.forEach(s=>set(s,e.type,k+'.sets'));if(e.plan&&plan(e.plan))err(k+'.plan');if(e.prog&&(!obj(e.prog)||!id(e.prog.pid)||(e.prog.did!==undefined&&!id(e.prog.did))))err(k+'.prog');}
+        for(const e of v.ex){if(!obj(e)||!id(e.id)||eids.has(e.id)||!id(e.exId)||typeof e.name!=='string'||!['w','bw','c'].includes(e.type)||!Array.isArray(e.sets)||e.sets.length>200){err(k+'.ex');continue;}eids.add(e.id);if(e.name.length>300||(e.sug!==undefined&&(typeof e.sug!=='string'||e.sug.length>1000)))err(k+'.ex.name');e.sets.forEach(s=>set(s,e.type,k+'.sets'));if(e.done!==undefined&&typeof e.done!=='boolean')err(k+'.ex.done');if(e.plan&&plan(e.plan))err(k+'.plan');if(e.prog&&(!obj(e.prog)||!id(e.prog.pid)||(e.prog.did!==undefined&&!id(e.prog.did))))err(k+'.prog');}
         if(v.watch){if(!obj(v.watch))err(k+'.watch');else for(const [f,max] of Object.entries({steps:150000,sleep:24,kcal:30000,kcalOverride:30000}))if(!blank(v.watch[f])&&!inRange(v.watch[f],0,max))err(k+'.watch.'+f);}
         if(v.snap){nut(v.snap,k+'.snap');for(const f of ['tdee','bmr'])if(!blank(v.snap[f])&&!inRange(v.snap[f],1,10000))err(k+'.snap.'+f);}
         if(v.complete!==undefined&&typeof v.complete!=='boolean')err(k+'.complete');
@@ -1139,7 +1372,7 @@ const Reliability = (() => {
 'use strict';
 const Store = (() => {
   let db=null,mode='memory',persisted=false,lastError=null,failures=0,ver=0,timer=null,queue=Promise.resolve(),locked=false,revision=0;
-  let conflictData=null,unavailable=false,loadErrors=[];
+  let conflictData=null,unavailable=false,loadErrors=[],resolving=false;
   const PRIMARY='wmu-storage-primary';
   const cache=new Map(),dirty=new Map();const LS='isozygio:',SNAP=LS+'snapshot:v5';
   const clone=Reliability.clone;
@@ -1241,14 +1474,14 @@ const Store = (() => {
     if(!conflictData||!['idb','ls'].includes(which))throw new Error('Δεν υπάρχει επιλεγμένο αντίγραφο.');
     const saved=conflictData,chosen=Reliability.migrate({app:'isozygio',version:6,data:publicData(saved[which])}).data;
     const run=async()=>{if(localStorage.getItem(SNAP)!==saved.raw)throw new Error('Το εφεδρικό αντίγραφο άλλαξε. Κάνε επαναφόρτωση.');
-      locked=true;signal();conflictData=null;
+      locked=true;resolving=true;signal();conflictData=null;
       try{const candidate={...chosen,_storageRecovery:{at:Date.now(),data:publicData(saved[which==='idb'?'ls':'idb'])}};
         await transaction(candidate,Object.keys(candidate),true);cache.clear();Object.entries(candidate).forEach(([k,v])=>cache.set(k,v));ver++;dirty.clear();loadErrors=[];
         try{localStorage.removeItem(SNAP);}catch{}markPrimary('idb');lastError=null;failures=0;
-      }catch(e){conflictData=saved;fail(e);throw e;}finally{locked=false;signal();}};
+      }catch(e){conflictData=saved;fail(e);throw e;}finally{locked=false;resolving=false;signal();}};
     return navigator.locks?navigator.locks.request('weightmeup-storage',run):run();
   }
-  return {resolveConflict,recoveryData:which=>clone(conflictData?.[which]),init,set,del,flush,replaceAll,dump,get:(k,d)=>clone(cache.has(k)?cache.get(k):d),peek:k=>cache.get(k)/* μόνο ανάγνωση, χωρίς αντίγραφο */,keys:p=>[...cache.keys()].filter(k=>k.startsWith(p)).sort(),ver:()=>ver,info:()=>({mode,persisted,lastError,failures,pending:dirty.size,locked,conflict:!!conflictData,unavailable,validationErrors:[...loadErrors]})};
+  return {resolveConflict,recoveryData:which=>clone(conflictData?.[which]),init,set,del,flush,replaceAll,dump,get:(k,d)=>clone(cache.has(k)?cache.get(k):d),peek:k=>cache.get(k)/* μόνο ανάγνωση, χωρίς αντίγραφο */,keys:p=>[...cache.keys()].filter(k=>k.startsWith(p)).sort(),ver:()=>ver,info:()=>({mode,persisted,lastError,failures,pending:dirty.size,locked,conflict:!!conflictData||resolving,unavailable,validationErrors:[...loadErrors]})};
 })();
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')Store.flush().catch(()=>{});});
 window.addEventListener('pagehide',()=>Store.flush().catch(()=>{}));
@@ -1829,7 +2062,7 @@ const fmt = (x, d = 0) => (x === null || x === undefined || isNaN(x)) ? '–' : 
 const sfmt = (x, d = 0) => { if (x === null || x === undefined || isNaN(x)) return '–'; const r = Math.round(x * 10 ** d) / 10 ** d; return (r > 0 ? '+' : r < 0 ? '−' : '') + fmt(Math.abs(r), d); };
 const numIn = Reliability.num;
 /* Έκδοση εφαρμογής: εμφανίζεται στο Προφίλ (κεφαλίδα και «Κατάσταση»). */
-const APP_VERSION = '1.1.7';
+const APP_VERSION = '1.1.8';
 /* Πεδία βημάτων/θερμίδων: «10.000» με ελληνικό διαχωριστικό χιλιάδων σημαίνει 10000, όχι 10. */
 const intIn = v => { const s = String(v ?? '').trim(); return /^\d{1,3}(?:\.\d{3})+$/.test(s) ? Number(s.replace(/\./g, '')) : numIn(s); };
 const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
@@ -2241,8 +2474,13 @@ function exCardHTML(ex, date) {
   const cols = cardio ? ['Λεπτά', 'km'] : ex.type === 'bw' ? ['+kg', Reliability.timed(ex) ? 'Δευτ.' : 'Επαν.', 'RIR'] : ['kg', 'Επαν.', 'RIR'];
   const fields = cardio ? ['min', 'km'] : ['w', 'r', 'rir'];
   const muscles = def && def.prim && def.prim.length ? def.prim.map(m => MUSCLES[m] ? MUSCLES[m].n : m).join(', ') : (def ? def.group : '');
-  return `<div class="exc" data-ex="${ex.id}">
-    <div class="hd"><button class="linkish" data-act="exHistory" data-exid="${ex.exId}">${esc(ex.name)}</button><span class="row" style="gap:0">${cardio ? '' : `<button class="x" data-act="swapEx" data-exid="${ex.exId}" data-id="${ex.id}" aria-label="Εναλλακτική άσκηση" title="Εναλλακτική">⇄</button>`}<button class="x" data-act="exRemove" data-id="${ex.id}" aria-label="Αφαίρεση άσκησης">✕</button></span></div>
+  UI.exOpen = UI.exOpen || {};
+  const open = UI.exOpen[ex.id] ?? !ex.done, work = (ex.sets || []).filter(s => !s.wu && (+s.r > 0 || +s.min > 0 || +s.km > 0));
+  const summ = work.length ? (cardio ? setsSummary(ex) : `${work.length} σετ · ${setsSummary(ex)}`) : 'Χωρίς σετ ακόμα';
+  const head = `<div class="hd"><button class="exc-t" data-act="exToggle" data-id="${ex.id}" aria-expanded="${open}"><span class="exc-n">${ex.done ? '<span class="exc-ok" aria-hidden="true">✓</span>' : ''}${esc(ex.name)}</span><span class="exc-s">${esc(summ)}</span></button><span class="exc-a"><button class="x" data-act="exHistory" data-exid="${ex.exId}" aria-label="Ιστορικό άσκησης" title="Ιστορικό">↗</button>${cardio ? '' : `<button class="x" data-act="swapEx" data-exid="${ex.exId}" data-id="${ex.id}" aria-label="Εναλλακτική άσκηση" title="Εναλλακτική">⇄</button>`}<button class="x" data-act="exRemove" data-id="${ex.id}" aria-label="Αφαίρεση άσκησης">✕</button><span class="chev" aria-hidden="true">${open ? '⌃' : '⌄'}</span></span></div>`;
+  if (!open) return `<div class="exc closed${ex.done ? ' done' : ''}" data-ex="${ex.id}">${head}</div>`;
+  return `<div class="exc${ex.done ? ' done' : ''}" data-ex="${ex.id}">
+    ${head}
     <div class="small muted">${esc(muscles)}${prev ? `. Προηγούμενη (${Dates.short(prev.date)}): ${esc(setsSummary(prev.ex))}` : ''}</div>
     ${ex.plan ? `<div class="small plan">Στόχος ${ex.plan.sets} × ${ex.plan.lo}–${ex.plan.hi}${numIn(ex.plan.rirLo) !== null ? ` @ RIR ${ex.plan.rirLo}–${ex.plan.rirHi}` : ''}${ex.sug ? `. ${esc(ex.sug)}` : ''}</div>` : ''}
     <table class="sets"><thead><tr><th>#</th>${cols.map(c => `<th>${c}</th>`).join('')}<th></th></tr></thead><tbody>
@@ -2250,7 +2488,8 @@ function exCardHTML(ex, date) {
       <td><button class="x" data-act="setRemove" data-i="${i}" aria-label="Διαγραφή σετ">✕</button></td></tr>`).join('')}
     </tbody></table>
     <div class="row" style="margin-top:6px"><button class="btn sm" data-act="setAdd">+ Σετ</button>${cardio ? '' : `<button class="btn sm" data-act="timer" data-sec="${(ex.plan && ex.plan.rest) || settings().defaultRest}">⏱ ${Math.floor(((ex.plan && ex.plan.rest) || settings().defaultRest) / 60)}:${String(((ex.plan && ex.plan.rest) || settings().defaultRest) % 60).padStart(2, '0')}</button>`}</div>
-    <div class="fb ${fb.kind}">${esc(fb.text)}</div></div>`;
+    <div class="fb ${fb.kind}">${esc(fb.text)}</div>
+    <div class="exc-f">${ex.done ? `<button class="btn sm" data-act="exUndone" data-id="${ex.id}">Επαναφορά σε «σε εξέλιξη»</button>` : `<button class="btn sm pri" data-act="exDone" data-id="${ex.id}">✓ Ολοκληρώθηκε</button>`}</div></div>`;
 }
 function exHTML(d) {
   return `${programStarterHTML(d)}${d.ex.length ? d.ex.map(ex => exCardHTML(ex, d.date)).join('') : `<p class="empty">Καμία άσκηση για αυτή την ημέρα.</p><p class="small muted" style="margin:0 4px 10px">Αν γυμνάστηκες: γράψε κάθε σετ εργασίας με κιλά, επαναλήψεις και RIR. Τα ζεστάματα σημείωσέ τα με «Ζ». Δεν χρειάζονται θερμίδες άσκησης, γιατί δεν αλλάζουν τους στόχους. <button class="linkish small" data-act="guide">Οδηγός</button></p>`}
@@ -2606,6 +2845,7 @@ function weightListHTML() {
 
 /* ===== ΔΙΑΛΟΓΟΙ ===== */
 const dlg = $('#dlg');
+function keepScroll(fn) { const y = window.scrollY; fn(); window.scrollTo(0, y); }
 function openDlg(title, html, onMount) {
   // Νέο στοιχείο σώματος σε κάθε άνοιγμα: οι listeners του προηγούμενου παραθύρου (συνταγή, πρόγραμμα, check-in) δεν μένουν ενεργοί.
   const old = $('#dlgBody'), fresh = old.cloneNode(false); old.replaceWith(fresh);
@@ -3451,6 +3691,8 @@ document.addEventListener('click', e => {
     case 'sweetAdd': { const f = foods().byId.get(a.dataset.fid), qty = +a.dataset.qty, unit = a.dataset.unit; addEntries([makeEntry(f, { qty, unit, g: qty * Parser.unitGrams(f, unit).g }, 'db', true)], 's'); break; }
     case 'exAdd': openExPicker(); break;
     case 'exHistory': closeDlg(); openExHistory(a.dataset.exid); break;
+    case 'exToggle': { const x = d(), ex = x.ex.find(y => y.id === a.dataset.id); if (!ex) break; UI.exOpen = UI.exOpen || {}; UI.exOpen[ex.id] = !(UI.exOpen[ex.id] ?? !ex.done); keepScroll(render); break; }
+    case 'exDone': case 'exUndone': { const x = d(), ex = x.ex.find(y => y.id === a.dataset.id); if (!ex) break; ex.done = act === 'exDone'; UI.exOpen = UI.exOpen || {}; UI.exOpen[ex.id] = !ex.done; saveDay(x); keepScroll(render); if (ex.done) toast('Η άσκηση ολοκληρώθηκε. Πάτα τον τίτλο για να τη δεις ξανά.'); break; }
     case 'exRemove': { const x = d(), i = x.ex.findIndex(y => y.id === a.dataset.id), ex = x.ex[i]; if (!ex) break; undoToast(`Αφαιρέθηκε: ${ex.name}`, () => { const dd = getDay(x.date); dd.ex.splice(Math.min(i, dd.ex.length), 0, ex); saveDay(dd); render(); }); x.ex = x.ex.filter(y => y.id !== a.dataset.id); saveDay(x); render(); break; }
     case 'setAdd': { const x = d(), card = a.closest('[data-ex]'), ex = x.ex.find(y => y.id === card.dataset.ex), last = ex.sets[ex.sets.length - 1] || {}; ex.sets.push(ex.type === 'c' ? { min: '', km: '' } : { w: last.w ?? '', r: '', rir: '' }); saveDay(x); render(); const ins = $$(`[data-ex="${ex.id}"] input[data-f="${ex.type === 'c' ? 'min' : 'r'}"]`); if (ins.length) ins[ins.length - 1].focus(); break; }
     case 'setRemove': { const x = d(), card = a.closest('[data-ex]'), ex = x.ex.find(y => y.id === card.dataset.ex), i = +a.dataset.i, gone = ex.sets.splice(i, 1)[0]; saveDay(x); render(); undoToast('Το σετ διαγράφηκε.', () => { const dd = getDay(x.date), e2 = dd.ex.find(y => y.id === ex.id); if (e2) { e2.sets.splice(Math.min(i, e2.sets.length), 0, gone); saveDay(dd); render(); } }); break; }
@@ -3518,7 +3760,7 @@ document.addEventListener('click', e => {
     case 'progStart': startProgramDay($('#progDaySel').value); break;
     case 'progNew': openProgramEditor(null); break;
     case 'progEdit': openProgramEditor(a.dataset.id); break;
-    case 'pgDayAdd': case 'pgDayDel': case 'pgItemDel': case 'pgUp': case 'pgAddEx': case 'pgSave': case 'pgDelete': pgAction(act, a); break;
+    case 'pgToggle': case 'pgDayToggle': case 'pgDayAdd': case 'pgDayDel': case 'pgItemDel': case 'pgUp': case 'pgAddEx': case 'pgSave': case 'pgDelete': pgAction(act, a); break;
     case 'timer': Timer.start(+a.dataset.sec); break;
     case 'tmAdd': Timer.add(15); break;
     case 'tmSub': Timer.add(-15); break;
@@ -3776,14 +4018,21 @@ function startProgramDay(did) {
 function exName(exId) { const e = exById(exId); if (e) return e.name; const h = allSessions().find(x => x.ex.exId === exId); return (h ? h.ex.name + ' ' : '') + '(διαγραμμένη άσκηση)'; }
 let progDraft = null;
 function openProgramEditor(id) {
-  if (id !== undefined) { const p = programs().list.find(x => x.id === id); progDraft = p ? JSON.parse(JSON.stringify(p)) : { id: 'p_' + uid(), name: 'Πρόγραμμα γυμναστή', days: [{ id: 'd_' + uid(), name: 'Ημέρα Α', items: [] }] }; }
+  if (id !== undefined) { const p = programs().list.find(x => x.id === id); progDraft = p ? JSON.parse(JSON.stringify(p)) : { id: 'p_' + uid(), name: 'Πρόγραμμα γυμναστή', days: [{ id: 'd_' + uid(), name: 'Ημέρα Α', items: [] }] };
+    // Οι ήδη αποθηκευμένες ασκήσεις ανοίγουν κλειστές (με σύνοψη)· οι καινούργιες ανοιχτές.
+    UI.pgSaved = new WeakSet(); UI.pgOpen = new WeakSet(); UI.pgClosedNew = new WeakSet(); UI.pgDayClosed = new WeakSet(); if (p) progDraft.days.forEach(d => d.items.forEach(it => UI.pgSaved.add(it))); }
   const P = progDraft, isSaved = programs().list.some(x => x.id === P.id);
+  UI.pgOpen = UI.pgOpen || new WeakSet(); UI.pgDayClosed = UI.pgDayClosed || new WeakSet(); UI.pgSaved = UI.pgSaved || new WeakSet(); UI.pgClosedNew = UI.pgClosedNew || new WeakSet();
+  const isOpen = it => UI.pgOpen.has(it) || (!UI.pgSaved.has(it) && !UI.pgClosedNew.has(it));
+  const scroller = () => [$('#dlgBody'), dlg].find(el => el && el.scrollHeight > el.clientHeight + 2) || dlg;
+  const keepTop = UI.pgScroll ?? null; UI.pgScroll = null;
+  const summary = it => `${it.sets ?? '–'} × ${it.lo ?? '–'}–${it.hi ?? '–'}${numIn(it.rirLo) !== null ? ` · RIR ${it.rirLo}–${it.rirHi ?? ''}` : ''}${it.rest ? ` · ${it.rest}″` : ''}${numIn(it.inc) !== null ? ` · +${fmt(it.inc, 2)} kg` : ''}`;
   const inp = (k, v, ph, cls = '') => `<input type="text" inputmode="decimal" data-pg="${k}" value="${esc(v ?? '')}" placeholder="${ph || ''}" class="${cls}">`;
   openDlg('Πρόγραμμα προπόνησης', `<label class="f"><span>Όνομα προγράμματος</span><input type="text" id="pgName" value="${esc(P.name)}"></label><label class="f"><span>Προπονήσεις ανά εβδομάδα (προαιρετικά· κενό = παύση μέτρησης)</span><input id="pgFrequency" inputmode="numeric" value="${esc(P.sessionsPerWeek??'')}"></label><p class="note">Η μέτρηση παρουσίας και οι αλλαγές στόχου ισχύουν από την επόμενη Δευτέρα. Η τρέχουσα εβδομάδα και παλαιότερες περίοδοι χωρίς στόχο δεν αξιολογούνται.</p>
-    ${P.days.map((day, di) => `<div class="parsed" data-di="${di}"><div class="row"><input type="text" data-pg="dayName" value="${esc(day.name)}" class="grow" aria-label="Όνομα ημέρας"><button class="x" data-act="pgDayDel" data-di="${di}" aria-label="Διαγραφή ημέρας">✕</button></div>
-      ${day.items.length ? day.items.map((it, ii) => { const e = exById(it.exId); return `<div class="pgi" data-ii="${ii}"><div class="row between"><b class="small">${esc(exName(it.exId))}</b><span><button class="x" data-act="pgUp" data-di="${di}" data-ii="${ii}" aria-label="Πάνω">↑</button><button class="x" data-act="pgItemDel" data-di="${di}" data-ii="${ii}" aria-label="Διαγραφή">✕</button></span></div>
-        <div class="pgg"><label><span>Σετ</span>${inp('sets', it.sets)}</label><label><span>Επαν.</span><span class="rng">${inp('lo', it.lo)}–${inp('hi', it.hi)}</span></label><label><span>RIR</span><span class="rng">${inp('rirLo', it.rirLo, '1')}–${inp('rirHi', it.rirHi, '2')}</span></label><label><span>Διάλ. ″</span>${inp('rest', it.rest)}</label><label><span>Βήμα kg</span>${inp('inc', it.inc, 'αυτ.')}</label></div></div>`; }).join('') : '<p class="small muted">Καμία άσκηση ακόμα.</p>'}
-      <button class="btn sm" data-act="pgAddEx" data-di="${di}">+ Άσκηση</button></div>`).join('')}
+    ${P.days.map((day, di) => { const dOpen = !UI.pgDayClosed.has(day); return `<div class="parsed pgday${dOpen ? '' : ' closed'}" data-di="${di}"><div class="row pgday-h"><button class="x pgchev" data-act="pgDayToggle" data-di="${di}" aria-expanded="${dOpen}" aria-label="${dOpen ? 'Σύμπτυξη' : 'Ανάπτυξη'} ημέρας">${dOpen ? '⌃' : '⌄'}</button><input type="text" data-pg="dayName" value="${esc(day.name)}" class="grow" aria-label="Όνομα ημέρας"><span class="small muted pgcount">${day.items.length} ${day.items.length === 1 ? 'άσκηση' : 'ασκήσεις'}</span><button class="x" data-act="pgDayDel" data-di="${di}" aria-label="Διαγραφή ημέρας">✕</button></div>
+      ${!dOpen ? '' : (day.items.length ? day.items.map((it, ii) => { const open = isOpen(it); return `<div class="pgi${open ? ' open' : ''}" data-ii="${ii}"><div class="row between"><button class="pgi-t" data-act="pgToggle" data-di="${di}" data-ii="${ii}" aria-expanded="${open}"><b>${esc(exName(it.exId))}</b><span class="pgi-s">${esc(summary(it))}</span></button><span class="pgi-a"><button class="x" data-act="pgUp" data-di="${di}" data-ii="${ii}" aria-label="Πάνω">↑</button><button class="x" data-act="pgItemDel" data-di="${di}" data-ii="${ii}" aria-label="Διαγραφή">✕</button><span class="chev" aria-hidden="true">${open ? '⌃' : '⌄'}</span></span></div>
+        ${open ? `<div class="pgg"><label><span>Σετ</span>${inp('sets', it.sets)}</label><label><span>Επαν.</span><span class="rng">${inp('lo', it.lo)}–${inp('hi', it.hi)}</span></label><label><span>RIR</span><span class="rng">${inp('rirLo', it.rirLo, '1')}–${inp('rirHi', it.rirHi, '2')}</span></label><label><span>Διάλ. ″</span>${inp('rest', it.rest)}</label><label><span>Βήμα kg</span>${inp('inc', it.inc, 'αυτ.')}</label></div>` : ''}</div>`; }).join('') : '<p class="small muted">Καμία άσκηση ακόμα.</p>')}
+      ${dOpen ? `<button class="btn sm" data-act="pgAddEx" data-di="${di}">+ Άσκηση</button>` : ''}</div>`; }).join('')}
     <button class="btn sm" data-act="pgDayAdd">+ Ημέρα</button>
     <p class="note">Γράψε το πρόγραμμα όπως σου το έδωσε ο γυμναστής. <b>RIR στόχος</b>: πόσες επαναλήψεις θέλει να σου μένουν (π.χ. 1–2). <b>Βήμα kg</b>: η μικρότερη αύξηση που μπορείς να κάνεις σε αυτή την άσκηση (π.χ. 1 για αλτήρες ανά χέρι, 2,5 για μπάρα, ή το βήμα του μηχανήματος). Όταν πιάσεις το πάνω όριο επαναλήψεων με το RIR του στόχου, η εφαρμογή προτείνει αύξηση κατά ένα βήμα. Η δομή του προγράμματος δεν αλλάζει ποτέ αυτόματα.</p>
     <div class="dlg-f">${isSaved ? '<button class="btn danger" data-act="pgDelete">Διαγραφή</button><span class="grow"></span>' : ''}<button class="btn pri" data-act="pgSave">Αποθήκευση</button></div>`, body => {
@@ -3793,6 +4042,12 @@ function openProgramEditor(id) {
       if (k === 'dayName') { P.days[di].name = t.value; return; }
       const ii = +t.closest('[data-ii]').dataset.ii, v = numIn(t.value), it = P.days[di].items[ii];
       it[k] = t.value.trim() === '' ? null : v === null ? t.value : v;
+      const s = t.closest('.pgi')?.querySelector('.pgi-s'); if (s) s.textContent = summary(it);
+    });
+    const f = UI.pgFocus; UI.pgFocus = null;
+    requestAnimationFrame(() => {
+      if (f) { const el = body.querySelector(`[data-di="${f.di}"] [data-ii="${f.ii}"]`); if (el) { el.scrollIntoView({ block: 'center' }); const i1 = el.querySelector('input'); if (i1) i1.focus({ preventScroll: true }); return; } }
+      if (keepTop !== null) { const sc = scroller(); sc.scrollTop = keepTop; }
     });
   });
 }
@@ -3811,12 +4066,17 @@ function setActiveProgram(all, id) {
 }
 function pgAction(act, a) {
   const P = progDraft; if (!P) return;
+  const sc = [$('#dlgBody'), dlg].find(el => el && el.scrollHeight > el.clientHeight + 2) || dlg; UI.pgScroll = sc.scrollTop;
+  UI.pgOpen = UI.pgOpen || new WeakSet(); UI.pgDayClosed = UI.pgDayClosed || new WeakSet(); UI.pgSaved = UI.pgSaved || new WeakSet(); UI.pgClosedNew = UI.pgClosedNew || new WeakSet();
+  const isOpen = it => UI.pgOpen.has(it) || (!UI.pgSaved.has(it) && !UI.pgClosedNew.has(it));
+  if (act === 'pgToggle') { const it = P.days[+a.dataset.di].items[+a.dataset.ii]; if (isOpen(it)) { UI.pgOpen.delete(it); UI.pgClosedNew.add(it); } else { UI.pgOpen.add(it); UI.pgClosedNew.delete(it); } openProgramEditor(); return; }
+  if (act === 'pgDayToggle') { const day = P.days[+a.dataset.di]; if (UI.pgDayClosed.has(day)) UI.pgDayClosed.delete(day); else UI.pgDayClosed.add(day); openProgramEditor(); return; }
   if (act === 'pgDayAdd') { P.days.push({ id: 'd_' + uid(), name: 'Ημέρα ' + 'ΑΒΓΔΕΖΗΘ'[P.days.length % 8], items: [] }); openProgramEditor(); }
   if (act === 'pgDayDel') { if (P.days.length > 1 && confirm('Διαγραφή ημέρας;')) { P.days.splice(+a.dataset.di, 1); openProgramEditor(); } }
   if (act === 'pgItemDel') { P.days[+a.dataset.di].items.splice(+a.dataset.ii, 1); openProgramEditor(); }
   if (act === 'pgUp') { const it = P.days[+a.dataset.di].items, i = +a.dataset.ii; if (i > 0) { [it[i - 1], it[i]] = [it[i], it[i - 1]]; openProgramEditor(); } }
-  if (act === 'pgAddEx') { const di = +a.dataset.di; openExPicker(def => { const comp = (def.prim || []).length > 1; P.days[di].items.push({ exId: def.id, sets: 3, lo: comp ? 6 : 8, hi: comp ? 10 : 12, rest: comp ? 150 : 90, rirLo: comp ? 1 : 0, rirHi: comp ? 3 : 2, inc: null }); openProgramEditor(); }); }
-  if (act === 'pgSave') { const error=Reliability.program(P); if(error){toast(error,6000);return;} const all = programs();const old=all.list.find(x=>x.id===P.id);if(!old||old.sessionsPerWeek!==P.sessionsPerWeek){const from=Dates.add(Dates.weekStart(Dates.today()),7);P.scheduleHistory=(P.scheduleHistory||[]).filter(x=>x.from!==from).concat([{from,weekly:all.active&&all.active!==P.id?0:(P.sessionsPerWeek||0)}]);}all.list = all.list.filter(x => x.id !== P.id).concat([P]); if (!all.active) setActiveProgram(all, P.id); Store.set('programs', all); closeDlg(); render(); toast('Το πρόγραμμα αποθηκεύτηκε.'); }
+  if (act === 'pgAddEx') { const di = +a.dataset.di; openExPicker(def => { const comp = (def.prim || []).length > 1; const it = { exId: def.id, sets: 3, lo: comp ? 6 : 8, hi: comp ? 10 : 12, rest: comp ? 150 : 90, rirLo: comp ? 1 : 0, rirHi: comp ? 3 : 2, inc: null }; P.days[di].items.push(it); UI.pgOpen.add(it); UI.pgFocus = { di, ii: P.days[di].items.length - 1 }; openProgramEditor(); }); }
+  if (act === 'pgSave') { const error=Reliability.program(P); if(error){ let n=0; P.days.forEach(d => d.items.forEach(it => { if (Reliability.plan(it)) { UI.pgOpen.add(it); UI.pgClosedNew.delete(it); UI.pgDayClosed.delete(d); n++; } })); if (n) openProgramEditor(); toast(error,6000);return;} const all = programs();const old=all.list.find(x=>x.id===P.id);if(!old||old.sessionsPerWeek!==P.sessionsPerWeek){const from=Dates.add(Dates.weekStart(Dates.today()),7);P.scheduleHistory=(P.scheduleHistory||[]).filter(x=>x.from!==from).concat([{from,weekly:all.active&&all.active!==P.id?0:(P.sessionsPerWeek||0)}]);}all.list = all.list.filter(x => x.id !== P.id).concat([P]); if (!all.active) setActiveProgram(all, P.id); Store.set('programs', all); closeDlg(); render(); toast('Το πρόγραμμα αποθηκεύτηκε.'); }
   if (act === 'pgDelete') { if (!confirm('Διαγραφή προγράμματος; Οι καταγεγραμμένες προπονήσεις μένουν.')) return; const all = programs(); all.list = all.list.filter(x => x.id !== P.id); if (all.active === P.id) { all.active = null; setActiveProgram(all, all.list[0] ? all.list[0].id : null); } Store.set('programs', all); closeDlg(); render(); }
 }
 
