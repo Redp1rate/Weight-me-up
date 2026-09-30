@@ -2,7 +2,7 @@
 <html lang="el">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-lW+rtHDP7vG5jt9l6xI6GGBwwCcW5JI7mybBLWRrl6I=' 'sha256-HYkg+4uzTPdo34Tq80vhJbICYDzuI+m7vNuWcJz4a4U=' 'sha256-RfPA1QR6c0Leq70jBh8GW6X0MimecEUlV20rfM0JRz4=' 'sha256-Lf/Il0Nxheetj6vmS00id+orqAygSbLW+XSVYNesNiM='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://images.openfoodfacts.org https://static.openfoodfacts.org https://world.openfoodfacts.org; connect-src 'self' https://world.openfoodfacts.org; worker-src 'self'; manifest-src 'self'; media-src 'self' blob: mediastream:; object-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-lW+rtHDP7vG5jt9l6xI6GGBwwCcW5JI7mybBLWRrl6I=' 'sha256-HYkg+4uzTPdo34Tq80vhJbICYDzuI+m7vNuWcJz4a4U=' 'sha256-RfPA1QR6c0Leq70jBh8GW6X0MimecEUlV20rfM0JRz4=' 'sha256-ufyprhlrfOVIQG/RnCkOX+5CL8YT/yvhGc1MLw573rc='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://images.openfoodfacts.org https://static.openfoodfacts.org https://world.openfoodfacts.org; connect-src 'self' https://world.openfoodfacts.org; worker-src 'self'; manifest-src 'self'; media-src 'self' blob: mediastream:; object-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#F3F5F8" media="(prefers-color-scheme: light)">
@@ -592,6 +592,8 @@ tr.wu input{opacity:.6}
  .hero-kv div{grid-template-columns:minmax(0,1fr);padding:8px}.hero-kv svg{display:none}.hero-kv b{font-size:.88rem}
  .datenav button{padding:7px 8px}
 }
+
+
 
 
 
@@ -2062,7 +2064,7 @@ const fmt = (x, d = 0) => (x === null || x === undefined || isNaN(x)) ? '–' : 
 const sfmt = (x, d = 0) => { if (x === null || x === undefined || isNaN(x)) return '–'; const r = Math.round(x * 10 ** d) / 10 ** d; return (r > 0 ? '+' : r < 0 ? '−' : '') + fmt(Math.abs(r), d); };
 const numIn = Reliability.num;
 /* Έκδοση εφαρμογής: εμφανίζεται στο Προφίλ (κεφαλίδα και «Κατάσταση»). */
-const APP_VERSION = '1.1.8';
+const APP_VERSION = '1.1.9';
 /* Πεδία βημάτων/θερμίδων: «10.000» με ελληνικό διαχωριστικό χιλιάδων σημαίνει 10000, όχι 10. */
 const intIn = v => { const s = String(v ?? '').trim(); return /^\d{1,3}(?:\.\d{3})+$/.test(s) ? Number(s.replace(/\./g, '')) : numIn(s); };
 const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
@@ -2320,7 +2322,7 @@ function viewDay() {
   h += learnCardHTML(d) + routineHTML(d);
   h += `<div class="seg" role="tablist">${[['meals', 'Γεύματα'], ['ex', 'Άσκηση'], ['steps', settings().showSteps ? 'Κίνηση / Ύπνος' : 'Ύπνος']].map(([k, l]) => `<button role="tab" aria-selected="${UI.tab === k}" data-act="tab" data-tab="${k}">${l}</button>`).join('')}</div>`;
   if(UI.tab==='ex')h+=`<section class="sec"><label class="f"><span>Ετοιμότητα σήμερα (προαιρετικά)</span><select id="readiness">${[['','Δεν δηλώθηκε'],['normal','Κανονικά'],['tired','Κουρασμένος'],['pain','Ενόχληση'],['short','Λίγος χρόνος']].map(([v,n])=>`<option value="${v}" ${d.readiness===v?'selected':''}>${n}</option>`).join('')}</select></label></section>`;
-  h += UI.tab === 'meals' ? sweetCardHTML(d, snap, tot) + mealsHTML(d) + nutrientHTML(d) : UI.tab === 'ex' ? exHTML(d) : stepsHTML(d, snap);
+  h += UI.tab === 'meals' ? sweetCardHTML(d, snap, tot) + mealsHTML(d) : UI.tab === 'ex' ? exHTML(d) : stepsHTML(d, snap);
   return h;
 }
 
@@ -2531,7 +2533,7 @@ function weekStats(ws) {
       const date = Dates.add(ws, i), d = getDay(date), snap = daySnap(d), tot = dayTotals(d), has = d.meals.length > 0;
       const exp = snap ? Calc.dayExpenditure(snap, d.watch, s) : null, b = has && d.complete && exp ? tot.kcal - exp.v : null;
       if (snap) weekTarget += snap.kcal;
-      alc += d.meals.reduce((a, e) => a + (+e.alc || 0) + (e.items || []).reduce((b, i) => b + (+i.alc || 0), 0), 0);
+      alc += dayAlc(d);
       if (has) { logged++; intake += tot.kcal; p += tot.p; if (snap) target += snap.kcal; if (tot.est) est = true; }
       if (b !== null) { bal += b; balDays++; }
       if (d.ex.some(e => Calc.sessionStats(e))) workouts++;
@@ -2550,7 +2552,7 @@ function viewWeek() {
   let h = `<div class="row between" style="margin-top:12px"><button class="btn sm" data-act="weekPrev" aria-label="Προηγούμενη εβδομάδα">‹</button>
     <b>${Dates.short(ws)} – ${Dates.short(we)}${isCur ? ' (τρέχουσα)' : ''}</b><button class="btn sm" data-act="weekNext" aria-label="Επόμενη εβδομάδα">›</button></div>`;
   const cls = st.bal < 0 ? 'neg' : st.bal > 0 ? 'pos' : '';
-  h += `<section class="sec weekbal"><h2>Ενεργειακό ισοζύγιο</h2>${st.alc > 0 ? `<p class="small">Αλκοόλ αυτή την εβδομάδα: <b>${fmt(st.alc)} g</b> (≈${fmt(st.alc * 7)} kcal, μέσα στις θερμίδες).</p>` : ''}
+  h += `<section class="sec weekbal"><h2>Ενεργειακό ισοζύγιο</h2>${st.alc > 0 ? `<p class="small">Αλκοόλ αυτή την εβδομάδα: <b>${fmt(st.alc)} g καθαρό αλκοόλ</b> (αιθανόλη, όχι ml ποτού· ≈${fmt(st.alc / 10, 1)} ποτά των 10 g). Δίνει ≈${fmt(st.alc * 7)} kcal, που είναι ήδη μέσα στις θερμίδες του φαγητού.</p>` : ''}
     ${st.balDays ? `<div class="big ${cls}"><span class="est">${sfmt(st.bal)}</span> kcal</div>
     <p class="small muted">${st.bal < 0 ? 'Έλλειμμα' : 'Πλεόνασμα'} σε ${st.balDays} ${st.balDays === 1 ? 'ολοκληρωμένη ημέρα' : 'ολοκληρωμένες ημέρες'} (φαγητό μείον εκτιμώμενη κατανάλωση).${st.logged > st.balDays ? ` ${st.logged - st.balDays} ${st.logged - st.balDays === 1 ? 'ημέρα δεν είναι ολοκληρωμένη και δεν προσμετράται' : 'ημέρες δεν είναι ολοκληρωμένες και δεν προσμετρώνται'}.` : ''}${st.balDays >= 5 ? ` Θεωρητική αντιστοιχία ≈${E(Math.abs(st.bal) / dens.v, true, 1)} kg σωματικής μάζας (ενδεικτικό, με ${fmt(dens.v)} kcal/kg).` : ''}</p>`
     : st.logged ? `<p class="muted">Δεν υπολογίζεται: καμία από τις ${st.logged} καταγεγραμμένες ημέρες δεν είναι σημειωμένη ως ολοκληρωμένη. Πάτα «Ολοκλήρωσα την καταγραφή» στο τέλος των γευμάτων.</p>` : '<p class="muted">Δεν υπάρχουν καταγεγραμμένα γεύματα αυτή την εβδομάδα.</p>'}
@@ -2921,6 +2923,11 @@ function foodDetail(det, f, lastQty, lastUnit) {
     addEntries([makeEntry(f, r, 'db', !!f.est || !['g', 'ml'].includes(r.unit))]); closeDlg();
   });
 }
+/* Γραμμάρια καθαρής αιθανόλης μιας καταχώρησης. Σύνθετο πιάτο: άθροισμα υλικών.
+   Αν λείπει η αποθηκευμένη τιμή (παλιές καταχωρήσεις), υπολογίζεται από per100.alc × γραμμάρια. */
+function itemAlc(e) { if (!e) return 0; const v = numIn(e.alc); if (v !== null) return v; const k = numIn(e.per100?.alc), g = numIn(e.g); return k !== null && g !== null ? k * g / 100 : 0; }
+function entryAlc(e) { if (!e) return 0; if (Array.isArray(e.items) && e.items.length) { const v = numIn(e.alc); return v !== null ? v : e.items.reduce((s, i) => s + entryAlc(i), 0); } return itemAlc(e); }
+const dayAlc = d => (d?.meals || []).reduce((s, e) => s + entryAlc(e), 0);
 function makeEntry(f, r, src, est) {
   // Οι θερμίδες υπολογίζονται από τα ίδια (στρογγυλεμένα) γραμμάρια που αποθηκεύονται.
   const g = Math.round(r.g * 10) / 10, per100 = Object.fromEntries(['kcal','p','c','f','fiber','satfat','salt','sugars','alc'].map(k=>[k,f[k]??null])), m = macrosFor(per100, g);
@@ -3210,7 +3217,7 @@ function toCsv(rows, excelGr) {
 }
 const CSV_SETS = {
   days: ['Ημέρες (θερμίδες, μακρο)', () => [['date', 'kcal', 'protein_g', 'carbs_g', 'fat_g', 'alcohol_g', 'entries', 'complete', 'target_kcal', 'target_protein_g', 'tdee_estimate', 'steps', 'sleep_h', 'readiness'],
-    ...Store.keys('day:').map(k => Store.get(k)).map(d => { const t = dayTotals(d), sn = d.snap || {}; return [d.date, t.kcal, t.p, t.c, t.f, d.meals.reduce((a, e) => a + (+e.alc || 0) + (e.items || []).reduce((b, i) => b + (+i.alc || 0), 0), 0), d.meals.length, d.complete ? 1 : 0, sn.kcal ?? '', sn.p ?? '', sn.tdee ?? '', numIn(d.watch?.steps) ?? '', numIn(d.watch?.sleep) ?? '', d.readiness || '']; })]],
+    ...Store.keys('day:').map(k => Store.get(k)).map(d => { const t = dayTotals(d), sn = d.snap || {}; return [d.date, t.kcal, t.p, t.c, t.f, dayAlc(d), d.meals.length, d.complete ? 1 : 0, sn.kcal ?? '', sn.p ?? '', sn.tdee ?? '', numIn(d.watch?.steps) ?? '', numIn(d.watch?.sleep) ?? '', d.readiness || '']; })]],
   weights: ['Ζυγίσεις', () => [['date', 'kg', 'trend_7d_kg'], ...weights().map(w => [w.d, w.kg, weightTrendOn(w.d) ?? ''])]],
   measures: ['Μετρήσεις', () => [['date', 'waist_cm', 'neck_cm', 'hip_cm', 'chest_cm', 'arm_cm', 'thigh_cm', 'scale_bf_pct'], ...measures().map(m => [m.d, m.waist, m.neck, m.hip, m.chest, m.arm, m.thigh, m.scaleBf])]],
   sets: ['Σετ προπόνησης', () => [['date', 'exercise', 'exercise_id', 'type', 'set', 'warmup', 'weight_kg', 'reps', 'rir', 'minutes', 'km'],
@@ -4090,7 +4097,7 @@ function openSaveFav(mealId) {
     <div class="dlg-f"><button class="btn pri" id="fvSave">Αποθήκευση</button></div>`, body => {
     $('#fvSave', body).addEventListener('click', () => {
       const name = $('#fvName', body).value.trim() || m.label;
-      const items = es.map(e => ({ edited: !!e.edited, foodId: e.foodId, name: e.name, qty: e.qty, unit: e.unit, g: e.g, kcal: e.kcal, p: e.p, c: e.c, f: e.f, est: e.est, sweet: e.sweet, sweetKcal: e.sweetKcal, per100:e.per100, fiber:e.fiber,salt:e.salt,satfat:e.satfat,sugars:e.sugars, items: e.items }));
+      const items = es.map(e => ({ ...(entryAlc(e) > 0 ? { alc: entryAlc(e) } : {}), edited: !!e.edited, foodId: e.foodId, name: e.name, qty: e.qty, unit: e.unit, g: e.g, kcal: e.kcal, p: e.p, c: e.c, f: e.f, est: e.est, sweet: e.sweet, sweetKcal: e.sweetKcal, per100:e.per100, fiber:e.fiber,salt:e.salt,satfat:e.satfat,sugars:e.sugars, items: e.items }));
       Store.set('favmeals', favMeals().concat([{ id: 'fv_' + uid(), name, items }])); closeDlg(); toast('Αποθηκεύτηκε στα αγαπημένα.');
     });
   });
@@ -4100,8 +4107,8 @@ function favToEntries(fv) {
     const f = it.per100?{...it.per100,id:it.foodId,name:it.name,sweet:!!it.sweet}:it.foodId && foods().byId.get(it.foodId);
     if (f && it.g && !it.items && !it.edited) return makeEntry(f, { qty: it.qty ?? it.g, unit: it.unit || 'g', g: it.g }, 'db', !!it.est);
     // Διορθωμένη καταχώρηση: επαναχρησιμοποιούνται ακριβώς οι διορθωμένες τιμές
-    if (it.edited && !it.items) return { id: uid(), name: it.name, foodId: it.foodId || null, g: it.g ?? null, qty: it.qty ?? null, unit: it.unit ?? null, per100: it.per100 ?? null, kcal: it.kcal, p: it.p, c: it.c, f: it.f, fiber: it.fiber, salt: it.salt, satfat: it.satfat, sugars: it.sugars, src: 'db', est: !!it.est, sweet: !!it.sweet, edited: true };
-    return Object.assign({ fiber:it.fiber,salt:it.salt,satfat:it.satfat,sugars:it.sugars,id: uid(), name: it.name, foodId: null, g: it.items ? it.g : null, per100: null, kcal: it.kcal, p: it.p, c: it.c, f: it.f, src: it.items ? 'text' : 'manual', est: !!it.est, sweet: !!it.sweet }, it.items ? { items: it.items, sweetKcal: it.sweetKcal } : {}, it.edited ? { edited: true } : {});
+    if (it.edited && !it.items) return { id: uid(), name: it.name, foodId: it.foodId || null, g: it.g ?? null, qty: it.qty ?? null, unit: it.unit ?? null, per100: it.per100 ?? null, kcal: it.kcal, p: it.p, c: it.c, f: it.f, fiber: it.fiber, salt: it.salt, satfat: it.satfat, sugars: it.sugars, src: 'db', est: !!it.est, sweet: !!it.sweet, edited: true, ...(numIn(it.alc) !== null ? { alc: it.alc } : {}) };
+    return Object.assign({ fiber:it.fiber,salt:it.salt,satfat:it.satfat,sugars:it.sugars,id: uid(), name: it.name, foodId: null, g: it.items ? it.g : null, per100: null, kcal: it.kcal, p: it.p, c: it.c, f: it.f, src: it.items ? 'text' : 'manual', est: !!it.est, sweet: !!it.sweet }, it.items ? { items: it.items, sweetKcal: it.sweetKcal } : {}, it.edited ? { edited: true } : {}, numIn(it.alc) !== null ? { alc: it.alc } : {});
   });
 }
 function paneFav(pane) {
@@ -4907,7 +4914,8 @@ function combineEntries(title, entries) {
   const sum = k => entries.reduce((a, e) => a + (+e[k] || 0), 0);
   return { id: uid(), name: title, foodId: null, per100: null, g: Math.round(sum('g')), kcal: sum('kcal'), p: sum('p'), c: sum('c'), f: sum('f'), src: 'text', est: true,
     sweetKcal: entries.filter(e => e.sweet).reduce((a, e) => a + e.kcal, 0),
-    items: entries.map(e => ({ foodId: e.foodId, name: e.name, qty: e.qty, unit: e.unit, g: e.g, kcal: e.kcal, p: e.p, c: e.c, f: e.f, per100: e.per100, fiber:e.fiber,satfat:e.satfat,salt:e.salt,sugars:e.sugars, sweet: e.sweet })) };
+    items: entries.map(e => { const al = entryAlc(e); return { foodId: e.foodId, name: e.name, qty: e.qty, unit: e.unit, g: e.g, kcal: e.kcal, p: e.p, c: e.c, f: e.f, per100: e.per100, fiber:e.fiber,satfat:e.satfat,salt:e.salt,sugars:e.sugars, sweet: e.sweet, ...(al > 0 ? { alc: al } : {}) }; }),
+    ...(entries.some(e => entryAlc(e) > 0) ? { alc: entries.reduce((s, e) => s + entryAlc(e), 0) } : {}) };
 }
 /* Διάσπαση πιάτου. Αν το σύνολο έχει διορθωθεί χειροκίνητα, τα υλικά προσαρμόζονται αναλογικά
    ώστε το σύνολο να μείνει ίδιο (μετά από ρητή επιβεβαίωση στη φόρμα). */
