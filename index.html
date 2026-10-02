@@ -2,7 +2,7 @@
 <html lang="el">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-lW+rtHDP7vG5jt9l6xI6GGBwwCcW5JI7mybBLWRrl6I=' 'sha256-HYkg+4uzTPdo34Tq80vhJbICYDzuI+m7vNuWcJz4a4U=' 'sha256-RfPA1QR6c0Leq70jBh8GW6X0MimecEUlV20rfM0JRz4=' 'sha256-ufyprhlrfOVIQG/RnCkOX+5CL8YT/yvhGc1MLw573rc='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://images.openfoodfacts.org https://static.openfoodfacts.org https://world.openfoodfacts.org; connect-src 'self' https://world.openfoodfacts.org; worker-src 'self'; manifest-src 'self'; media-src 'self' blob: mediastream:; object-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-lW+rtHDP7vG5jt9l6xI6GGBwwCcW5JI7mybBLWRrl6I=' 'sha256-HYkg+4uzTPdo34Tq80vhJbICYDzuI+m7vNuWcJz4a4U=' 'sha256-RfPA1QR6c0Leq70jBh8GW6X0MimecEUlV20rfM0JRz4=' 'sha256-pixrKCCPldBMfPy/7iehpmcc4BfoFhElsgCNbGk2qLo='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://images.openfoodfacts.org https://static.openfoodfacts.org https://world.openfoodfacts.org; connect-src 'self' https://world.openfoodfacts.org; worker-src 'self'; manifest-src 'self'; media-src 'self' blob: mediastream:; object-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#F3F5F8" media="(prefers-color-scheme: light)">
@@ -602,6 +602,8 @@ tr.wu input{opacity:.6}
 
 
 
+
+
 /* ================= v1.1.8 NORDIC START ================= */
 /* Σκανδιναβικό μινιμαλ: ένα σύστημα τόνων, λεπτές γραμμές αντί για σκιές, καθαρή ιεραρχία κειμένου.
    Αντικαθιστά τις προηγούμενες στρώσεις χρωμάτων (v6–v12). Κύρια χρώματα: μπλε και λευκό/ασημί. */
@@ -825,6 +827,30 @@ dialog [data-act="dlgClose"]:focus-visible,#dlgClose:focus-visible{outline:none;
 .seg:not(.seg5) button{font-size:.86rem!important;padding:9px 4px!important;letter-spacing:-.01em}
 /* Τρεις καρτέλες: λίγος επιπλέον χώρος στην τρίτη (μακρύτερη ετικέτα) */
 .seg:not(.seg5):has(> button:nth-child(3):last-child){grid-template-columns:1fr 1fr 1.3fr!important}
+
+/* v1.1.10 — Ημερολόγιο */
+.cal-h{margin:2px 0 10px}.cal-h b{font-size:1.02rem}
+.cal-g{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal-w{text-align:center;font-size:.72rem;font-weight:600;color:var(--muted);padding:4px 0}
+.cal-d{aspect-ratio:1/1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:1px solid transparent;border-radius:12px;background:var(--surface);color:var(--ink);font-variant-numeric:tabular-nums;cursor:pointer;padding:0}
+.cal-n{font-size:.92rem;font-weight:550;line-height:1}
+.cal-m{display:flex;align-items:center;gap:3px;height:6px}
+.cal-d .dot{width:6px;height:6px;border-radius:50%;display:none}
+.cal-d.done .dot{display:block;background:var(--good)}
+.cal-d.part .dot{display:block;border:1.5px solid var(--faint);box-sizing:border-box}
+.cal-d .gym{width:8px;height:3px;border-radius:2px;background:var(--accent);display:block}
+.cal-d.today{border-color:var(--accent)}
+.cal-d.sel{background:var(--accent-soft)}
+.cal-d.fut{opacity:.45}
+.cal-e{aspect-ratio:1/1}
+.cal-l{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:12px;color:var(--ink-2)}
+.cal-l span{display:inline-flex;align-items:center;gap:6px}
+.cal-l .dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.cal-l .d1{background:var(--good)}.cal-l .d2{border:1.5px solid var(--faint);box-sizing:border-box}
+.cal-l .gym{width:10px;height:3px;border-radius:2px;background:var(--accent);display:inline-block}
+.datenav .lbl{cursor:pointer}
+/* Γλυκό που δεν χωράει: ήρεμη, ουδέτερη εμφάνιση */
+.sweet-c.nofit .sw-ic{background:var(--sunk)!important;color:var(--muted)!important}
 
 /* v1.1.8 NORDIC END */
 </style>
@@ -1586,7 +1612,7 @@ const BUILTIN_FOODS = [
   F('honey','Μέλι',['μέλι'],304,0.3,82.4,0,{portion:21,tbsp:21,tsp:7}),
   F('sugar','Ζάχαρη',['ζάχαρη'],387,0,100,0,{portion:5,tbsp:12.5,tsp:4}),
   F('choc_milk','Σοκολάτα γάλακτος',['σοκολάτα','σοκολάτα γάλακτος'],535,7.6,59.4,29.7,{portion:25,piece:5}),
-  F('choc_dark','Μαύρη σοκολάτα 70%',['μαύρη σοκολάτα','σοκολάτα μαύρη','σοκολάτα 70'],598,7.8,45.9,42.6,{portion:25,piece:5}),
+  F('choc_dark','Μαύρη σοκολάτα 70%',['μαύρη σοκολάτα','σοκολάτα μαύρη','σοκολάτα 70','σοκολάτα υγείας'],598,7.8,45.9,42.6,{portion:25,piece:5,sweet:true}),
   F('whey','Πρωτεΐνη ορού γάλακτος (whey)',['πρωτεΐνη','whey','σκόνη πρωτεΐνης','πρωτεϊνη','ρόφημα πρωτεΐνης','σκουπ πρωτεΐνης'],390,78,7,6,{portion:30,piece:30,tbsp:8,tsp:3}),
   // Ποτά
   // Υλικά μαγειρικής (ωμά, για συνταγές). Τιμές USDA FoodData Central.
@@ -1633,6 +1659,19 @@ const BUILTIN_FOODS = [
   F('profiterole','Προφιτερόλ',['προφιτερόλ','προφιτερολ'],300,5,30,18,{portion:150,cat:'sweet',sweet:true,est:true}),
   F('crepe_praline','Κρέπα με πραλίνα',['κρέπα','κρέπα σοκολάτα','κρέπα πραλίνα'],290,6,38,13,{portion:230,piece:230,cat:'sweet',sweet:true,est:true}),
   F('rizogalo','Ρυζόγαλο',['ρυζόγαλο'],125,3.5,20,3.3,{portion:150,piece:150,cat:'sweet',sweet:true,est:true}),
+  // Ελληνικά και κλασικά γλυκά (v1.1.10). USDA όπου υπάρχει (μπακλαβάς, παστέλι, ζελέ, σορμπέ)· αλλιώς εκτίμηση (est).
+  F('baklavas','Μπακλαβάς',['μπακλαβάς','μπακλαβα','σιροπιαστό'],428,6.7,37.6,29,{portion:60,piece:60,cat:'sweet',sweet:true,est:true}),
+  F('galaktoboureko','Γαλακτομπούρεκο',['γαλακτομπούρεκο','γαλακτομπουρεκο'],250,5,33,11,{portion:150,piece:150,cat:'sweet',sweet:true,est:true}),
+  F('krema_karamele','Κρέμα καραμελέ',['κρέμα καραμελέ','καραμελέ','flan'],145,4,23,4.2,{portion:125,piece:125,cat:'sweet',sweet:true,est:true}),
+  F('halvas','Χαλβάς ταχινιού',['χαλβάς','χαλβα','χαλβάς ταχινιού'],516,12,58,26,{portion:50,piece:50,cat:'sweet',sweet:true,est:true}),
+  F('loukoumi','Λουκούμι',['λουκούμι','λουκούμια'],380,0.2,94,0.2,{portion:30,piece:15,cat:'sweet',sweet:true,est:true}),
+  F('pasteli','Παστέλι',['παστέλι','παστελι','μπάρα σουσαμιού'],516,11.2,50.8,33.4,{portion:30,piece:30,cat:'sweet',sweet:true}),
+  F('kourabies','Κουραμπιές',['κουραμπιές','κουραμπιέδες'],510,6,58,28,{portion:40,piece:40,cat:'sweet',sweet:true,est:true}),
+  F('melomakarono','Μελομακάρονο',['μελομακάρονο','μελομακάρονα'],420,4.5,58,19,{portion:40,piece:40,cat:'sweet',sweet:true,est:true}),
+  F('glyko_koutaliou','Γλυκό του κουταλιού',['γλυκό του κουταλιού','γλυκό κουταλιού','βύσσινο γλυκό'],280,0.3,70,0.1,{portion:20,cat:'sweet',sweet:true,est:true}),
+  F('loukoumades','Λουκουμάδες με μέλι',['λουκουμάδες','λουκουμαδες'],330,4.5,45,15,{portion:120,cat:'sweet',sweet:true,est:true}),
+  F('zele','Ζελέ φρούτων',['ζελέ','ζελε','jelly'],62,1.2,14.2,0,{portion:125,piece:125,cat:'sweet',sweet:true}),
+  F('sorbet','Σορμπέ/γρανίτα',['σορμπέ','γρανίτα','sorbet'],144,1.1,30.4,2,{portion:100,piece:100,cat:'icecream',sweet:true}),
   F('protein_bar','Μπάρα πρωτεΐνης',['μπάρα πρωτεΐνης','protein bar','μπάρα πρωτεινης'],380,33,35,13,{portion:60,piece:60,cat:'sweet',sweet:true,est:true}),
   F('protein_pudding','Πουτίγκα πρωτεΐνης (έτοιμη)',['πουτίγκα πρωτεΐνης','πουτίγκα','protein pudding'],85,10,8,1.5,{portion:200,piece:200,cat:'dairy',sweet:true,est:true}),
   // alc: γραμμάρια αλκοόλης ανά 100 ml (7 kcal/g, USDA)
@@ -2064,7 +2103,7 @@ const fmt = (x, d = 0) => (x === null || x === undefined || isNaN(x)) ? '–' : 
 const sfmt = (x, d = 0) => { if (x === null || x === undefined || isNaN(x)) return '–'; const r = Math.round(x * 10 ** d) / 10 ** d; return (r > 0 ? '+' : r < 0 ? '−' : '') + fmt(Math.abs(r), d); };
 const numIn = Reliability.num;
 /* Έκδοση εφαρμογής: εμφανίζεται στο Προφίλ (κεφαλίδα και «Κατάσταση»). */
-const APP_VERSION = '1.1.9';
+const APP_VERSION = '1.1.10';
 /* Πεδία βημάτων/θερμίδων: «10.000» με ελληνικό διαχωριστικό χιλιάδων σημαίνει 10000, όχι 10. */
 const intIn = v => { const s = String(v ?? '').trim(); return /^\d{1,3}(?:\.\d{3})+$/.test(s) ? Number(s.replace(/\./g, '')) : numIn(s); };
 const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
@@ -2305,11 +2344,12 @@ function render() { storageStatus();if(recoveryScreen()){const fab=$('#fab');if(
 }
 
 /* ===== ΠΡΟΒΟΛΗ ΗΜΕΡΑΣ ===== */
+const BACKUP_EVERY = 2; // ημέρες ανάμεσα σε υπενθυμίσεις backup
 function backupBanner() {
   const s = settings(), n = Store.keys('day:').length;
-  if (n < 5 || UI.backupDismissed) return '';
+  if (n < 1 || UI.backupDismissed) return '';
   const days = s.lastBackup ? Math.floor((Date.now() - s.lastBackup) / 864e5) : null;
-  if (days !== null && days < 14) return '';
+  if (days !== null && days < BACKUP_EVERY) return '';
   return `<div class="banner backup"><span><b>${days === null ? 'Δεν έχεις κρατήσει αντίγραφο ασφαλείας' : `Τελευταίο αντίγραφο πριν ${days} ημέρες`}</b><br><span class="small muted">${n} ημέρες καταγραφών ζουν μόνο σε αυτό το κινητό.</span></span><button class="btn sm pri" data-act="export">Export</button><button class="x" data-act="backupDismiss" aria-label="Αργότερα">✕</button></div>`;
 }
 
@@ -2364,61 +2404,76 @@ function ledgerHTML(d, snap, tot) {
 }
 
 /* ----- Πρόταση γλυκού (μόνο όταν περισσεύουν θερμίδες) ----- */
-function typicalMealKcal(mealId) {
-  return cached('tm' + mealId + Dates.today(), () => {
-    const from = Dates.add(Dates.today(), -28), vals = [];
-    for (const k of dayKeysBetween(from, Dates.add(Dates.today(), -1))) { const d = Store.get(k); const es = d.meals.filter(e => e.meal === mealId); if (es.length) vals.push(es.reduce((a, e) => a + (+e.kcal || 0), 0)); }
-    return vals.length >= 3 ? vals.reduce((a, b) => a + b, 0) / vals.length : null;
+/* Το τυπικό σου μοτίβο: μέσος όρος θερμίδων ανά γεύμα στις ΟΛΟΚΛΗΡΩΜΕΝΕΣ μέρες των τελευταίων 28
+   (με μηδέν όταν το γεύμα παραλείπεται). Στο σνακ μετράει μόνο το μη γλυκό μέρος, ώστε να μη διπλομετρά το γλυκό. */
+function typicalDay(date = Dates.today()) {
+  return cached('td' + date, () => {
+    const from = Dates.add(date, -28), days = [];
+    for (const k of dayKeysBetween(from, Dates.add(date, -1))) { const d = Store.get(k); if (d && d.complete && d.meals.length) days.push(d); }
+    if (days.length < 5) return null;
+    const slot = {};
+    for (const m of MEALS) slot[m.id] = days.reduce((s, d) => s + d.meals.filter(e => e.meal === m.id && !(m.id === 's' && (e.sweet || e.sweetKcal))).reduce((a, e) => a + (+e.kcal || 0), 0), 0) / days.length;
+    return { n: days.length, slot, avg: days.reduce((s, d) => s + dayTotals(d).kcal, 0) / days.length };
   });
 }
+function typicalMealKcal(mealId) { const t = typicalDay(); return t ? t.slot[mealId] : null; }
+/* Θερμίδες που περίσσεψαν σε ΟΛΟΚΛΗΡΩΜΕΝΕΣ μέρες της εβδομάδας πριν από σήμερα. Οι μισές μέρες δεν μετράνε. */
 function weekBank(date) {
-  // Θερμίδες που «περίσσεψαν» τις προηγούμενες ημέρες της εβδομάδας (μόνο καταγεγραμμένες ημέρες)
   let bank = 0; const ws = Dates.weekStart(date);
-  for (let dd = ws; dd < date; dd = Dates.add(dd, 1)) { const d = Store.get('day:' + dd); if (d && d.meals.length && d.snap) bank += d.snap.kcal - dayTotals(d).kcal; }
+  for (let dd = ws; dd < date; dd = Dates.add(dd, 1)) { const d = Store.get('day:' + dd); if (d && d.complete && d.meals.length && d.snap) bank += d.snap.kcal - dayTotals(d).kcal; }
   return bank;
 }
+/* Ομάδα γλυκού για ποικιλία στις προτάσεις */
+const sweetGroup = f => /παγωτ|frozen/i.test(f.name) || f.cat === 'icecream' ? 'icecream' : /σοκολ|πραλίν|γκοφρ|brownie|μους|κορμ/i.test(f.name) ? 'choc' : /μπισκ|cookie|κουλουρ|κουραμπ|μελομακ/i.test(f.name) ? 'biscuit' : /κέικ|κεκ|μάφιν|κρουασ|τάρτ|πίτα|μπουγάτσ|γαλακτομπ|μπακλα|λουκουμ/i.test(f.name) ? 'pastry' : /πρωτεΐν/i.test(f.name) ? 'protein' : 'dessert';
+function seededShuffle(arr, seedStr) { let h = 2166136261; for (const ch of seedStr) h = Math.imul(h ^ ch.charCodeAt(0), 16777619); const rnd = () => ((h = Math.imul(h ^ (h >>> 15), 2246822507) ^ Math.imul(h ^ (h >>> 13), 3266489909)) >>> 0) / 4294967296; const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+/* Χωράει γλυκό; Περιθώριο = στόχος − (ό,τι έφαγες + όσα τρως συνήθως στα γεύματα που δεν έχεις γράψει ακόμα) + περίσσευμα ολοκληρωμένων ημερών (έως 300). */
 function sweetSuggestions(d, snap, tot) {
   if (!snap || d.date !== Dates.today()) return null;
-  const goal = profile().goal, hour = new Date().getHours();
-  const reserveParts = [];
-  for (const m of MEALS.slice(0, 3)) {
-    if (d.meals.some(e => e.meal === m.id) || hour >= m.end) continue;
-    const typ = typicalMealKcal(m.id) ?? snap.kcal * m.share;
-    reserveParts.push({ label: m.label.toLowerCase(), kcal: typ });
+  const goal = profile().goal, td = typicalDay(d.date), expectedParts = [];
+  for (const m of MEALS) {
+    if (d.meals.some(e => e.meal === m.id)) continue;
+    const typ = td ? td.slot[m.id] : (m.id === 's' ? 0 : snap.kcal * m.share);
+    if (typ >= 1) expectedParts.push({ label: m.label.toLowerCase(), kcal: typ });
   }
-  const reserve = reserveParts.reduce((a, r) => a + r.kcal, 0);
+  const expected = expectedParts.reduce((a, r) => a + r.kcal, 0);
   const bank = Math.max(0, weekBank(d.date)), bankUse = Math.min(bank, 300);
-  const room = snap.kcal - tot.kcal - reserve + bankUse;
-  const minRoom = { cut: 150, recomp: 150, maintain: 120, bulk: 100 }[goal] || 150;
-  if (room < minRoom) return null;
-  // Αγαπημένα: γλυκά που έχεις καταγράψει τις τελευταίες 60 ημέρες
+  const projected = tot.kcal + expected, room = snap.kcal - projected + bankUse;
+  const minRoom = { cut: 150, recomp: 150, maintain: 120, bulk: 100 }[goal] || 150, fits = room >= minRoom;
+  const basis = td ? `μέσος όρος των ${td.n} ολοκληρωμένων ημερών σου (28 ημέρες)` : 'τυπική κατανομή του στόχου, μέχρι να υπάρξουν 5 ολοκληρωμένες μέρες';
+  const res = { fits, room, eaten: tot.kcal, expected, expectedParts, projected, target: snap.kcal, bankUse, basis, pick: [], protein: null, pLeft: snap.p - tot.p };
+  if (!fits) return res;
   const freq = new Map(), from = Dates.add(d.date, -60);
   for (const k of dayKeysBetween(from, null)) { const x = Store.get(k); for (const e of x.meals) if (e.sweet && e.foodId) freq.set(e.foodId, (freq.get(e.foodId) || 0) + 1); }
-  const all = foods().list.filter(f => f.sweet && !(settings().noSupplements && f.supp));
+  const pool = foods().list.filter(f => f.sweet && !f.liquid && f.cat !== 'drink' && !(settings().noSupplements && f.supp));
   const opts = [];
-  for (const f of all) {
-    const unit = f.piece ? 'piece' : 'portion', ug = Parser.unitGrams(f, unit).g, uk = ug * f.kcal / 100;
+  for (const f of pool) {
+    const unit = f.piece ? 'piece' : 'portion', ug = Parser.unitGrams(f, unit).g, uk = ug * f.kcal / 100; if (!(uk > 0)) continue;
     let qty;
     if (unit === 'piece') { const maxPieces = Math.max(1, Math.round((f.portion || ug) / ug)); qty = Math.min(maxPieces, Math.floor(room / uk)); }
     else qty = uk <= room ? 1 : uk / 2 <= room ? 0.5 : 0;
     if (qty <= 0) continue;
-    opts.push({ f, unit, qty, g: qty * ug, kcal: qty * uk, fav: freq.get(f.id) || 0, pRatio: f.p * 4 / f.kcal });
+    opts.push({ f, unit, qty, g: qty * ug, kcal: qty * uk, fav: freq.get(f.id) || 0, pRatio: f.p * 4 / f.kcal, grp: sweetGroup(f) });
   }
-  if (!opts.length) return null;
-  opts.sort((a, b) => b.fav - a.fav || (goal === 'cut' ? a.kcal - b.kcal : b.kcal - a.kcal));
-  const pick = opts.slice(0, 4);
-  const pLeft = snap.p - tot.p;
-  let protein = null;
-  if (pLeft > 25) { protein = opts.filter(o => o.pRatio >= 0.3).sort((a, b) => b.pRatio - a.pRatio)[0] || null; if (protein && pick.includes(protein)) protein = null; }
-  return { room, reserveParts, bankUse, pick, protein, pLeft };
+  // Ποικιλία: έως 2 αγαπημένα, μετά διαφορετικές ομάδες με σειρά που αλλάζει κάθε μέρα (ή με «Άλλες προτάσεις»)
+  const favs = opts.filter(o => o.fav).sort((a, b) => b.fav - a.fav).slice(0, 2);
+  const rest = seededShuffle(opts.filter(o => !favs.includes(o)), d.date + ':' + (UI.sweetSeed || 0));
+  const pick = [...favs], used = new Set(favs.map(o => o.grp));
+  for (const o of rest) { if (pick.length >= 5) break; if (!used.has(o.grp)) { pick.push(o); used.add(o.grp); } }
+  for (const o of rest) { if (pick.length >= 5) break; if (!pick.includes(o)) pick.push(o); }
+  res.pick = pick;
+  if (res.pLeft > 25) { const pr = opts.filter(o => o.pRatio >= 0.3 && !pick.includes(o)).sort((a, b) => b.pRatio - a.pRatio)[0]; if (pr) res.protein = pr; }
+  res.more = opts.length > pick.length;
+  return res;
 }
 function sweetCardHTML(d, snap, tot) {
   const s = sweetSuggestions(d, snap, tot); if (!s) return '';
   const open = !!UI.sweetOpen;
   const row = (o, note) => `<li class="row sweet-opt"><span class="grow"><b>${esc(o.f.name)}</b><br><span class="small muted">${qtyLabel(o.qty, o.unit)} (${fmt(o.g)} g), ≈${fmt(o.kcal)} kcal${note ? '. ' + note : ''}</span></span><button class="btn sm" data-act="sweetAdd" data-fid="${o.f.id}" data-qty="${o.qty}" data-unit="${o.unit}">Προσθήκη</button></li>`;
-  return `<section class="sweet-c ${open ? 'open' : ''}"><button class="sweet-h" data-act="sweetToggle" aria-expanded="${open}"><span class="sw-ic">${IC.star}</span><span class="grow"><b>Χωράει γλυκό</b><span class="small muted"> έως ≈${fmt(s.room)} kcal</span></span><span class="go">${open ? '⌃' : '⌄'}</span></button>
-    ${open ? `<p class="small muted" style="margin:0 14px 6px">${s.reserveParts.length ? `Κράτησα ≈${fmt(s.reserveParts.reduce((a, r) => a + r.kcal, 0))} kcal για ${s.reserveParts.map(r => r.label).join(' και ')}.` : ''}${s.bankUse > 0 ? ` Μετράνε και ${fmt(s.bankUse)} kcal που περίσσεψαν μέσα στην εβδομάδα.` : ''}</p>
-    <ul class="plain" style="padding:0 14px 8px">${s.pick.map(o => row(o, o.fav ? 'Από τα αγαπημένα σου' : '')).join('')}${s.protein ? row(s.protein, `Καλύπτει και μέρος από τα ${fmt(s.pLeft)} g πρωτεΐνης που λείπουν`) : ''}</ul>` : ''}</section>`;
+  const exp = s.expectedParts.length ? ` Με όσα τρως συνήθως ${s.expectedParts.map(r => `στο ${r.label} (≈${fmt(r.kcal)})`).join(', ')}, η μέρα θα κλείσει στα <b>≈${fmt(s.projected)}</b> από ${fmt(s.target)} kcal.` : ` Η μέρα είναι στα <b>${fmt(s.projected)}</b> από ${fmt(s.target)} kcal.`;
+  const why = `<p class="small" style="margin:0 14px 6px">Έχεις φάει <b>${fmt(s.eaten)}</b> kcal.${exp}${s.bankUse > 0 ? ` Μετράνε και ${fmt(s.bankUse)} kcal που περίσσεψαν σε ολοκληρωμένες μέρες της εβδομάδας.` : ''}</p><p class="small muted" style="margin:0 14px 8px">Βάση: ${esc(s.basis)}.</p>`;
+  const head = s.fits ? `<b>Χωράει γλυκό</b><span class="small muted"> έως ≈${fmt(s.room)} kcal</span>` : `<b>Γλυκό: σήμερα δεν χωράει</b><span class="small muted"> ${s.room < 0 ? `≈${fmt(-s.room)} kcal πάνω` : `μόνο ≈${fmt(s.room)} kcal`}</span>`;
+  return `<section class="sweet-c ${open ? 'open' : ''}${s.fits ? '' : ' nofit'}"><button class="sweet-h" data-act="sweetToggle" aria-expanded="${open}"><span class="sw-ic">${IC.star}</span><span class="grow">${head}</span><span class="go">${open ? '⌃' : '⌄'}</span></button>
+    ${open ? why + (s.fits ? `<ul class="plain" style="padding:0 14px 4px">${s.pick.map(o => row(o, o.fav ? 'Από τα αγαπημένα σου' : '')).join('')}${s.protein ? row(s.protein, `Καλύπτει και μέρος από τα ${fmt(s.pLeft)} g πρωτεΐνης που λείπουν`) : ''}</ul>${s.more ? '<div style="padding:0 14px 12px"><button class="linkish small" data-act="sweetMore">↻ Άλλες προτάσεις</button></div>' : ''}` : '<p class="small" style="margin:0 14px 12px">Αν σήμερα θες κάτι γλυκό, προτίμησε μικρή ποσότητα ή άφησέ το για αύριο, μια μέρα που θα σου περισσέψουν θερμίδες.</p>') : ''}</section>`;
 }
 
 function entryHTML(e) {
@@ -2528,13 +2583,14 @@ function expLineHTML(exp, snap, s, date = Dates.today()) {
 function weekStats(ws) {
   return cached('ws' + ws, () => {
     const s = settings(), rows = [];
-    let intake = 0, target = 0, bal = 0, logged = 0, balDays = 0, p = 0, workouts = 0, steps = 0, stepDays = 0, est = false, weekTarget = 0, alc = 0;
+    let cIntake = 0, cTarget = 0, cDays = 0, intake = 0, target = 0, bal = 0, logged = 0, balDays = 0, p = 0, workouts = 0, steps = 0, stepDays = 0, est = false, weekTarget = 0, alc = 0;
     for (let i = 0; i < 7; i++) {
       const date = Dates.add(ws, i), d = getDay(date), snap = daySnap(d), tot = dayTotals(d), has = d.meals.length > 0;
       const exp = snap ? Calc.dayExpenditure(snap, d.watch, s) : null, b = has && d.complete && exp ? tot.kcal - exp.v : null;
       if (snap) weekTarget += snap.kcal;
       alc += dayAlc(d);
       if (has) { logged++; intake += tot.kcal; p += tot.p; if (snap) target += snap.kcal; if (tot.est) est = true; }
+      if (has && d.complete && snap) { cDays++; cIntake += tot.kcal; cTarget += snap.kcal; }
       if (b !== null) { bal += b; balDays++; }
       if (d.ex.some(e => Calc.sessionStats(e))) workouts++;
       const st = numIn((d.watch || {}).steps); if (st !== null) { steps += st; stepDays++; }
@@ -2543,7 +2599,7 @@ function weekStats(ws) {
     const wts = weights().filter(w => w.d >= ws && w.d <= Dates.add(ws, 6));
     const avgW = wts.length ? wts.reduce((a, w) => a + w.kg, 0) / wts.length : null;
     const sl = sleepStats(Dates.add(ws, 6), 7);
-    return { rows, intake, target, weekTarget, bal, logged, balDays, avgP: logged ? p / logged : null, workouts, avgSteps: stepDays ? steps / stepDays : null, avgW, est, sleep: sl, alc };
+    return { rows, intake, target, weekTarget, bal, logged, balDays, avgP: logged ? p / logged : null, workouts, avgSteps: stepDays ? steps / stepDays : null, avgW, est, sleep: sl, alc, cIntake, cTarget, cDays };
   });
 }
 function viewWeek() {
@@ -2557,8 +2613,10 @@ function viewWeek() {
     <p class="small muted">${st.bal < 0 ? 'Έλλειμμα' : 'Πλεόνασμα'} σε ${st.balDays} ${st.balDays === 1 ? 'ολοκληρωμένη ημέρα' : 'ολοκληρωμένες ημέρες'} (φαγητό μείον εκτιμώμενη κατανάλωση).${st.logged > st.balDays ? ` ${st.logged - st.balDays} ${st.logged - st.balDays === 1 ? 'ημέρα δεν είναι ολοκληρωμένη και δεν προσμετράται' : 'ημέρες δεν είναι ολοκληρωμένες και δεν προσμετρώνται'}.` : ''}${st.balDays >= 5 ? ` Θεωρητική αντιστοιχία ≈${E(Math.abs(st.bal) / dens.v, true, 1)} kg σωματικής μάζας (ενδεικτικό, με ${fmt(dens.v)} kcal/kg).` : ''}</p>`
     : st.logged ? `<p class="muted">Δεν υπολογίζεται: καμία από τις ${st.logged} καταγεγραμμένες ημέρες δεν είναι σημειωμένη ως ολοκληρωμένη. Πάτα «Ολοκλήρωσα την καταγραφή» στο τέλος των γευμάτων.</p>` : '<p class="muted">Δεν υπάρχουν καταγεγραμμένα γεύματα αυτή την εβδομάδα.</p>'}
     <div class="stats">
-      <div class="stat"><div class="k">Καταγεγραμμένο φαγητό / στόχος (${st.logged}/7 ημ.)</div><div class="v">${st.est ? `<span class="est">${fmt(st.intake)}</span>` : fmt(st.intake)} / ${E(st.target, true)}</div></div>
-      <div class="stat"><div class="k">Διαφορά από στόχο</div><div class="v">${st.logged ? sfmt(st.intake - st.target) + ' kcal' : '–'}</div></div>
+      <div class="stat"><div class="k">Ολοκληρωμένες μέρες (${st.cDays}/7): φαγητό / στόχος</div><div class="v">${st.cDays ? `${st.est ? `<span class="est">${fmt(st.cIntake)}</span>` : fmt(st.cIntake)} / ${E(st.cTarget, true)}` : '–'}</div></div>
+      <div class="stat"><div class="k">Διαφορά από στόχο (ολοκληρωμένες)</div><div class="v">${st.cDays ? sfmt(st.cIntake - st.cTarget) + ' kcal' : '–'}</div></div>
+      <p class="small muted" style="grid-column:1/-1;margin:0">${st.logged > st.cDays ? `${st.logged - st.cDays} ${st.logged - st.cDays === 1 ? 'μέρα με καταγραφή' : 'μέρες με καταγραφή'} (π.χ. η σημερινή, σε εξέλιξη) δεν ${st.logged - st.cDays === 1 ? 'μετράει' : 'μετράνε'} στη διαφορά μέχρι να πατήσεις «Ολοκλήρωσα την καταγραφή». ` : ''}Οι μέρες χωρίς καταγραφή (π.χ. το Σαββατοκύριακο που δεν έχει έρθει) δεν μετράνε ποτέ.</p>
+      <div class="stat"><div class="k">Όλο το καταγεγραμμένο φαγητό (${st.logged}/7 ημ.)</div><div class="v">${st.logged ? (st.est ? `<span class="est">${fmt(st.intake)}</span>` : fmt(st.intake)) + ' kcal' : '–'}</div></div>
       <div class="stat"><div class="k">Εβδομαδιαίος στόχος</div><div class="v">${st.weekTarget ? E(st.weekTarget, true) + ' kcal' : '–'}</div></div>
       <div class="stat"><div class="k">Μέση πρωτεΐνη</div><div class="v">${st.avgP !== null ? fmt(st.avgP) + ' g/ημ.' : '–'}</div></div>
       <div class="stat"><div class="k">Προπονήσεις</div><div class="v">${st.workouts}</div></div>
@@ -2847,6 +2905,24 @@ function weightListHTML() {
 
 /* ===== ΔΙΑΛΟΓΟΙ ===== */
 const dlg = $('#dlg');
+/* ----- Ημερολόγιο: κουκκίδα για ολοκληρωμένες μέρες, κύκλος για μέρες με καταγραφή, γραμμή για προπόνηση ----- */
+const MONTHS_EL = ['Ιανουάριος','Φεβρουάριος','Μάρτιος','Απρίλιος','Μάιος','Ιούνιος','Ιούλιος','Αύγουστος','Σεπτέμβριος','Οκτώβριος','Νοέμβριος','Δεκέμβριος'];
+function openCalendar(ym) {
+  ym = ym || UI.calMonth || UI.date.slice(0, 7); UI.calMonth = ym;
+  const [Y, M] = ym.split('-').map(Number), first = `${ym}-01`, days = new Date(Date.UTC(Y, M, 0)).getUTCDate(), lead = (new Date(Date.UTC(Y, M - 1, 1)).getUTCDay() + 6) % 7, today = Dates.today();
+  let cells = '', nDone = 0, nPart = 0;
+  for (let i = 0; i < lead; i++) cells += '<span class="cal-e"></span>';
+  for (let dd = 1; dd <= days; dd++) {
+    const date = `${ym}-${String(dd).padStart(2, '0')}`, x = Store.get('day:' + date), has = !!(x && x.meals && x.meals.length), done = !!(x && x.complete && has), gym = !!(x && (x.ex || []).some(e => Calc.sessionStats(e)));
+    if (done) nDone++; else if (has) nPart++;
+    cells += `<button class="cal-d${done ? ' done' : has ? ' part' : ''}${date === today ? ' today' : ''}${date === UI.date ? ' sel' : ''}${date > today ? ' fut' : ''}" data-act="calPick" data-d="${date}" aria-label="${dd} ${MONTHS_EL[M - 1]}${done ? ', ολοκληρωμένη' : has ? ', με καταγραφή' : ''}${gym ? ', προπόνηση' : ''}"><span class="cal-n">${dd}</span><span class="cal-m"><i class="dot"></i>${gym ? '<i class="gym"></i>' : ''}</span></button>`;
+  }
+  const prev = (M === 1 ? `${Y - 1}-12` : `${Y}-${String(M - 1).padStart(2, '0')}`), next = (M === 12 ? `${Y + 1}-01` : `${Y}-${String(M + 1).padStart(2, '0')}`);
+  openDlg('Ημερολόγιο', `<div class="row between cal-h"><button class="x" data-act="calMonth" data-m="${prev}" aria-label="Προηγούμενος μήνας">‹</button><b>${MONTHS_EL[M - 1]} ${Y}</b><button class="x" data-act="calMonth" data-m="${next}" aria-label="Επόμενος μήνας">›</button></div>
+    <div class="cal-g">${['Δ','Τ','Τ','Π','Π','Σ','Κ'].map(x => `<span class="cal-w">${x}</span>`).join('')}${cells}</div>
+    <div class="cal-l small"><span><i class="dot d1"></i>Ολοκληρωμένη (${nDone})</span><span><i class="dot d2"></i>Με καταγραφή, χωρίς ολοκλήρωση (${nPart})</span><span><i class="gym"></i>Προπόνηση</span></div>
+    <div class="row" style="justify-content:flex-end;margin-top:6px"><button class="btn sm" data-act="calPick" data-d="${today}">Σήμερα</button></div>`);
+}
 function keepScroll(fn) { const y = window.scrollY; fn(); window.scrollTo(0, y); }
 function openDlg(title, html, onMount) {
   // Νέο στοιχείο σώματος σε κάθε άνοιγμα: οι listeners του προηγούμενου παραθύρου (συνταγή, πρόγραμμα, check-in) δεν μένουν ενεργοί.
@@ -3690,7 +3766,7 @@ document.addEventListener('click', e => {
   switch (act) {
     case 'dayPrev': UI.date = Dates.add(UI.date, -1); render(); break;
     case 'dayNext': UI.date = Dates.add(UI.date, 1); render(); break;
-    case 'dayPick': { const p = $('#datePicker'); p.value = UI.date; if (p.showPicker) try { p.showPicker(); } catch { p.click(); } else p.click(); break; }
+    case 'dayPick': openCalendar(UI.date.slice(0, 7)); break;
     case 'tab': UI.tab = a.dataset.tab; render(); break;
     case 'addFood': openAddFood(a.dataset.meal); break;
     case 'addMode': openAddFood($('#mealSel') ? $('#mealSel').value : a.dataset.meal, a.dataset.mode); break;
@@ -3737,6 +3813,9 @@ document.addEventListener('click', e => {
     case 'swapToday': swapToday(a.dataset.id, a.dataset.to); break;
     case 'swapProg': swapInProgram(a.dataset.from, a.dataset.to); break;
     case 'mealToggle': UI.mealOpen = UI.mealOpen || {}; UI.mealOpen[a.dataset.meal] = !UI.mealOpen[a.dataset.meal]; render(); break;
+    case 'calMonth': openCalendar(a.dataset.m); break;
+    case 'calPick': UI.date = a.dataset.d; UI.view = 'day'; UI.calMonth = null; closeDlg(); render(); window.scrollTo(0, 0); break;
+    case 'sweetMore': UI.sweetSeed = (UI.sweetSeed || 0) + 1; UI.sweetOpen = true; keepScroll(render); break;
     case 'sweetToggle': UI.sweetOpen = !UI.sweetOpen; render(); break;
     case 'installApp': doInstall(); break;
     case 'installHelp': openInstallHelp(); break;
@@ -4743,9 +4822,9 @@ function routineItems(date) {
   const ws = Dates.weekStart(date), ci = checkins();
   const ciWeek = dow === 1 && wd === 0 ? Dates.add(ws, -7) : ws;
   if (dow === wd || (dow === (wd + 1) % 7 && !ci[ciWeek])) items.push({ k: 'checkin', role: 'brake', freq: 'Κάθε εβδομάδα', t: 'Check-in', w: 'Ύπνος, πείνα, ενέργεια, στρες, απόδοση (1 λεπτό)', done: !!ci[ciWeek], act: 'checkin', ws: ciWeek });
-  // Κάθε 2 εβδομάδες
+  // Κάθε 2 ημέρες
   const lb = s.lastBackup ? Dates.key(new Date(s.lastBackup)) : null, nDays = Store.keys('day:').length;
-  if (lb === date || (nDays >= 5 && (!lb || daysSince(lb) >= 14))) items.push({ k: 'backup', role: 'data', freq: 'Κάθε 2 εβδομάδες', t: 'Αντίγραφο ασφαλείας', w: 'Export και αποθήκευση στο Drive', done: lb === date, act: 'export' });
+  if (lb === date || (nDays >= 1 && (!lb || daysSince(lb) >= BACKUP_EVERY))) items.push({ k: 'backup', role: 'data', freq: 'Κάθε 2 ημέρες', t: 'Αντίγραφο ασφαλείας', w: 'Export και αποθήκευση στο Drive', done: lb === date, act: 'export' });
   // Κάθε μήνα
   const ph = photos(), lp = ph.length ? ph[0].d : null, firstDay = Store.keys('day:')[0];
   if (lp === date || ((lp ? daysSince(lp) >= 28 : firstDay && daysSince(firstDay.slice(4)) >= 3))) items.push({ k: 'photo', role: 'info', freq: 'Κάθε μήνα', t: 'Φωτογραφίες προόδου', w: 'Μπροστά, πλάι, πίσω, ίδιο φως (προαιρετικό)', done: lp === date, act: 'goPhotos', opt: true });
@@ -4801,7 +4880,7 @@ function openGuide() {
 
     <h3 class="gh">Δεν χρειάζεται</h3>
     <p class="small">Να ζυγίζεις το φαγητό· να γράφεις θερμίδες άσκησης· να περνάς βήματα· να αγχώνεσαι για ένα «κακό» νούμερο στη ζυγαριά· να είσαι τέλειος. Μια πρόχειρη αλλά πλήρης μέρα είναι καλύτερη από μια «τέλεια» μισή.</p>
-    <p class="note small">Κάθε 2 εβδομάδες: Προφίλ → Export (αντίγραφο ασφαλείας). Για υπενθυμίσεις: Προφίλ → «Υπενθυμίσεις στο ημερολόγιο».</p>`);
+    <p class="note small">Κάθε 2 ημέρες: Προφίλ → Export (αντίγραφο ασφαλείας). Για υπενθυμίσεις: Προφίλ → «Υπενθυμίσεις στο ημερολόγιο».</p>`);
 }
 
 /* ----- Μαζική εισαγωγή ημερήσιων συνόλων ----- */
